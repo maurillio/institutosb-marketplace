@@ -1,6 +1,9 @@
+'use client';
+
 import Link from 'next/link';
-import { ShoppingCart, User, Search, Menu } from 'lucide-react';
+import { ShoppingCart, Search, Menu } from 'lucide-react';
 import { Button } from '@thebeautypro/ui/button';
+import { UserMenu } from './user-menu';
 
 export function Header() {
   return (
@@ -55,12 +58,7 @@ export function Header() {
           </Button>
 
           {/* User Menu */}
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/entrar">
-              <User className="h-5 w-5" />
-              <span className="sr-only">Conta</span>
-            </Link>
-          </Button>
+          <UserMenu />
 
           {/* Mobile Menu */}
           <Button variant="ghost" size="icon" className="md:hidden">
