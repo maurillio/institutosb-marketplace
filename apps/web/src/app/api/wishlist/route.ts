@@ -23,13 +23,14 @@ export async function GET(request: Request) {
             },
             seller: {
               select: {
-                user: {
+                id: true,
+                name: true,
+                avatar: true,
+                sellerProfile: {
                   select: {
-                    name: true,
-                    avatar: true,
+                    rating: true,
                   },
                 },
-                rating: true,
               },
             },
             _count: {
