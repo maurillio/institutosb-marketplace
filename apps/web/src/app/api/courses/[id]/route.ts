@@ -12,26 +12,18 @@ export async function GET(
         id: params.id,
       },
       include: {
-        category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
         instructor: {
           select: {
             id: true,
-            user: {
+            name: true,
+            avatar: true,
+            instructorProfile: {
               select: {
-                id: true,
-                name: true,
-                avatar: true,
+                bio: true,
+                rating: true,
+                totalStudents: true,
               },
             },
-            bio: true,
-            rating: true,
-            totalStudents: true,
           },
         },
         modules: {
