@@ -144,7 +144,7 @@ Veja o schema completo em: `packages/database/prisma/schema.prisma`
 
 ## 🚀 Deploy em Produção
 
-**✅ LIVE:** https://thebeautypro.vercel.app/
+**✅ LIVE:** https://institutosb-mark-git-132e18-maurillio-araujo-oliveiras-projects.vercel.app/
 
 Para instruções completas e detalhadas de deploy, consulte: **[DEPLOY.md](./docs/DEPLOY.md)**
 
@@ -152,9 +152,11 @@ Para instruções completas e detalhadas de deploy, consulte: **[DEPLOY.md](./do
 
 | Serviço | Status | URL/Info |
 |---------|--------|----------|
-| **Frontend** | ✅ Live | https://thebeautypro.vercel.app/ |
+| **Frontend** | ✅ Live | https://institutosb-mark-git-132e18-maurillio-araujo-oliveiras-projects.vercel.app/ |
 | **Database** | ✅ Neon | PostgreSQL (Neon - us-east-1) |
 | **Branch** | `claude/beauty-pro-marketplace-setup-01MTUpYaZQTmpRkLc6v5oEi8` | Auto-deploy ativo |
+
+> **Nota:** Esta é a URL de preview deployment. Para produção, configure um domínio customizado no Vercel.
 
 ### Quick Start
 

@@ -418,7 +418,7 @@ Durante o processo de deploy, foram identificados e corrigidos **21 erros** de T
 - Build TypeScript: ✅ Passou
 - Páginas Estáticas: ✅ 35/35 geradas
 - Deploy Vercel: ✅ Bem-sucedido
-- URL Live: https://institutosb-marketplace-ayk1itkfa.vercel.app
+- URL Live: https://institutosb-mark-git-132e18-maurillio-araujo-oliveiras-projects.vercel.app
 
 Para detalhes completos das correções, consulte: [CHANGELOG.md](../CHANGELOG.md#012---2025-01-14)
 

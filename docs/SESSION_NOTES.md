@@ -7,10 +7,11 @@ Este documento mantém o contexto atualizado do projeto para facilitar continuid
 ### ✅ Completamente Funcional
 
 1. **Deploy em Produção**
-   - URL: https://institutosb-marketplace-ayk1itkfa.vercel.app
+   - URL: https://institutosb-mark-git-132e18-maurillio-araujo-oliveiras-projects.vercel.app
    - Status: ✅ LIVE
    - Branch: `claude/beauty-pro-marketplace-setup-01MTUpYaZQTmpRkLc6v5oEi8`
    - CI/CD: Deploy automático ativo
+   - Tipo: Preview Deployment (branch-specific)
 
 2. **Infraestrutura**
    - Frontend: Vercel (Edge Network)
