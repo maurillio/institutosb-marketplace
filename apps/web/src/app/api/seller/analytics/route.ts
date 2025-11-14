@@ -129,13 +129,13 @@ export async function GET(request: Request) {
           where: { id: item.productId },
           select: {
             name: true,
-            imageUrl: true,
+            images: true,
           },
         });
         return {
           productId: item.productId,
           name: product?.name || 'Produto removido',
-          imageUrl: product?.imageUrl,
+          images: product?.images || [],
           totalSold: item._sum.quantity || 0,
           totalRevenue: item._sum.total || 0,
           orderCount: item._count.id,

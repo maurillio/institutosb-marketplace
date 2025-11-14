@@ -20,7 +20,7 @@ export async function GET(request: Request) {
             product: {
               select: {
                 name: true,
-                imageUrl: true,
+                images: true,
               },
             },
           },

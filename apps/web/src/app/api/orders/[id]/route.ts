@@ -24,17 +24,13 @@ export async function GET(
               select: {
                 id: true,
                 name: true,
-                imageUrl: true,
+                images: true,
               },
             },
             seller: {
               select: {
                 id: true,
-                user: {
-                  select: {
-                    name: true,
-                  },
-                },
+                name: true,
               },
             },
           },
