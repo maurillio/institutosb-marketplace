@@ -82,13 +82,14 @@ export async function GET(request: Request) {
           seller: {
             select: {
               id: true,
-              user: {
+              name: true,
+              avatar: true,
+              sellerProfile: {
                 select: {
-                  name: true,
-                  avatar: true,
+                  rating: true,
+                  storeName: true,
                 },
               },
-              rating: true,
             },
           },
           _count: {
