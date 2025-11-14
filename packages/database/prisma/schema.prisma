@@ -249,6 +249,13 @@ model Product {
   slug        String   @unique
   description String   @db.Text
 
+  // Atributos específicos de beleza
+  brand       String?  // Marca do produto
+  skinTypes   String[] @default([]) // Ex: ["oleosa", "seca", "mista", "normal", "sensivel"]
+  concerns    String[] @default([]) // Ex: ["acne", "envelhecimento", "hidratacao", "manchas"]
+  ingredients String[] @default([]) // Lista de ingredientes principais
+  tags        String[] @default([]) // Tags gerais (vegano, cruelty-free, organico, etc)
+
   // Categoria
   categoryId  String
   category    Category @relation(fields: [categoryId], references: [id])

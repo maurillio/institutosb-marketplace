@@ -43,13 +43,27 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Filtros
+  // Filtros básicos
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedCondition, setSelectedCondition] = useState<string>('');
   const [minPrice, setMinPrice] = useState<string>('');
   const [maxPrice, setMaxPrice] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('createdAt');
+
+  // Filtros de beleza
+  const [selectedBrand, setSelectedBrand] = useState<string>('');
+  const [selectedSkinType, setSelectedSkinType] = useState<string>('');
+  const [selectedConcern, setSelectedConcern] = useState<string>('');
+  const [selectedTag, setSelectedTag] = useState<string>('');
+
+  // Opções de filtros disponíveis
+  const [filterOptions, setFilterOptions] = useState<any>({
+    brands: [],
+    skinTypes: [],
+    concerns: [],
+    tags: [],
+  });
 
   // Paginação
   const [page, setPage] = useState(1);
@@ -63,10 +77,30 @@ export default function ProductsPage() {
       .catch((error) => console.error('Erro ao buscar categorias:', error));
   }, []);
 
+  // Buscar opções de filtros
+  useEffect(() => {
+    fetch('/api/products/filters')
+      .then((res) => res.json())
+      .then((data) => setFilterOptions(data))
+      .catch((error) => console.error('Erro ao buscar filtros:', error));
+  }, []);
+
   // Buscar produtos
   useEffect(() => {
     fetchProducts();
-  }, [page, selectedCategory, selectedCondition, minPrice, maxPrice, searchTerm, sortBy]);
+  }, [
+    page,
+    selectedCategory,
+    selectedCondition,
+    minPrice,
+    maxPrice,
+    searchTerm,
+    sortBy,
+    selectedBrand,
+    selectedSkinType,
+    selectedConcern,
+    selectedTag,
+  ]);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -82,6 +116,12 @@ export default function ProductsPage() {
       if (maxPrice) params.append('maxPrice', maxPrice);
       if (searchTerm) params.append('search', searchTerm);
       if (sortBy) params.append('sortBy', sortBy);
+
+      // Filtros de beleza
+      if (selectedBrand) params.append('brand', selectedBrand);
+      if (selectedSkinType) params.append('skinType', selectedSkinType);
+      if (selectedConcern) params.append('concern', selectedConcern);
+      if (selectedTag) params.append('tag', selectedTag);
 
       const response = await fetch(`/api/products?${params}`);
       const data = await response.json();
@@ -108,6 +148,10 @@ export default function ProductsPage() {
     setMaxPrice('');
     setSearchTerm('');
     setSortBy('createdAt');
+    setSelectedBrand('');
+    setSelectedSkinType('');
+    setSelectedConcern('');
+    setSelectedTag('');
     setPage(1);
   };
 
@@ -167,6 +211,7 @@ export default function ProductsPage() {
           {/* Painel de filtros */}
           {showFilters && (
             <div className="mb-6 rounded-lg border bg-white p-6">
+              <h3 className="mb-4 font-semibold">Filtros Gerais</h3>
               <div className="grid gap-6 md:grid-cols-4">
                 {/* Categoria */}
                 <div>
@@ -232,7 +277,86 @@ export default function ProductsPage() {
                 </div>
               </div>
 
-              <div className="mt-4 flex gap-2">
+              <h3 className="mb-4 mt-6 font-semibold">Filtros de Beleza</h3>
+              <div className="grid gap-6 md:grid-cols-4">
+                {/* Marca */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium">
+                    Marca
+                  </label>
+                  <select
+                    value={selectedBrand}
+                    onChange={(e) => setSelectedBrand(e.target.value)}
+                    className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm"
+                  >
+                    <option value="">Todas as marcas</option>
+                    {filterOptions.brands.map((brand: string) => (
+                      <option key={brand} value={brand}>
+                        {brand}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Tipo de Pele */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium">
+                    Tipo de Pele
+                  </label>
+                  <select
+                    value={selectedSkinType}
+                    onChange={(e) => setSelectedSkinType(e.target.value)}
+                    className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm"
+                  >
+                    <option value="">Todos os tipos</option>
+                    {filterOptions.skinTypes.map((type: any) => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Preocupação */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium">
+                    Preocupação
+                  </label>
+                  <select
+                    value={selectedConcern}
+                    onChange={(e) => setSelectedConcern(e.target.value)}
+                    className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm"
+                  >
+                    <option value="">Todas</option>
+                    {filterOptions.concerns.map((concern: any) => (
+                      <option key={concern.value} value={concern.value}>
+                        {concern.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Características */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium">
+                    Características
+                  </label>
+                  <select
+                    value={selectedTag}
+                    onChange={(e) => setSelectedTag(e.target.value)}
+                    className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm"
+                  >
+                    <option value="">Todas</option>
+                    {filterOptions.tags.map((tag: any) => (
+                      <option key={tag.value} value={tag.value}>
+                        {tag.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="mt-6 flex gap-2">
                 <Button onClick={fetchProducts}>Aplicar filtros</Button>
                 <Button variant="outline" onClick={clearFilters}>
                   Limpar filtros

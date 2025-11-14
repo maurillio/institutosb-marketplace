@@ -17,6 +17,12 @@ export async function GET(request: Request) {
     const sortBy = searchParams.get('sortBy') || 'createdAt';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
 
+    // Filtros específicos de beleza
+    const brand = searchParams.get('brand');
+    const skinType = searchParams.get('skinType');
+    const concern = searchParams.get('concern');
+    const tag = searchParams.get('tag');
+
     // Construir objeto de filtros
     const where: any = {
       status: 'ACTIVE', // Apenas produtos ativos
@@ -36,10 +42,28 @@ export async function GET(request: Request) {
       if (maxPrice) where.price.lte = parseFloat(maxPrice);
     }
 
+    // Filtros de beleza
+    if (brand) {
+      where.brand = { contains: brand, mode: 'insensitive' };
+    }
+
+    if (skinType) {
+      where.skinTypes = { has: skinType };
+    }
+
+    if (concern) {
+      where.concerns = { has: concern };
+    }
+
+    if (tag) {
+      where.tags = { has: tag };
+    }
+
     if (search) {
       where.OR = [
         { name: { contains: search, mode: 'insensitive' } },
         { description: { contains: search, mode: 'insensitive' } },
+        { brand: { contains: search, mode: 'insensitive' } },
       ];
     }
 
