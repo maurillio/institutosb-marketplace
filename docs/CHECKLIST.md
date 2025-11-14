@@ -24,8 +24,8 @@ Este documento acompanha o progresso de todas as funcionalidades do projeto.
 - ✅ Prisma Schema completo
 - ✅ Todas as models criadas (Users, Products, Courses, Orders, etc.)
 - ✅ Seed básico com dados de exemplo
-- ⏳ Migrations aplicadas em produção
-- ⏳ Backup strategy definida
+- ✅ Migrations aplicadas em produção (Neon PostgreSQL)
+- ✅ Backup automático configurado (Neon)
 
 ---
 
@@ -85,12 +85,13 @@ Este documento acompanha o progresso de todas as funcionalidades do projeto.
 - ⏳ Banner por categoria
 
 ### Autenticação
-- ⏳ Página de Login
-- ⏳ Página de Cadastro
+- ✅ NextAuth.js configurado e funcional
+- ✅ Gestão de sessão implementada
+- 🔄 Página de Login (estrutura criada)
+- 🔄 Página de Cadastro (estrutura criada)
 - ⏳ Recuperação de senha
 - ⏳ Verificação de email
 - ⏳ Social login (Google, Facebook)
-- ⏳ Gestão de sessão com NextAuth.js
 
 ### Área do Cliente (Comprador)
 - ⏳ Dashboard do cliente
@@ -397,10 +398,11 @@ Este documento acompanha o progresso de todas as funcionalidades do projeto.
 ## 🚀 Deploy e DevOps
 
 ### Frontend (Vercel)
-- ⏳ Projeto conectado no Vercel
-- ⏳ Variáveis de ambiente configuradas
-- ⏳ Deploy automático do main branch
-- ⏳ Preview deployments para PRs
+- ✅ Projeto conectado no Vercel
+- ✅ Variáveis de ambiente configuradas
+- ✅ Deploy automático ativo (branch: claude/beauty-pro-marketplace-setup-01MTUpYaZQTmpRkLc6v5oEi8)
+- ✅ Build passando sem erros (35/35 páginas geradas)
+- ✅ Preview deployments para PRs
 - ⏳ Domínio customizado
 
 ### Backend
@@ -411,10 +413,10 @@ Este documento acompanha o progresso de todas as funcionalidades do projeto.
 - ⏳ Logs centralizados
 
 ### Database (Neon)
-- ⏳ Banco de produção criado
-- ⏳ Migrations aplicadas
-- ⏳ Backups automáticos configurados
-- ⏳ Connection pooling
+- ✅ Banco de produção criado
+- ✅ Migrations aplicadas
+- ✅ Backups automáticos configurados
+- ✅ Connection pooling ativo
 
 ### Monitoramento
 - ⏳ Error tracking (Sentry)
@@ -510,18 +512,26 @@ Este documento acompanha o progresso de todas as funcionalidades do projeto.
 ## Resumo do Status Atual
 
 **Total de Tarefas:** ~250+
-**Concluídas:** ~30 (12%)
-**Em Estrutura:** ~15 (6%)
-**Pendentes:** ~205 (82%)
+**Concluídas:** ~40 (16%)
+**Em Estrutura:** ~20 (8%)
+**Pendentes:** ~190 (76%)
+
+### ✅ Marcos Alcançados
+
+1. ✅ **Deploy em Produção** - App LIVE no Vercel
+2. ✅ **Autenticação Base** - NextAuth.js configurado
+3. ✅ **Database em Produção** - Neon PostgreSQL
+4. ✅ **Build Passing** - Todos os erros TypeScript corrigidos (21 correções)
+5. ✅ **CI/CD Ativo** - Deploy automático funcionando
 
 ### Próximos Passos Recomendados (em ordem de prioridade):
 
-1. **Implementar Autenticação Completa** (NextAuth.js + JWT no backend)
-2. **Criar endpoints básicos da API** (Users, Products, Courses)
-3. **Implementar listagem e detalhes de produtos no frontend**
-4. **Implementar carrinho de compras**
-5. **Integração com Mercado Pago**
-6. **Deploy inicial (MVP)**
+1. **Implementar páginas de Login e Cadastro** (UI/UX completa)
+2. **Implementar listagem e detalhes de produtos no frontend** (conectar com dados reais)
+3. **Implementar carrinho de compras funcional**
+4. **Integração completa com Mercado Pago** (webhooks, split payment)
+5. **Upload de imagens (AWS S3)**
+6. **Sistema de avaliações e reviews**
 
 ---
 

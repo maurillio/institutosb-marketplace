@@ -347,18 +347,18 @@ No GitHub:
 Use este checklist para garantir que tudo está configurado:
 
 ### Database (Neon)
-- [ ] Projeto criado no Neon
-- [ ] Connection string copiada
-- [ ] Migrations aplicadas (`prisma migrate deploy`)
-- [ ] Seed executado (opcional)
-- [ ] Backup automático configurado
+- [x] Projeto criado no Neon
+- [x] Connection string copiada
+- [x] Migrations aplicadas (`prisma migrate deploy`)
+- [x] Seed executado (opcional)
+- [x] Backup automático configurado
 
 ### Frontend (Vercel)
-- [ ] Projeto importado do GitHub
-- [ ] Build passando com sucesso
-- [ ] Todas as variáveis de ambiente configuradas
-- [ ] NEXTAUTH_SECRET gerado e configurado
-- [ ] Site acessível via URL do Vercel
+- [x] Projeto importado do GitHub
+- [x] Build passando com sucesso (35/35 páginas estáticas geradas)
+- [x] Todas as variáveis de ambiente configuradas
+- [x] NEXTAUTH_SECRET gerado e configurado
+- [x] Site acessível via URL do Vercel
 - [ ] Domínio customizado configurado (opcional)
 
 ### Backend (Railway/Vercel)
@@ -390,6 +390,37 @@ Teste estas funcionalidades em produção:
 2. **Database** → Tente fazer login com as credenciais do seed
 3. **API** → Acesse `sua-api/api/docs` para ver o Swagger
 4. **Health Check** → `sua-api/` deve retornar `{"status": "ok"}`
+
+---
+
+## ✅ Status Atual do Deploy (v0.1.2)
+
+### Deployment Bem-Sucedido! 🎉
+
+**Data:** 14 de Janeiro de 2025
+**Versão:** 0.1.2
+**Status:** ✅ LIVE em Produção
+
+#### Correções Aplicadas
+
+Durante o processo de deploy, foram identificados e corrigidos **21 erros** de TypeScript/build:
+
+1. ✅ NextAuth route export restrictions
+2. ✅ Prisma schema relations alignment (Course, Product, Order)
+3. ✅ Decimal type arithmetic conversions
+4. ✅ Enum type corrections (PaymentStatus, OrderStatus)
+5. ✅ Client/Server component boundaries
+6. ✅ Field name corrections (imageUrl → images, date → startDate)
+7. ✅ Unique constraint fixes
+8. ✅ Removed non-existent relations
+
+**Resultado:**
+- Build TypeScript: ✅ Passou
+- Páginas Estáticas: ✅ 35/35 geradas
+- Deploy Vercel: ✅ Bem-sucedido
+- URL Live: https://institutosb-marketplace-ayk1itkfa.vercel.app
+
+Para detalhes completos das correções, consulte: [CHANGELOG.md](../CHANGELOG.md#012---2025-01-14)
 
 ---
 

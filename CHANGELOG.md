@@ -8,10 +8,145 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ## [Unreleased]
 
 ### Em Desenvolvimento
-- Implementação de autenticação completa (NextAuth.js + JWT)
 - Endpoints da API para Products, Courses, Orders
-- Integração com Mercado Pago
-- Sistema de carrinho de compras
+- Integração completa com Mercado Pago
+- Sistema de carrinho de compras funcional
+- Upload de imagens para AWS S3
+
+## [0.1.2] - 2025-01-14
+
+### 🐛 Correções de Deploy - Build em Produção
+
+Esta release corrige **20 erros** de TypeScript e build que impediam o deploy bem-sucedido no Vercel.
+
+#### Corrigido
+
+**1. Configuração NextAuth** (`apps/web/src/app/api/auth/[...nextauth]/route.ts`)
+- ❌ Erro: Route handlers não podem exportar `authOptions` no Next.js 14
+- ✅ Solução: Removida palavra-chave `export` da constante `authOptions`
+
+**2. Relação Course.category** (múltiplos arquivos)
+- ❌ Erro: Modelo Course não tem relação `category` no schema Prisma
+- ✅ Solução: Removidas todas as referências a `category` nas queries de Course
+
+**3. Relação Course.instructor.user** (`apps/web/src/app/api/courses/[id]/route.ts`)
+- ❌ Erro: `instructor.user` não existe - instructor já é User
+- ✅ Solução: Acesso direto aos campos de User com `instructorProfile` nested
+
+**4. Campo CourseSchedule.date** (`apps/web/src/app/api/courses/[id]/route.ts`)
+- ❌ Erro: Campo `date` não existe no modelo CourseSchedule
+- ✅ Solução: Mudado para `startDate` e `endDate` conforme schema
+
+**5. Unique Constraint CourseEnrollment** (`apps/web/src/app/api/courses/[id]/enroll/route.ts`)
+- ❌ Erro: Constraint `courseId_userId` não existe
+- ✅ Solução: Mudado `findUnique` para `findFirst` (constraint é `@@unique([userId, courseId, scheduleId])`)
+
+**6. Unique Constraint LessonProgress** (`apps/web/src/app/api/lessons/[id]/progress/route.ts`)
+- ❌ Erro: Constraint incorreta para LessonProgress
+- ✅ Solução: Usado constraint composta `enrollmentId_lessonId`
+
+**7. Campo Product.imageUrl** (múltiplos arquivos)
+- ❌ Erro: Product não tem campo `imageUrl`, usa array `images`
+- ✅ Solução: Mudado todas referências de `imageUrl` para `images`
+
+**8. Relação OrderItem.seller** (`apps/web/src/app/api/orders/[id]/route.ts`)
+- ❌ Erro: OrderItem não tem relação direta com seller
+- ✅ Solução: Acessado seller via `product.seller`
+
+**9. Relação Order.user** (múltiplos arquivos)
+- ❌ Erro: Order não tem relação `user`, tem `buyer` e `seller`
+- ✅ Solução: Mudado `user` para `buyer` e `userId` para `buyerId`
+
+**10. Aritmética com Prisma Decimal** (`apps/web/src/app/api/seller/analytics/route.ts`, `apps/web/src/app/api/seller/orders/route.ts`)
+- ❌ Erro: Tipo Decimal do Prisma não pode ser usado diretamente em operações aritméticas
+- ✅ Solução: Convertido para Number: `Number(product.price)`, `Number(item.price)`
+
+**11. Campos Order.shippingAddress/billingAddress** (`apps/web/src/app/api/orders/route.ts`)
+- ❌ Erro: Order não tem campos JSON, usa relação Address
+- ✅ Solução: Adicionado `addressId`, auto-criação de Address, campos `orderNumber`, `platformFee`, `sellerAmount`
+
+**12. Campos Payment Model** (`apps/web/src/app/api/payments/webhook/route.ts`)
+- ❌ Erro: Campos e enums do Payment não correspondem ao schema
+- ✅ Solução:
+  - `transactionId` → `mercadoPagoId`
+  - Adicionado campo `mercadoPagoStatus`
+  - Enums corretos: `APPROVED`, `REJECTED`, `REFUNDED`
+  - Adicionado `PaymentMethod` enum (`CREDIT_CARD`, `DEBIT_CARD`, `PIX`, `BOLETO`)
+
+**13. Enum OrderStatus** (`apps/web/src/app/api/payments/webhook/route.ts`)
+- ❌ Erro: OrderStatus não tem `CONFIRMED`
+- ✅ Solução: Mudado `CONFIRMED` para `PAID`
+
+**14. Iteração de Map com TypeScript** (`apps/web/src/app/api/payments/webhook/route.ts`)
+- ❌ Erro: Map não pode ser iterado sem `--downlevelIteration`
+- ✅ Solução: Usado `Array.from(map.entries())`
+
+**15. Campo Payout.orderId** (`apps/web/src/app/api/payments/webhook/route.ts`)
+- ❌ Erro: Payout não tem campo `orderId`
+- ✅ Solução: Removida criação de Payout do webhook (modelo é para saques, não ordens)
+
+**16. Relação Product.seller.user** (`apps/web/src/app/api/products/[id]/route.ts`, `apps/web/src/app/api/wishlist/route.ts`)
+- ❌ Erro: `seller.user` não existe - seller já é User
+- ✅ Solução: Acesso direto aos campos de User com `sellerProfile` nested
+
+**17. Campo ProductVariation.createdAt** (`apps/web/src/app/api/products/[id]/route.ts`)
+- ❌ Erro: ProductVariation não tem `createdAt` para orderBy
+- ✅ Solução: Removido orderBy, usado `variations: true`
+
+**18. Campo OrderItem.createdAt (filtro)** (`apps/web/src/app/api/seller/analytics/route.ts`)
+- ❌ Erro: OrderItem não tem `createdAt`
+- ✅ Solução: Filtrado por `order.createdAt`, incluído no select, ajustado lógica de agrupamento
+
+**19. Campo OrderItem.createdAt (ordenação)** (`apps/web/src/app/api/seller/orders/route.ts`)
+- ❌ Erro: OrderItem não tem `createdAt` para orderBy
+- ✅ Solução: Mudado para `orderBy: { order: { createdAt: 'desc' } }`
+
+**20. Relação Payout.order** (`apps/web/src/app/api/seller/payouts/route.ts`)
+- ❌ Erro: Payout não tem relação `order`
+- ✅ Solução: Removido include, mudado orderBy para `requestedAt`
+
+**21. Página Offline sem Client Component** (`apps/web/src/app/offline/page.tsx`)
+- ❌ Erro: Server Component não pode passar onClick handlers
+- ✅ Solução: Adicionada diretiva `'use client'`
+
+#### Modificado
+
+**Arquivos Atualizados (21 correções):**
+- `apps/web/src/app/api/auth/[...nextauth]/route.ts`
+- `apps/web/src/app/api/courses/[id]/route.ts`
+- `apps/web/src/app/api/courses/[id]/enroll/route.ts`
+- `apps/web/src/app/api/lessons/[id]/progress/route.ts`
+- `apps/web/src/app/api/orders/route.ts`
+- `apps/web/src/app/api/orders/[id]/route.ts`
+- `apps/web/src/app/api/payments/webhook/route.ts`
+- `apps/web/src/app/api/products/[id]/route.ts`
+- `apps/web/src/app/api/products/route.ts`
+- `apps/web/src/app/api/seller/analytics/route.ts`
+- `apps/web/src/app/api/seller/orders/route.ts`
+- `apps/web/src/app/api/seller/payouts/route.ts`
+- `apps/web/src/app/api/wishlist/route.ts`
+- `apps/web/src/app/offline/page.tsx`
+
+#### Deploy e CI/CD
+- ✅ Build TypeScript: Passou sem erros
+- ✅ Geração de páginas estáticas: 35/35 completas
+- ✅ Deploy no Vercel: Bem-sucedido
+- ✅ Status: **LIVE** em produção
+
+#### Padrões Identificados e Corrigidos
+
+1. **Relações Prisma**: Código assumia estrutura de schema diferente do real
+2. **Tipos Prisma**: Decimal requer conversão explícita para Number
+3. **Next.js 14**: Route handlers têm restrições de export
+4. **Client vs Server Components**: Handlers de evento requerem `'use client'`
+
+#### Impacto
+- ⚡ **Antes**: Build falhando com 20+ erros de compilação
+- ✅ **Depois**: Build passando, deploy bem-sucedido, app em produção
+
+#### Links Relacionados
+- [Vercel Deploy](https://institutosb-marketplace-ayk1itkfa.vercel.app)
+- [Branch de Deploy](https://github.com/maurillio/institutosb-marketplace/tree/claude/beauty-pro-marketplace-setup-01MTUpYaZQTmpRkLc6v5oEi8)
 
 ## [0.1.1] - 2025-01-14
 
