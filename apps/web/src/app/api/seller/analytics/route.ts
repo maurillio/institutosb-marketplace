@@ -165,7 +165,7 @@ export async function GET(request: Request) {
         },
         order: {
           status: {
-            in: ['CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
+            in: ['PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
           },
         },
       },
