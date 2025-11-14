@@ -39,7 +39,9 @@ export async function GET(request: Request) {
     // 2. Total de vendas (pedidos confirmados ou entregues)
     const orderItems = await prisma.orderItem.findMany({
       where: {
-        sellerId: session.user.id,
+        product: {
+          sellerId: session.user.id,
+        },
         order: {
           status: {
             in: ['CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
@@ -57,7 +59,7 @@ export async function GET(request: Request) {
     });
 
     const totalSales = orderItems.length;
-    const totalRevenue = orderItems.reduce((sum, item) => sum + Number(item.total), 0);
+    const totalRevenue = orderItems.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
 
     // 3. Vendas por status
     const salesByStatus = {
@@ -100,7 +102,9 @@ export async function GET(request: Request) {
     const topProducts = await prisma.orderItem.groupBy({
       by: ['productId'],
       where: {
-        sellerId: session.user.id,
+        product: {
+          sellerId: session.user.id,
+        },
         order: {
           status: {
             in: ['CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
@@ -109,7 +113,7 @@ export async function GET(request: Request) {
       },
       _sum: {
         quantity: true,
-        total: true,
+        price: true,
       },
       _count: {
         id: true,
@@ -130,14 +134,18 @@ export async function GET(request: Request) {
           select: {
             name: true,
             images: true,
+            price: true,
           },
         });
+        const avgPrice = product ? Number(product.price) : Number(item._sum.price || 0) / (item._count.id || 1);
+        const totalRevenue = (item._sum.quantity || 0) * avgPrice;
+
         return {
           productId: item.productId,
           name: product?.name || 'Produto removido',
           images: product?.images || [],
           totalSold: item._sum.quantity || 0,
-          totalRevenue: Number(item._sum.total) || 0,
+          totalRevenue: Math.round(totalRevenue * 100) / 100,
           orderCount: item._count.id,
         };
       })
@@ -149,7 +157,9 @@ export async function GET(request: Request) {
 
     const recentSales = await prisma.orderItem.findMany({
       where: {
-        sellerId: session.user.id,
+        product: {
+          sellerId: session.user.id,
+        },
         createdAt: {
           gte: thirtyDaysAgo,
         },
@@ -160,7 +170,8 @@ export async function GET(request: Request) {
         },
       },
       select: {
-        total: true,
+        price: true,
+        quantity: true,
         createdAt: true,
       },
     });
@@ -171,7 +182,7 @@ export async function GET(request: Request) {
       if (!acc[date]) {
         acc[date] = { date, revenue: 0, count: 0 };
       }
-      acc[date].revenue += Number(sale.total);
+      acc[date].revenue += Number(sale.price) * sale.quantity;
       acc[date].count++;
       return acc;
     }, {});

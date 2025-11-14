@@ -114,7 +114,11 @@ async function processarSplitPagamento(orderId: string, payment: any) {
       include: {
         items: {
           include: {
-            seller: true,
+            product: {
+              select: {
+                sellerId: true,
+              },
+            },
           },
         },
       },
@@ -129,8 +133,8 @@ async function processarSplitPagamento(orderId: string, payment: any) {
     const vendasPorVendedor = new Map<string, number>();
 
     for (const item of order.items) {
-      const sellerId = item.sellerId;
-      const valorVenda = item.total;
+      const sellerId = item.product.sellerId;
+      const valorVenda = Number(item.price) * item.quantity;
 
       const totalAtual = vendasPorVendedor.get(sellerId) || 0;
       vendasPorVendedor.set(sellerId, totalAtual + valorVenda);

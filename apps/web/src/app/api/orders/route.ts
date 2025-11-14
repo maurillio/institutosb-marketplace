@@ -69,6 +69,7 @@ export async function POST(request: Request) {
     // Calcular total dos produtos
     let subtotal = 0;
     const orderItems = [];
+    let firstSellerId: string | null = null;
 
     for (const item of items) {
       const product = await prisma.product.findUnique({
@@ -98,34 +99,75 @@ export async function POST(request: Request) {
       const itemTotal = price * item.quantity;
       subtotal += itemTotal;
 
+      // Armazenar o primeiro sellerId
+      if (!firstSellerId) {
+        firstSellerId = product.sellerId;
+      }
+
       orderItems.push({
         productId: product.id,
-        sellerId: product.sellerId,
         quantity: item.quantity,
         price,
-        total: itemTotal,
       });
     }
 
-    const total = subtotal + (shippingCost || 0);
+    if (!firstSellerId) {
+      return NextResponse.json(
+        { error: 'Nenhum vendedor encontrado' },
+        { status: 400 }
+      );
+    }
+
+    const shippingCostDecimal = shippingCost || 0;
+    const total = subtotal + shippingCostDecimal;
+
+    // Calcular taxa da plataforma (10%)
+    const platformFee = total * 0.1;
+    const sellerAmount = total - platformFee;
+
+    // Buscar ou criar endereço padrão do usuário
+    let userAddress = await prisma.address.findFirst({
+      where: {
+        userId: session.user.id,
+        isDefault: true,
+      },
+    });
+
+    // Se não tiver endereço padrão, criar um temporário
+    if (!userAddress) {
+      userAddress = await prisma.address.create({
+        data: {
+          userId: session.user.id,
+          label: 'Endereço Padrão',
+          street: shippingAddress?.street || 'A definir',
+          number: shippingAddress?.number || 'S/N',
+          complement: shippingAddress?.complement || null,
+          neighborhood: shippingAddress?.neighborhood || 'A definir',
+          city: shippingAddress?.city || 'A definir',
+          state: shippingAddress?.state || 'A definir',
+          zipCode: shippingAddress?.zipCode || '00000-000',
+          country: 'Brasil',
+          isDefault: true,
+        },
+      });
+    }
+
+    // Gerar número do pedido único
+    const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
 
     // Criar pedido
     const order = await prisma.order.create({
       data: {
+        orderNumber,
         buyerId: session.user.id,
-        sellerId: orderItems[0].sellerId, // Using first item's seller
+        sellerId: firstSellerId,
+        addressId: userAddress.id,
         status: 'PENDING',
         subtotal,
-        shippingCost: shippingCost || 0,
+        shippingCost: shippingCostDecimal,
         total,
-        shippingAddress: shippingAddress
-          ? JSON.stringify(shippingAddress)
-          : null,
-        billingAddress: billingAddress
-          ? JSON.stringify(billingAddress)
-          : shippingAddress
-          ? JSON.stringify(shippingAddress)
-          : null,
+        platformFee,
+        sellerAmount,
         items: {
           create: orderItems,
         },
