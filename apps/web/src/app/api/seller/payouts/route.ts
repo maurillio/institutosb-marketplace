@@ -32,17 +32,8 @@ export async function GET(request: Request) {
       where: {
         sellerId: sellerProfile.id,
       },
-      include: {
-        order: {
-          select: {
-            id: true,
-            status: true,
-            createdAt: true,
-          },
-        },
-      },
       orderBy: {
-        createdAt: 'desc',
+        requestedAt: 'desc',
       },
     });
 
