@@ -33,11 +33,7 @@ export async function GET(
             },
           },
         },
-        variations: {
-          orderBy: {
-            createdAt: 'asc',
-          },
-        },
+        variations: true,
         reviews: {
           include: {
             user: {
