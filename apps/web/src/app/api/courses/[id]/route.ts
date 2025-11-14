@@ -47,12 +47,12 @@ export async function GET(
         },
         schedules: {
           where: {
-            date: {
+            startDate: {
               gte: new Date(), // Apenas agendamentos futuros
             },
           },
           orderBy: {
-            date: 'asc',
+            startDate: 'asc',
           },
           take: 10,
         },
