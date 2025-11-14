@@ -160,10 +160,10 @@ export async function GET(request: Request) {
         product: {
           sellerId: session.user.id,
         },
-        createdAt: {
-          gte: thirtyDaysAgo,
-        },
         order: {
+          createdAt: {
+            gte: thirtyDaysAgo,
+          },
           status: {
             in: ['PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
           },
@@ -172,13 +172,17 @@ export async function GET(request: Request) {
       select: {
         price: true,
         quantity: true,
-        createdAt: true,
+        order: {
+          select: {
+            createdAt: true,
+          },
+        },
       },
     });
 
     // Agrupar por dia
     const salesByDay = recentSales.reduce((acc: any, sale) => {
-      const date = sale.createdAt.toISOString().split('T')[0];
+      const date = sale.order.createdAt.toISOString().split('T')[0];
       if (!acc[date]) {
         acc[date] = { date, revenue: 0, count: 0 };
       }
