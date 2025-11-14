@@ -1,13 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, Search, Menu } from 'lucide-react';
+import { ShoppingCart, Search, Menu, Heart } from 'lucide-react';
 import { Button } from '@thebeautypro/ui/button';
 import { UserMenu } from './user-menu';
 import { useCart } from '@/contexts/cart-context';
+import { useWishlist } from '@/contexts/wishlist-context';
 
 export function Header() {
   const { itemsCount } = useCart();
+  const { wishlistItems } = useWishlist();
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
@@ -50,6 +52,19 @@ export function Header() {
               />
             </div>
           </div>
+
+          {/* Wishlist */}
+          <Button variant="ghost" size="icon" asChild className="relative">
+            <Link href="/lista-desejos">
+              <Heart className="h-5 w-5" />
+              {wishlistItems.length > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-pink-500 text-xs font-bold text-white">
+                  {wishlistItems.length}
+                </span>
+              )}
+              <span className="sr-only">Lista de Desejos ({wishlistItems.length})</span>
+            </Link>
+          </Button>
 
           {/* Cart */}
           <Button variant="ghost" size="icon" asChild className="relative">

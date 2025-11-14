@@ -4,8 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { Button } from '@thebeautypro/ui/button';
-import { useState } from 'react';
 import { useCart } from '@/contexts/cart-context';
+import { useWishlist } from '@/contexts/wishlist-context';
 
 interface ProductCardProps {
   product: {
@@ -29,17 +29,16 @@ interface ProductCardProps {
       reviews: number;
     };
   };
-  onToggleFavorite?: (productId: string) => void;
 }
 
-export function ProductCard({ product, onToggleFavorite }: ProductCardProps) {
-  const [isFavorite, setIsFavorite] = useState(false);
+export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const isFavorite = isInWishlist(product.id);
 
-  const handleToggleFavorite = (e: React.MouseEvent) => {
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
-    setIsFavorite(!isFavorite);
-    onToggleFavorite?.(product.id);
+    await toggleWishlist(product.id);
   };
 
   const handleAddToCart = (e: React.MouseEvent) => {

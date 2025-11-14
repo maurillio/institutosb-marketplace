@@ -55,6 +55,7 @@ model User {
   orders        Order[]   @relation("BuyerOrders")
   reviews       Review[]
   courseEnrollments CourseEnrollment[]
+  wishlist      Wishlist[]
 
   // Como vendedor
   sellerProfile SellerProfile?
@@ -298,6 +299,7 @@ model Product {
   variations  ProductVariation[]
   reviews     Review[]
   orderItems  OrderItem[]
+  wishlists   Wishlist[]
 
   @@index([slug])
   @@index([categoryId])
@@ -758,4 +760,25 @@ model Notification {
   @@index([userId])
   @@index([isRead])
   @@map("notifications")
+}
+
+// ========================================
+// WISHLIST
+// ========================================
+
+model Wishlist {
+  id          String   @id @default(cuid())
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, productId]) // Um usuário não pode adicionar o mesmo produto duas vezes
+  @@index([userId])
+  @@index([productId])
+  @@map("wishlists")
 }
