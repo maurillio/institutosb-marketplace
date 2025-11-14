@@ -57,7 +57,7 @@ export async function GET(request: Request) {
     });
 
     const totalSales = orderItems.length;
-    const totalRevenue = orderItems.reduce((sum, item) => sum + item.total, 0);
+    const totalRevenue = orderItems.reduce((sum, item) => sum + Number(item.total), 0);
 
     // 3. Vendas por status
     const salesByStatus = {
@@ -137,7 +137,7 @@ export async function GET(request: Request) {
           name: product?.name || 'Produto removido',
           images: product?.images || [],
           totalSold: item._sum.quantity || 0,
-          totalRevenue: item._sum.total || 0,
+          totalRevenue: Number(item._sum.total) || 0,
           orderCount: item._count.id,
         };
       })
@@ -171,7 +171,7 @@ export async function GET(request: Request) {
       if (!acc[date]) {
         acc[date] = { date, revenue: 0, count: 0 };
       }
-      acc[date].revenue += sale.total;
+      acc[date].revenue += Number(sale.total);
       acc[date].count++;
       return acc;
     }, {});
@@ -185,8 +185,8 @@ export async function GET(request: Request) {
         totalProducts,
         totalSales,
         totalRevenue,
-        availablePayout: availablePayouts._sum.amount || 0,
-        processedPayout: processedPayouts._sum.amount || 0,
+        availablePayout: Number(availablePayouts._sum.amount) || 0,
+        processedPayout: Number(processedPayouts._sum.amount) || 0,
         rating: sellerProfile.rating,
       },
       salesByStatus,

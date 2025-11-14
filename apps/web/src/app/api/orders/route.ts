@@ -94,7 +94,7 @@ export async function POST(request: Request) {
         );
       }
 
-      const price = product.price;
+      const price = Number(product.price);
       const itemTotal = price * item.quantity;
       subtotal += itemTotal;
 

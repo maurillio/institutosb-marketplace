@@ -79,10 +79,10 @@ export async function GET(request: Request) {
         id: item.id,
         product: item.product,
         quantity: item.quantity,
-        price: item.price,
-        total: item.total,
+        price: Number(item.price),
+        total: Number(item.total),
       });
-      order.total += item.total;
+      order.total += Number(item.total);
     });
 
     const orders = Array.from(ordersMap.values());
