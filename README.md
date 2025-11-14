@@ -144,23 +144,31 @@ Veja o schema completo em: `packages/database/prisma/schema.prisma`
 
 ## 🚀 Deploy em Produção
 
+**✅ LIVE:** https://thebeautypro.vercel.app/
+
 Para instruções completas e detalhadas de deploy, consulte: **[DEPLOY.md](./docs/DEPLOY.md)**
+
+### Status do Deploy
+
+| Serviço | Status | URL/Info |
+|---------|--------|----------|
+| **Frontend** | ✅ Live | https://thebeautypro.vercel.app/ |
+| **Database** | ✅ Neon | PostgreSQL (Neon - us-east-1) |
+| **Branch** | `claude/beauty-pro-marketplace-setup-01MTUpYaZQTmpRkLc6v5oEi8` | Auto-deploy ativo |
 
 ### Quick Start
 
 **Frontend (Vercel):**
-1. Conecte seu repositório GitHub ao Vercel
-2. Configure as variáveis de ambiente
-3. Deploy automático!
+1. ✅ Conectado ao GitHub
+2. ✅ Variáveis de ambiente configuradas
+3. ✅ Deploy automático ativo!
 
 **Database (Neon):**
 ```bash
 # Aplique as migrations no banco de produção
+cd packages/database
 npx prisma migrate deploy
 ```
-
-**Backend (Railway ou Vercel):**
-- Veja o guia completo em [DEPLOY.md](./docs/DEPLOY.md)
 
 💡 **Custo estimado:** ~$0-5/mês com as free tiers (perfeitamente viável para MVP!)
 

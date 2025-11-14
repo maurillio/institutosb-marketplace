@@ -13,6 +13,26 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Integração com Mercado Pago
 - Sistema de carrinho de compras
 
+## [0.1.1] - 2025-01-14
+
+### 🚀 Deploy em Produção
+
+#### Adicionado
+- ✅ Deploy completo no Vercel: https://thebeautypro.vercel.app/
+- ✅ Banco de dados PostgreSQL no Neon (us-east-1)
+- ✅ Variáveis de ambiente de produção configuradas
+- ✅ Auto-deploy ativo na branch `claude/beauty-pro-marketplace-setup-01MTUpYaZQTmpRkLc6v5oEi8`
+
+#### Modificado
+- 📝 README.md atualizado com URL de produção e status do deploy
+- 📝 Documentação com instruções de deploy completas
+
+#### Infraestrutura de Produção
+- **Frontend:** Vercel (Edge Network global)
+- **Database:** Neon PostgreSQL (0.5GB free tier)
+- **Branch de Deploy:** `claude/beauty-pro-marketplace-setup-01MTUpYaZQTmpRkLc6v5oEi8`
+- **Custo Mensal:** ~$0 (usando free tiers)
+
 ## [0.1.0] - 2025-01-14
 
 ### 🎉 Lançamento Inicial - Estrutura Completa
