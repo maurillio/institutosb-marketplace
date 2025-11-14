@@ -121,10 +121,11 @@ npm run clean        # Limpa builds e caches
 
 ## 📚 Documentação
 
-- [Setup Completo](./docs/SETUP.md)
-- [Estrutura do Projeto](./docs/STRUCTURE.md)
-- [API Documentation](./docs/API.md)
-- [Checklist de Funcionalidades](./docs/CHECKLIST.md)
+- [Setup Completo](./docs/SETUP.md) - Configuração do ambiente de desenvolvimento
+- [Estrutura do Projeto](./docs/STRUCTURE.md) - Arquitetura e organização do código
+- [Deploy em Produção](./docs/DEPLOY.md) - **NOVO!** Guia completo de deploy (Vercel + Neon)
+- [Checklist de Funcionalidades](./docs/CHECKLIST.md) - Status de todas as features (~250+)
+- [API Documentation](./docs/API.md) - Documentação da API (em breve)
 
 ## 🗄️ Schema do Banco de Dados
 
@@ -141,30 +142,27 @@ O schema completo inclui:
 
 Veja o schema completo em: `packages/database/prisma/schema.prisma`
 
-## 🚀 Deploy
+## 🚀 Deploy em Produção
 
-### Frontend (Vercel)
+Para instruções completas e detalhadas de deploy, consulte: **[DEPLOY.md](./docs/DEPLOY.md)**
 
+### Quick Start
+
+**Frontend (Vercel):**
+1. Conecte seu repositório GitHub ao Vercel
+2. Configure as variáveis de ambiente
+3. Deploy automático!
+
+**Database (Neon):**
 ```bash
-vercel --prod
-```
-
-### Backend (Railway/Render)
-
-```bash
-# Será configurado posteriormente
-```
-
-### Database (Neon)
-
-1. Crie um projeto no Neon
-2. Copie a connection string
-3. Atualize `DATABASE_URL` no `.env`
-4. Execute as migrations:
-
-```bash
+# Aplique as migrations no banco de produção
 npx prisma migrate deploy
 ```
+
+**Backend (Railway ou Vercel):**
+- Veja o guia completo em [DEPLOY.md](./docs/DEPLOY.md)
+
+💡 **Custo estimado:** ~$0-5/mês com as free tiers (perfeitamente viável para MVP!)
 
 ## 🤝 Contribuindo
 
