@@ -36,7 +36,7 @@ export async function GET(request: Request) {
       },
     });
 
-    // 2. Total de vendas (pedidos confirmados ou entregues)
+    // 2. Total de vendas (pedidos pagos, processando ou entregues)
     const orderItems = await prisma.orderItem.findMany({
       where: {
         product: {
@@ -44,7 +44,7 @@ export async function GET(request: Request) {
         },
         order: {
           status: {
-            in: ['CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
+            in: ['PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
           },
         },
       },
@@ -63,7 +63,7 @@ export async function GET(request: Request) {
 
     // 3. Vendas por status
     const salesByStatus = {
-      CONFIRMED: 0,
+      PAID: 0,
       PROCESSING: 0,
       SHIPPED: 0,
       DELIVERED: 0,
@@ -107,7 +107,7 @@ export async function GET(request: Request) {
         },
         order: {
           status: {
-            in: ['CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
+            in: ['PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
           },
         },
       },

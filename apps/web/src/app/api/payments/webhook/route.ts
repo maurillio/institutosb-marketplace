@@ -36,12 +36,12 @@ export async function POST(request: Request) {
       const status = payment.status;
 
       // Mapear status do Mercado Pago para status do pedido
-      let orderStatus: string;
+      let orderStatus: 'PENDING' | 'PAID' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'REFUNDED';
       let paymentStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'REFUNDED';
 
       switch (status) {
         case 'approved':
-          orderStatus = 'CONFIRMED';
+          orderStatus = 'PAID';
           paymentStatus = 'APPROVED';
           break;
         case 'pending':
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
           paymentStatus = 'REJECTED';
           break;
         case 'refunded':
-          orderStatus = 'CANCELLED';
+          orderStatus = 'REFUNDED';
           paymentStatus = 'REFUNDED';
           break;
         default:
