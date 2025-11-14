@@ -22,15 +22,15 @@ export async function GET(
         seller: {
           select: {
             id: true,
-            user: {
+            name: true,
+            avatar: true,
+            sellerProfile: {
               select: {
-                id: true,
-                name: true,
-                avatar: true,
+                rating: true,
+                totalSales: true,
+                storeName: true,
               },
             },
-            rating: true,
-            totalSales: true,
           },
         },
         variations: {
