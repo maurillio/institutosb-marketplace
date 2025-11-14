@@ -1,0 +1,784 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ========================================
+// USUÁRIOS E AUTENTICAÇÃO
+// ========================================
+
+enum UserRole {
+  CUSTOMER // Cliente/Comprador
+  SELLER   // Vendedor
+  INSTRUCTOR // Instrutor
+  ADMIN    // Administrador
+}
+
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING_VERIFICATION
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String
+  cpfCnpj       String?   @unique // CPF ou CNPJ
+  phone         String?
+  avatar        String?
+  password      String    // Hashed
+
+  roles         UserRole[] @default([CUSTOMER])
+  status        AccountStatus @default(PENDING_VERIFICATION)
+
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+
+  // Relações
+  accounts      Account[]
+  sessions      Session[]
+  addresses     Address[]
+
+  // Como comprador
+  orders        Order[]   @relation("BuyerOrders")
+  reviews       Review[]
+  courseEnrollments CourseEnrollment[]
+  wishlist      Wishlist[]
+
+  // Como vendedor
+  sellerProfile SellerProfile?
+  productsCreated Product[] @relation("SellerProducts")
+  ordersReceived  Order[]   @relation("SellerOrders")
+
+  // Como instrutor
+  instructorProfile InstructorProfile?
+  coursesCreated    Course[] @relation("InstructorCourses")
+
+  @@index([email])
+  @@index([status])
+  @@map("users")
+}
+
+// NextAuth Models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ========================================
+// PERFIS
+// ========================================
+
+enum SubscriptionPlan {
+  FREE     // Gratuito
+  BASIC    // Básico
+  PRO      // Profissional
+  PREMIUM  // Premium
+}
+
+model SellerProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Informações da loja
+  storeName   String
+  storeSlug   String   @unique
+  description String?  @db.Text
+  logo        String?
+  banner      String?
+
+  // Plano de assinatura
+  plan        SubscriptionPlan @default(FREE)
+  planExpiresAt DateTime?
+
+  // Métricas
+  totalSales  Decimal  @default(0) @db.Decimal(10, 2)
+  rating      Decimal  @default(0) @db.Decimal(3, 2)
+  totalReviews Int     @default(0)
+
+  // Financeiro
+  balance     Decimal  @default(0) @db.Decimal(10, 2) // Saldo disponível
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relações
+  payouts     Payout[]
+
+  @@index([storeSlug])
+  @@map("seller_profiles")
+}
+
+model InstructorProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  bio         String?  @db.Text
+  expertise   String[] // Áreas de expertise
+
+  // Métricas
+  totalStudents Int    @default(0)
+  rating        Decimal @default(0) @db.Decimal(3, 2)
+  totalReviews  Int    @default(0)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("instructor_profiles")
+}
+
+model Address {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  label       String   // Ex: "Casa", "Trabalho"
+  street      String
+  number      String
+  complement  String?
+  neighborhood String
+  city        String
+  state       String
+  zipCode     String
+  country     String   @default("Brasil")
+
+  isDefault   Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relações
+  orders      Order[]
+
+  @@index([userId])
+  @@map("addresses")
+}
+
+// ========================================
+// PRODUTOS
+// ========================================
+
+enum ProductCondition {
+  NEW
+  USED_LIKE_NEW
+  USED_GOOD
+  USED_FAIR
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  OUT_OF_STOCK
+  SOLD // Para produtos usados únicos
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  icon        String?
+  imageUrl    String?  // URL da imagem da categoria
+  parentId    String?
+  parent      Category? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+
+  products    Product[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+  @@index([parentId])
+  @@map("categories")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+
+  // Informações básicas
+  name        String
+  slug        String   @unique
+  description String   @db.Text
+
+  // Atributos específicos de beleza
+  brand       String?  // Marca do produto
+  skinTypes   String[] @default([]) // Ex: ["oleosa", "seca", "mista", "normal", "sensivel"]
+  concerns    String[] @default([]) // Ex: ["acne", "envelhecimento", "hidratacao", "manchas"]
+  ingredients String[] @default([]) // Lista de ingredientes principais
+  tags        String[] @default([]) // Tags gerais (vegano, cruelty-free, organico, etc)
+
+  // Categoria
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+
+  // Vendedor
+  sellerId    String
+  seller      User     @relation("SellerProducts", fields: [sellerId], references: [id])
+
+  // Preço e estoque
+  price       Decimal  @db.Decimal(10, 2)
+  compareAtPrice Decimal? @db.Decimal(10, 2) // Preço "de"
+  stock       Int      @default(0)
+  sku         String?  @unique
+
+  // Condição
+  condition   ProductCondition @default(NEW)
+
+  // Status
+  status      ProductStatus @default(DRAFT)
+
+  // Mídia
+  images      String[] // URLs das imagens
+  videos      String[] // URLs dos vídeos
+
+  // SEO
+  metaTitle   String?
+  metaDescription String?
+
+  // Métricas
+  views       Int      @default(0)
+  sales       Int      @default(0)
+  rating      Decimal  @default(0) @db.Decimal(3, 2)
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime?
+
+  // Relações
+  variations  ProductVariation[]
+  reviews     Review[]
+  orderItems  OrderItem[]
+  wishlists   Wishlist[]
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([sellerId])
+  @@index([status])
+  @@map("products")
+}
+
+model ProductVariation {
+  id          String   @id @default(cuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  name        String   // Ex: "Cor", "Tamanho"
+  value       String   // Ex: "Vermelho", "P"
+  sku         String?
+  price       Decimal? @db.Decimal(10, 2) // Preço diferente do padrão
+  stock       Int      @default(0)
+
+  @@index([productId])
+  @@map("product_variations")
+}
+
+// ========================================
+// CURSOS
+// ========================================
+
+enum CourseType {
+  ONLINE      // Curso online (EAD)
+  IN_PERSON   // Curso presencial
+  HYBRID      // Híbrido
+}
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  ALL_LEVELS
+}
+
+model Course {
+  id          String   @id @default(cuid())
+
+  // Informações básicas
+  title       String
+  slug        String   @unique
+  description String   @db.Text
+  shortDescription String?
+
+  // Instrutor
+  instructorId String
+  instructor  User     @relation("InstructorCourses", fields: [instructorId], references: [id])
+
+  // Tipo e nível
+  type        CourseType
+  level       CourseLevel @default(ALL_LEVELS)
+
+  // Preço
+  price       Decimal  @db.Decimal(10, 2)
+  compareAtPrice Decimal? @db.Decimal(10, 2)
+
+  // Status
+  status      CourseStatus @default(DRAFT)
+
+  // Mídia
+  thumbnail   String?
+  previewVideo String?
+
+  // Conteúdo (para cursos online)
+  duration    Int?     // Duração total em minutos
+
+  // SEO
+  metaTitle   String?
+  metaDescription String?
+
+  // Métricas
+  views       Int      @default(0)
+  totalEnrollments Int @default(0)
+  rating      Decimal  @default(0) @db.Decimal(3, 2)
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime?
+
+  // Relações
+  modules     CourseModule[] // Para cursos online
+  schedules   CourseSchedule[] // Para cursos presenciais
+  enrollments CourseEnrollment[]
+  reviews     Review[]
+
+  @@index([slug])
+  @@index([instructorId])
+  @@index([status])
+  @@index([type])
+  @@map("courses")
+}
+
+// Módulos e aulas (para cursos online)
+model CourseModule {
+  id          String   @id @default(cuid())
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String?  @db.Text
+  order       Int
+
+  lessons     CourseLesson[]
+
+  @@index([courseId])
+  @@map("course_modules")
+}
+
+model CourseLesson {
+  id          String   @id @default(cuid())
+  moduleId    String
+  module      CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String?  @db.Text
+  order       Int
+
+  // Conteúdo
+  videoUrl    String?
+  duration    Int?     // Duração em minutos
+  content     String?  @db.Text // Conteúdo textual
+  attachments String[] // URLs de arquivos (PDFs, etc)
+
+  // Controle
+  isFree      Boolean  @default(false) // Aula gratuita para preview
+
+  // Relações
+  progress    LessonProgress[]
+
+  @@index([moduleId])
+  @@map("course_lessons")
+}
+
+// Agenda de cursos presenciais
+model CourseSchedule {
+  id          String   @id @default(cuid())
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  // Data e local
+  startDate   DateTime
+  endDate     DateTime
+  location    String
+  address     String?
+
+  // Vagas
+  maxStudents Int
+  enrolledStudents Int @default(0)
+
+  // Status
+  isActive    Boolean  @default(true)
+  isCancelled Boolean  @default(false)
+
+  // Relações
+  enrollments CourseEnrollment[]
+
+  @@index([courseId])
+  @@index([startDate])
+  @@map("course_schedules")
+}
+
+// Matrículas
+model CourseEnrollment {
+  id          String   @id @default(cuid())
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id])
+
+  scheduleId  String?  // Apenas para cursos presenciais
+  schedule    CourseSchedule? @relation(fields: [scheduleId], references: [id])
+
+  // Status
+  enrolledAt  DateTime @default(now())
+  completedAt DateTime?
+  progress    Int      @default(0) // 0-100%
+
+  // Certificado
+  certificateUrl String?
+  certificateIssuedAt DateTime?
+
+  // Relações
+  lessonsProgress LessonProgress[]
+
+  @@unique([userId, courseId, scheduleId])
+  @@index([userId])
+  @@index([courseId])
+  @@map("course_enrollments")
+}
+
+// Progresso das aulas
+model LessonProgress {
+  id          String   @id @default(cuid())
+
+  enrollmentId String
+  enrollment  CourseEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  lessonId    String
+  lesson      CourseLesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+
+  @@unique([enrollmentId, lessonId])
+  @@index([enrollmentId])
+  @@map("lesson_progress")
+}
+
+// ========================================
+// PEDIDOS E PAGAMENTOS
+// ========================================
+
+enum OrderStatus {
+  PENDING         // Aguardando pagamento
+  PAID            // Pago
+  PROCESSING      // Em processamento
+  SHIPPED         // Enviado
+  DELIVERED       // Entregue
+  CANCELLED       // Cancelado
+  REFUNDED        // Reembolsado
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  PIX
+  BOLETO
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  REFUNDED
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  orderNumber String   @unique // Número do pedido amigável
+
+  // Comprador
+  buyerId     String
+  buyer       User     @relation("BuyerOrders", fields: [buyerId], references: [id])
+
+  // Vendedor (para split)
+  sellerId    String
+  seller      User     @relation("SellerOrders", fields: [sellerId], references: [id])
+
+  // Endereço de entrega
+  addressId   String
+  address     Address  @relation(fields: [addressId], references: [id])
+
+  // Valores
+  subtotal    Decimal  @db.Decimal(10, 2)
+  shippingCost Decimal @db.Decimal(10, 2)
+  discount    Decimal  @default(0) @db.Decimal(10, 2)
+  total       Decimal  @db.Decimal(10, 2)
+
+  // Comissão da plataforma
+  platformFee Decimal  @db.Decimal(10, 2)
+  sellerAmount Decimal @db.Decimal(10, 2) // Valor que o vendedor recebe
+
+  // Status
+  status      OrderStatus @default(PENDING)
+
+  // Rastreamento
+  trackingCode String?
+  shippingCarrier String?
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  paidAt      DateTime?
+  shippedAt   DateTime?
+  deliveredAt DateTime?
+
+  // Relações
+  items       OrderItem[]
+  payment     Payment?
+
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([status])
+  @@index([orderNumber])
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+
+  quantity    Int
+  price       Decimal  @db.Decimal(10, 2) // Preço no momento da compra
+
+  // Variação (se aplicável)
+  variationData Json?   // Dados da variação escolhida
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+
+  orderId     String   @unique
+  order       Order    @relation(fields: [orderId], references: [id])
+
+  // Mercado Pago
+  mercadoPagoId String? @unique
+  mercadoPagoStatus String?
+
+  method      PaymentMethod
+  status      PaymentStatus @default(PENDING)
+
+  amount      Decimal  @db.Decimal(10, 2)
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  approvedAt  DateTime?
+
+  @@index([mercadoPagoId])
+  @@map("payments")
+}
+
+// Saques dos vendedores
+enum PayoutStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model Payout {
+  id          String   @id @default(cuid())
+
+  sellerId    String
+  seller      SellerProfile @relation(fields: [sellerId], references: [id])
+
+  amount      Decimal  @db.Decimal(10, 2)
+  fee         Decimal  @default(0) @db.Decimal(10, 2) // Taxa de saque
+  netAmount   Decimal  @db.Decimal(10, 2) // Valor líquido
+
+  status      PayoutStatus @default(PENDING)
+
+  // Dados bancários
+  bankAccount Json
+
+  // Timestamps
+  requestedAt DateTime @default(now())
+  processedAt DateTime?
+  completedAt DateTime?
+
+  @@index([sellerId])
+  @@index([status])
+  @@map("payouts")
+}
+
+// ========================================
+// AVALIAÇÕES
+// ========================================
+
+enum ReviewType {
+  PRODUCT
+  COURSE
+  SELLER
+}
+
+model Review {
+  id          String   @id @default(cuid())
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  // Pode ser review de produto, curso ou vendedor
+  type        ReviewType
+
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id])
+
+  courseId    String?
+  course      Course?  @relation(fields: [courseId], references: [id])
+
+  rating      Int      // 1-5
+  title       String?
+  comment     String   @db.Text
+
+  // Resposta do vendedor/instrutor
+  response    String?  @db.Text
+  respondedAt DateTime?
+
+  // Status
+  isVerifiedPurchase Boolean @default(false)
+  isPublished Boolean @default(true)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([productId])
+  @@index([courseId])
+  @@map("reviews")
+}
+
+// ========================================
+// NOTIFICAÇÕES
+// ========================================
+
+enum NotificationType {
+  ORDER_PLACED
+  ORDER_PAID
+  ORDER_SHIPPED
+  ORDER_DELIVERED
+  NEW_REVIEW
+  COURSE_ENROLLMENT
+  COURSE_STARTED
+  PAYOUT_COMPLETED
+  SYSTEM
+}
+
+model Notification {
+  id          String   @id @default(cuid())
+
+  userId      String
+  // user        User     @relation(fields: [userId], references: [id])
+
+  type        NotificationType
+  title       String
+  message     String   @db.Text
+
+  isRead      Boolean  @default(false)
+  readAt      DateTime?
+
+  // Dados extras (JSON)
+  metadata    Json?
+
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+// ========================================
+// WISHLIST
+// ========================================
+
+model Wishlist {
+  id          String   @id @default(cuid())
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, productId]) // Um usuário não pode adicionar o mesmo produto duas vezes
+  @@index([userId])
+  @@index([productId])
+  @@map("wishlists")
+}
