@@ -37,12 +37,12 @@ export async function POST(request: Request) {
 
       // Mapear status do Mercado Pago para status do pedido
       let orderStatus: string;
-      let paymentStatus: string;
+      let paymentStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'REFUNDED';
 
       switch (status) {
         case 'approved':
           orderStatus = 'CONFIRMED';
-          paymentStatus = 'COMPLETED';
+          paymentStatus = 'APPROVED';
           break;
         case 'pending':
         case 'in_process':
@@ -52,11 +52,29 @@ export async function POST(request: Request) {
         case 'rejected':
         case 'cancelled':
           orderStatus = 'CANCELLED';
-          paymentStatus = 'FAILED';
+          paymentStatus = 'REJECTED';
+          break;
+        case 'refunded':
+          orderStatus = 'CANCELLED';
+          paymentStatus = 'REFUNDED';
           break;
         default:
           orderStatus = 'PENDING';
           paymentStatus = 'PENDING';
+      }
+
+      // Mapear método de pagamento
+      let paymentMethod: 'CREDIT_CARD' | 'DEBIT_CARD' | 'PIX' | 'BOLETO';
+      const methodId = payment.payment_method_id || payment.payment_type_id || '';
+
+      if (methodId.includes('pix')) {
+        paymentMethod = 'PIX';
+      } else if (methodId.includes('boleto')) {
+        paymentMethod = 'BOLETO';
+      } else if (methodId.includes('debit') || payment.payment_type_id === 'debit_card') {
+        paymentMethod = 'DEBIT_CARD';
+      } else {
+        paymentMethod = 'CREDIT_CARD';
       }
 
       // Atualizar ou criar registro de pagamento
@@ -66,18 +84,20 @@ export async function POST(request: Request) {
         },
         update: {
           status: paymentStatus,
-          transactionId: payment.id.toString(),
+          mercadoPagoId: payment.id.toString(),
+          mercadoPagoStatus: status,
           amount: payment.transaction_amount,
-          method: payment.payment_method_id,
-          metadata: JSON.stringify(payment),
+          method: paymentMethod,
+          approvedAt: paymentStatus === 'APPROVED' ? new Date() : undefined,
         },
         create: {
           orderId,
           status: paymentStatus,
-          transactionId: payment.id.toString(),
+          mercadoPagoId: payment.id.toString(),
+          mercadoPagoStatus: status,
           amount: payment.transaction_amount,
-          method: payment.payment_method_id,
-          metadata: JSON.stringify(payment),
+          method: paymentMethod,
+          approvedAt: paymentStatus === 'APPROVED' ? new Date() : undefined,
         },
       });
 
