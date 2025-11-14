@@ -31,12 +31,12 @@ export async function GET(request: Request) {
     // Buscar itens de pedidos onde o vendedor está envolvido
     const orderItems = await prisma.orderItem.findMany({
       where: {
-        sellerId: sellerProfile.id,
+        sellerId: session.user.id,
       },
       include: {
         order: {
           include: {
-            user: {
+            buyer: {
               select: {
                 name: true,
                 email: true,
@@ -68,7 +68,7 @@ export async function GET(request: Request) {
           status: item.order.status,
           total: 0,
           createdAt: item.order.createdAt,
-          customer: item.order.user,
+          customer: item.order.buyer,
           payment: item.order.payment,
           items: [],
         });

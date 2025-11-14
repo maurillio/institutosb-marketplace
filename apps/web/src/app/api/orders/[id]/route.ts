@@ -36,7 +36,7 @@ export async function GET(
           },
         },
         payment: true,
-        user: {
+        buyer: {
           select: {
             id: true,
             name: true,
@@ -54,7 +54,7 @@ export async function GET(
     }
 
     // Verificar se o pedido pertence ao usuário (ou se é admin/vendedor)
-    if (order.userId !== session.user.id) {
+    if (order.buyerId !== session.user.id) {
       // TODO: Adicionar verificação para admin ou vendedor do item
       return NextResponse.json(
         { error: 'Sem permissão para acessar este pedido' },

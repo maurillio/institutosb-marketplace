@@ -31,7 +31,7 @@ export async function GET(request: Request) {
     // 1. Total de produtos
     const totalProducts = await prisma.product.count({
       where: {
-        sellerId: sellerProfile.id,
+        sellerId: session.user.id,
         status: 'ACTIVE',
       },
     });
@@ -39,7 +39,7 @@ export async function GET(request: Request) {
     // 2. Total de vendas (pedidos confirmados ou entregues)
     const orderItems = await prisma.orderItem.findMany({
       where: {
-        sellerId: sellerProfile.id,
+        sellerId: session.user.id,
         order: {
           status: {
             in: ['CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
@@ -78,7 +78,7 @@ export async function GET(request: Request) {
     const [availablePayouts, processedPayouts] = await Promise.all([
       prisma.payout.aggregate({
         where: {
-          sellerId: sellerProfile.id,
+          sellerId: session.user.id,
           status: 'PENDING',
         },
         _sum: {
@@ -87,7 +87,7 @@ export async function GET(request: Request) {
       }),
       prisma.payout.aggregate({
         where: {
-          sellerId: sellerProfile.id,
+          sellerId: session.user.id,
           status: 'COMPLETED',
         },
         _sum: {
@@ -100,7 +100,7 @@ export async function GET(request: Request) {
     const topProducts = await prisma.orderItem.groupBy({
       by: ['productId'],
       where: {
-        sellerId: sellerProfile.id,
+        sellerId: session.user.id,
         order: {
           status: {
             in: ['CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
@@ -149,7 +149,7 @@ export async function GET(request: Request) {
 
     const recentSales = await prisma.orderItem.findMany({
       where: {
-        sellerId: sellerProfile.id,
+        sellerId: session.user.id,
         createdAt: {
           gte: thirtyDaysAgo,
         },

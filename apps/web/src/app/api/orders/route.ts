@@ -12,7 +12,7 @@ export async function GET(request: Request) {
 
     const orders = await prisma.order.findMany({
       where: {
-        userId: session.user.id,
+        buyerId: session.user.id,
       },
       include: {
         items: {
@@ -112,7 +112,8 @@ export async function POST(request: Request) {
     // Criar pedido
     const order = await prisma.order.create({
       data: {
-        userId: session.user.id,
+        buyerId: session.user.id,
+        sellerId: orderItems[0].sellerId, // Using first item's seller
         status: 'PENDING',
         subtotal,
         shippingCost: shippingCost || 0,
