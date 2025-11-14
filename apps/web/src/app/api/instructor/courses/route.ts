@@ -30,14 +30,9 @@ export async function GET(request: Request) {
 
     const courses = await prisma.course.findMany({
       where: {
-        instructorId: instructorProfile.id,
+        instructorId: session.user.id,
       },
       include: {
-        category: {
-          select: {
-            name: true,
-          },
-        },
         modules: {
           include: {
             lessons: true,
@@ -94,17 +89,18 @@ export async function POST(request: Request) {
     const body = await request.json();
     const {
       title,
+      slug,
       description,
+      shortDescription,
       price,
-      categoryId,
-      imageUrl,
+      thumbnail,
       type,
       duration,
       level,
       status,
     } = body;
 
-    if (!title || !description || !price || !categoryId || !type) {
+    if (!title || !slug || !description || !price || !type) {
       return NextResponse.json(
         { error: 'Campos obrigatórios faltando' },
         { status: 400 }
@@ -114,18 +110,16 @@ export async function POST(request: Request) {
     const course = await prisma.course.create({
       data: {
         title,
+        slug,
         description,
+        shortDescription,
         price: parseFloat(price),
-        categoryId,
-        instructorId: instructorProfile.id,
-        imageUrl: imageUrl || null,
+        instructorId: session.user.id,
+        thumbnail: thumbnail || null,
         type, // ONLINE ou PRESENCIAL
         duration: duration || null,
-        level: level || 'INICIANTE',
+        level: level || 'ALL_LEVELS',
         status: status || 'DRAFT',
-      },
-      include: {
-        category: true,
       },
     });
 

@@ -17,19 +17,10 @@ export async function GET(request: Request) {
       include: {
         course: {
           include: {
-            category: {
-              select: {
-                name: true,
-              },
-            },
             instructor: {
               select: {
-                user: {
-                  select: {
-                    name: true,
-                    avatar: true,
-                  },
-                },
+                name: true,
+                avatar: true,
               },
             },
             modules: {
@@ -55,13 +46,8 @@ export async function GET(request: Request) {
 
         const completedLessons = await prisma.lessonProgress.count({
           where: {
-            userId: session.user.id,
+            enrollmentId: enrollment.id,
             completed: true,
-            lesson: {
-              module: {
-                courseId: enrollment.courseId,
-              },
-            },
           },
         });
 
