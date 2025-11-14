@@ -8,7 +8,6 @@ export async function GET(request: Request) {
 
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '12');
-    const categoryId = searchParams.get('categoryId');
     const type = searchParams.get('type'); // ONLINE ou PRESENCIAL
     const level = searchParams.get('level');
     const minPrice = searchParams.get('minPrice');
@@ -18,10 +17,6 @@ export async function GET(request: Request) {
     const where: any = {
       status: 'PUBLISHED', // Apenas cursos publicados
     };
-
-    if (categoryId) {
-      where.categoryId = categoryId;
-    }
 
     if (type) {
       where.type = type;
@@ -48,23 +43,16 @@ export async function GET(request: Request) {
       prisma.course.findMany({
         where,
         include: {
-          category: {
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-            },
-          },
           instructor: {
             select: {
               id: true,
-              user: {
+              name: true,
+              avatar: true,
+              instructorProfile: {
                 select: {
-                  name: true,
-                  avatar: true,
+                  rating: true,
                 },
               },
-              rating: true,
             },
           },
           _count: {
