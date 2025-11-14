@@ -25,12 +25,12 @@ export async function GET(
                 id: true,
                 name: true,
                 images: true,
-              },
-            },
-            seller: {
-              select: {
-                id: true,
-                name: true,
+                seller: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
               },
             },
           },
