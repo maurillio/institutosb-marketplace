@@ -10,9 +10,6 @@ const nextConfig = {
       'via.placeholder.com', // Remove in production
     ],
   },
-  experimental: {
-    serverActions: true,
-  },
 };
 
 module.exports = nextConfig;
