@@ -160,22 +160,8 @@ async function processarSplitPagamento(orderId: string, payment: any) {
       vendasPorVendedor.set(sellerId, totalAtual + valorVenda);
     }
 
-    // Criar registros de payout para cada vendedor
+    // Atualizar total de vendas para cada vendedor
     for (const [sellerId, valor] of Array.from(vendasPorVendedor.entries())) {
-      // Taxa do marketplace (10%)
-      const taxaMarketplace = valor * 0.1;
-      const valorVendedor = valor - taxaMarketplace;
-
-      await prisma.payout.create({
-        data: {
-          sellerId,
-          orderId,
-          amount: valorVendedor,
-          fee: taxaMarketplace,
-          status: 'PENDING',
-        },
-      });
-
       // Atualizar total de vendas do vendedor
       await prisma.sellerProfile.update({
         where: { userId: sellerId },
