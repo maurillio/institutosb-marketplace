@@ -38,12 +38,10 @@ export async function POST(
     }
 
     // Verificar se já está matriculado
-    const existingEnrollment = await prisma.courseEnrollment.findUnique({
+    const existingEnrollment = await prisma.courseEnrollment.findFirst({
       where: {
-        courseId_userId: {
-          courseId,
-          userId: session.user.id,
-        },
+        courseId,
+        userId: session.user.id,
       },
     });
 
@@ -59,7 +57,6 @@ export async function POST(
       data: {
         courseId,
         userId: session.user.id,
-        status: 'ACTIVE',
       },
       include: {
         course: {
@@ -86,7 +83,7 @@ export async function POST(
 
     // Incrementar contador de alunos do instrutor
     await prisma.instructorProfile.update({
-      where: { id: course.instructorId },
+      where: { userId: course.instructorId },
       data: {
         totalStudents: {
           increment: 1,

@@ -35,12 +35,10 @@ export async function POST(
     }
 
     // Verificar se está matriculado no curso
-    const enrollment = await prisma.courseEnrollment.findUnique({
+    const enrollment = await prisma.courseEnrollment.findFirst({
       where: {
-        courseId_userId: {
-          courseId: lesson.module.courseId,
-          userId: session.user.id,
-        },
+        courseId: lesson.module.courseId,
+        userId: session.user.id,
       },
     });
 
@@ -54,9 +52,9 @@ export async function POST(
     // Criar ou atualizar progresso
     const progress = await prisma.lessonProgress.upsert({
       where: {
-        lessonId_userId: {
+        enrollmentId_lessonId: {
+          enrollmentId: enrollment.id,
           lessonId,
-          userId: session.user.id,
         },
       },
       update: {
@@ -64,8 +62,8 @@ export async function POST(
         completedAt: new Date(),
       },
       create: {
+        enrollmentId: enrollment.id,
         lessonId,
-        userId: session.user.id,
         completed: true,
         completedAt: new Date(),
       },
@@ -92,11 +90,42 @@ export async function GET(
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }
 
+    const lessonId = params.id;
+
+    // Buscar a aula para obter o courseId
+    const lesson = await prisma.courseLesson.findUnique({
+      where: { id: lessonId },
+      include: {
+        module: {
+          select: {
+            courseId: true,
+          },
+        },
+      },
+    });
+
+    if (!lesson) {
+      return NextResponse.json({ completed: false });
+    }
+
+    // Buscar a matrícula do usuário
+    const enrollment = await prisma.courseEnrollment.findFirst({
+      where: {
+        courseId: lesson.module.courseId,
+        userId: session.user.id,
+      },
+    });
+
+    if (!enrollment) {
+      return NextResponse.json({ completed: false });
+    }
+
+    // Buscar o progresso
     const progress = await prisma.lessonProgress.findUnique({
       where: {
-        lessonId_userId: {
-          lessonId: params.id,
-          userId: session.user.id,
+        enrollmentId_lessonId: {
+          enrollmentId: enrollment.id,
+          lessonId,
         },
       },
     });
