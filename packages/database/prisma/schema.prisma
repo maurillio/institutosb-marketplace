@@ -373,7 +373,7 @@ model Course {
 
   // Métricas
   views       Int      @default(0)
-  enrollments Int      @default(0)
+  totalEnrollments Int @default(0)
   rating      Decimal  @default(0) @db.Decimal(3, 2)
 
   // Timestamps
