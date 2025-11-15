@@ -1,9 +1,4 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run build --filter=@thebeautypro/web",
-  "devCommand": "npm run dev --filter=@thebeautypro/web",
-  "installCommand": "npm install",
-  "framework": null,
-  "outputDirectory": "apps/web/.next"
+  "$schema": "https://openapi.vercel.sh/vercel.json"
 }
 
