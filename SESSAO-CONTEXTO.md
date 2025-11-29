@@ -397,15 +397,15 @@ generator client {
 }
 ```
 
-**2. Forçar inclusão dos binários no next.config.js:**
+**2. Forçar inclusão dos binários no next.config.js (Next.js 14):**
 ```javascript
-// next.config.js
+// next.config.js - ATENÇÃO: No Next.js 14, serverComponentsExternalPackages fica em experimental!
 const nextConfig = {
   // ... outras configurações ...
 
-  // Força incluir Prisma Client e seus binários no bundle do Vercel
-  serverComponentsExternalPackages: ['@prisma/client', '@thebeautypro/database'],
   experimental: {
+    // Força incluir Prisma Client e seus binários no bundle do Vercel
+    serverComponentsExternalPackages: ['@prisma/client', '@thebeautypro/database'],
     // Garante que binários do Prisma sejam incluídos no deployment
     outputFileTracingIncludes: {
       '/api/**/*': [
@@ -417,16 +417,41 @@ const nextConfig = {
 };
 ```
 
+**3. Adicionar script postinstall no package.json:**
+```json
+{
+  "scripts": {
+    "postinstall": "cd ../../packages/database && npx prisma generate"
+  }
+}
+```
+
+**4. Desabilitar cache do Turbo (apps/web/turbo.json):**
+```json
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "pipeline": {
+    "build": {
+      "cache": false,
+      "outputs": [".next/**", "!.next/cache/**"]
+    }
+  }
+}
+```
+
 **LIÇÃO:**
 - Vercel usa RHEL (Red Hat Enterprise Linux)
 - Prisma precisa de binários específicos para cada plataforma
 - `binaryTargets` garante que os binários corretos sejam gerados
-- `serverComponentsExternalPackages` evita que Next.js tente bundlar o Prisma
+- **ATENÇÃO:** No Next.js 14.0.4, `serverComponentsExternalPackages` DEVE estar dentro de `experimental`!
 - `outputFileTracingIncludes` força inclusão explícita dos binários no deployment
+- `postinstall` garante geração dos binários após npm install
+- Desabilitar cache do Turbo evita builds cacheados com binários incorretos
 - "native" = desenvolvimento local
 - "rhel-openssl-3.0.x" = Vercel/produção
 
-**IMPORTANTE:** Sempre incluir AMBAS configurações ao usar Prisma com deploy em Vercel! O cache do Vercel pode mascarar o problema, então também pode ser necessário incrementar a versão do package.json para forçar rebuild.
+**IMPORTANTE:** Sempre incluir TODAS as 4 configurações ao usar Prisma com deploy em Vercel! O cache do Vercel/Turbo pode mascarar o problema.
 
 ---
 
