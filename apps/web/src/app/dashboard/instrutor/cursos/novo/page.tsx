@@ -23,15 +23,32 @@ export default function NovoCursoPage() {
     level: 'BEGINNER',
   });
 
+  // Gerar slug a partir do título
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+      .replace(/[^\w\s-]/g, '') // Remove caracteres especiais
+      .replace(/\s+/g, '-') // Substitui espaços por hífens
+      .replace(/-+/g, '-') // Remove hífens duplicados
+      .trim();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      const slug = generateSlug(formData.title);
+      
       const response = await fetch('/api/instructor/courses', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          slug,
+        }),
       });
 
       if (!response.ok) throw new Error('Erro ao criar curso');

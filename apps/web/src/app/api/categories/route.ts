@@ -5,6 +5,24 @@ import { prisma } from '@thebeautypro/database';
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
+    const all = searchParams.get('all'); // Se passar ?all=true, retorna todas sem filtro
+    
+    if (all === 'true') {
+      // Retorna todas as categorias para uso em selects
+      const categories = await prisma.category.findMany({
+        orderBy: {
+          name: 'asc',
+        },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          parentId: true,
+        },
+      });
+      return NextResponse.json(categories);
+    }
+
     const parentId = searchParams.get('parentId');
 
     const categories = await prisma.category.findMany({
