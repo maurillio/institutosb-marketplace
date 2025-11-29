@@ -35,7 +35,7 @@
 10. ~~Warning autocomplete em campos de senha~~ ✅ CORRIGIDO
 11. ~~Erro 400 ao criar curso (faltando campo slug)~~ ✅ CORRIGIDO
 12. ~~Sistema de categorias não configurado~~ ✅ CORRIGIDO (categorias criadas no Neon)
-13. ~~Erro 500 ao criar produto (sellerId errado)~~ ✅ CORRIGIDO
+13. ~~Erro 500 ao criar produto (sellerId errado - FK constraint)~~ ✅ CORRIGIDO
 14. ~~Logout após atualizar perfil e dar F5~~ ⚠️ EM INVESTIGAÇÃO (logs adicionados - ver docs/DEBUG-LOGS.md)
 15. ~~Erro ao criar produto - enum ProductCondition inválido (USED)~~ ✅ CORRIGIDO
 
