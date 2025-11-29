@@ -93,7 +93,6 @@ export async function POST(request: Request) {
     const body = await request.json();
     const {
       name,
-      slug,
       description,
       price,
       categoryId,
@@ -112,6 +111,16 @@ export async function POST(request: Request) {
       );
     }
 
+    // Gerar slug a partir do nome
+    const slug = name
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+      .replace(/[^\w\s-]/g, '') // Remove caracteres especiais
+      .replace(/\s+/g, '-') // Substitui espaços por hífens
+      .replace(/-+/g, '-') // Remove hífens duplicados
+      .trim();
+
     // Criar produto
     const product = await prisma.product.create({
       data: {
@@ -120,7 +129,7 @@ export async function POST(request: Request) {
         description,
         price: parseFloat(price),
         categoryId,
-        sellerId: session.user.id,
+        sellerId: sellerProfile.id, // CORRIGIDO: usar sellerProfile.id ao invés de session.user.id
         images: images || [],
         condition: condition || 'NEW',
         stock: parseInt(stock) || 0,
