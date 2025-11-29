@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@thebeautypro/ui/button';
 import { Star } from 'lucide-react';
+import { PLACEHOLDER_IMAGE } from '@/lib/constants';
 
 // Mock data - será substituído por dados reais do banco
 const products = [
@@ -8,7 +9,7 @@ const products = [
     id: '1',
     name: 'Shampoo Profissional 500ml',
     price: 49.9,
-    image: 'https://via.placeholder.com/300x300',
+    image: PLACEHOLDER_IMAGE,
     rating: 4.5,
     slug: 'shampoo-profissional-500ml',
   },
@@ -16,7 +17,7 @@ const products = [
     id: '2',
     name: 'Kit de Pincéis Maquiagem',
     price: 89.9,
-    image: 'https://via.placeholder.com/300x300',
+    image: PLACEHOLDER_IMAGE,
     rating: 5,
     slug: 'kit-pinceis-maquiagem',
   },
@@ -24,7 +25,7 @@ const products = [
     id: '3',
     name: 'Sérum Facial Anti-idade',
     price: 129.9,
-    image: 'https://via.placeholder.com/300x300',
+    image: PLACEHOLDER_IMAGE,
     rating: 4.8,
     slug: 'serum-facial-anti-idade',
   },
@@ -32,7 +33,7 @@ const products = [
     id: '4',
     name: 'Esmalte Gel UV 3 Semanas',
     price: 24.9,
-    image: 'https://via.placeholder.com/300x300',
+    image: PLACEHOLDER_IMAGE,
     rating: 4.3,
     slug: 'esmalte-gel-uv',
   },

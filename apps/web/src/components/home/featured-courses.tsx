@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@thebeautypro/ui/button';
 import { Star, Users, Clock } from 'lucide-react';
+import { PLACEHOLDER_IMAGE } from '@/lib/constants';
 
 // Mock data - será substituído por dados reais do banco
 const courses = [
@@ -8,7 +9,7 @@ const courses = [
     id: '1',
     title: 'Curso Completo de Maquiagem Profissional',
     price: 299.0,
-    image: 'https://via.placeholder.com/400x225',
+    image: PLACEHOLDER_IMAGE,
     rating: 4.9,
     students: 1234,
     duration: 1200, // minutos
@@ -19,7 +20,7 @@ const courses = [
     id: '2',
     title: 'Técnicas Avançadas de Colorimetria Capilar',
     price: 399.0,
-    image: 'https://via.placeholder.com/400x225',
+    image: PLACEHOLDER_IMAGE,
     rating: 5.0,
     students: 856,
     duration: 900,
@@ -30,7 +31,7 @@ const courses = [
     id: '3',
     title: 'Skincare do Básico ao Avançado',
     price: 249.0,
-    image: 'https://via.placeholder.com/400x225',
+    image: PLACEHOLDER_IMAGE,
     rating: 4.8,
     students: 2341,
     duration: 800,

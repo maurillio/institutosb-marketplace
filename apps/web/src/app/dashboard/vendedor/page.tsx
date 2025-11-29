@@ -171,13 +171,13 @@ export default function SellerDashboardPage() {
           </div>
 
           {/* Rating */}
-          {analytics.overview.rating !== null && (
+          {analytics.overview.rating !== null && analytics.overview.rating > 0 && (
             <div className="mt-6 rounded-lg border bg-white p-6">
               <div className="flex items-center gap-3">
                 <Star className="h-8 w-8 fill-yellow-400 text-yellow-400" />
                 <div>
                   <p className="text-2xl font-bold">
-                    {analytics.overview.rating.toFixed(1)}
+                    {Number(analytics.overview.rating).toFixed(1)}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     Avaliação Média

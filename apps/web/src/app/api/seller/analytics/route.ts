@@ -216,10 +216,10 @@ export async function GET(request: Request) {
       overview: {
         totalProducts,
         totalSales,
-        totalRevenue,
+        totalRevenue: Number(totalRevenue),
         availablePayout: Number(availablePayouts._sum.amount) || 0,
         processedPayout: Number(processedPayouts._sum.amount) || 0,
-        rating: sellerProfile.rating,
+        rating: sellerProfile.rating ? Number(sellerProfile.rating) : null,
       },
       salesByStatus,
       topProducts: topProductsWithNames,
