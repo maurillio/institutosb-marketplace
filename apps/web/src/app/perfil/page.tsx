@@ -10,10 +10,12 @@ import { ImageUpload } from '@/components/ImageUpload';
 import { User, Mail, Phone, MapPin } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default function PerfilPage() {
   const { data: session, update } = useSession();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -22,6 +24,10 @@ export default function PerfilPage() {
     avatar: '',
     cpfCnpj: '',
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (session?.user) {
@@ -60,6 +66,20 @@ export default function PerfilPage() {
     }
   };
 
+  // Não renderizar até montar no cliente
+  if (!mounted) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <Header />
+        <main className="flex-1 bg-gray-50 flex items-center justify-center">
+          <p>Carregando...</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Redirecionar se não estiver autenticado (só no cliente)
   if (!session) {
     router.push('/entrar');
     return null;
