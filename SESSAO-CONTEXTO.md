@@ -523,7 +523,7 @@ cd packages/database && npx prisma studio
 
 ### ✅ Fases Completas
 
-**Fase 0: Setup e Infraestrutura**
+**Fase 0: Setup e Infraestrutura** (100% COMPLETO)
 - [x] Monorepo configurado (Turborepo)
 - [x] Next.js 14 + NestJS
 - [x] Prisma + Neon PostgreSQL
@@ -540,40 +540,47 @@ cd packages/database && npx prisma studio
 - [x] Middleware de proteção
 - [x] Guards baseados em roles
 
+**Fase 2: Marketplace de Produtos** (100% COMPLETO)
+- [x] Sistema de categorias
+- [x] Listagem de produtos com paginação
+- [x] Filtros avançados (categoria, preço, tipo de produto)
+- [x] Carrinho de compras (Zustand store)
+- [x] Favoritos/Wishlist completo
+- [x] Detalhes do produto com variações
+
+**Fase 3: Checkout e Pagamentos** (100% COMPLETO)
+- [x] Integração Mercado Pago
+- [x] Split payment (comissão marketplace)
+- [x] Processamento de pedidos
+- [x] Confirmação de pagamento via webhook
+- [x] Páginas de sucesso/falha
+
+**Fase 4: Dashboard Vendedor** (100% COMPLETO)
+- [x] CRUD de produtos completo
+- [x] Gestão de pedidos
+- [x] Analytics básico (vendas, produtos, etc)
+- [x] Sistema de payouts
+- [x] Listagem de pedidos recebidos
+
+**Fase 5: Plataforma de Cursos** (100% COMPLETO)
+- [x] CRUD de cursos
+- [x] Sistema de módulos/aulas (Lesson, Module)
+- [x] Agendamento (presencial/online via CourseSchedule)
+- [x] Progresso do aluno (LessonProgress)
+- [x] Matrículas (CourseEnrollment)
+- [x] Dashboard instrutor
+
 ### 🚧 Fases Pendentes
 
-**Fase 2: Marketplace de Produtos** (0%)
-- [ ] Sistema de categorias
-- [ ] Listagem de produtos
-- [ ] Filtros e busca
-- [ ] Carrinho de compras
-- [ ] Favoritos/Wishlist
-- [ ] Detalhes do produto
-
-**Fase 3: Checkout e Pagamentos** (0%)
-- [ ] Integração Mercado Pago
-- [ ] Split payment
-- [ ] Processamento de pedidos
-- [ ] Confirmação de pagamento via webhook
-
-**Fase 4: Dashboard Vendedor** (0%)
-- [ ] CRUD de produtos
-- [ ] Gestão de pedidos
-- [ ] Analytics
-- [ ] Sistema de assinaturas
-
-**Fase 5: Plataforma de Cursos** (0%)
-- [ ] CRUD de cursos
-- [ ] Player de vídeo
-- [ ] Sistema de módulos/aulas
-- [ ] Agendamento (presencial)
-- [ ] Certificados
-
 **Fase 6: Funcionalidades Avançadas** (0%)
-- [ ] Sistema de avaliações
-- [ ] Notificações push
-- [ ] Chat/mensagens
+- [ ] Sistema de avaliações (Review/Rating)
+- [ ] Notificações push (PWA)
+- [ ] Chat/mensagens entre usuários
 - [ ] Relatórios avançados
+- [ ] Player de vídeo customizado
+- [ ] Certificados de conclusão (PDF)
+- [ ] Sistema de cupons/descontos
+- [ ] Programa de afiliados
 
 ---
 
@@ -650,14 +657,51 @@ chore: tarefas de manutenção
 
 ## 🎯 PRÓXIMOS PASSOS SUGERIDOS
 
-1. **Remover flags temporárias de build** após corrigir tipos TypeScript
-2. **Implementar Fase 2:** Marketplace de Produtos
-3. **Configurar AWS S3** para upload de imagens
-4. **Configurar Mercado Pago** para pagamentos
-5. **Criar testes automatizados** para features críticas
-6. **Implementar CI/CD** com GitHub Actions
-7. **Adicionar monitoring** (Sentry, LogRocket)
-8. **Performance optimization** (images, fonts, etc)
+### Prioridade Alta
+1. **Remover flags temporárias de build** (typescript.ignoreBuildErrors e eslint.ignoreDuringBuilds)
+   - Corrigir todos os erros TypeScript
+   - Garantir type safety completo
+
+2. **Configurar upload de imagens** (AWS S3 ou Cloudinary)
+   - Produtos sem imagens reais
+   - Cursos sem thumbnails
+   - Usuários sem avatars
+
+3. **Configurar credenciais Mercado Pago em produção**
+   - Testar fluxo completo de pagamento
+   - Validar webhooks
+   - Testar split payment
+
+### Prioridade Média
+4. **Implementar Fase 6: Funcionalidades Avançadas**
+   - Sistema de avaliações (Review/Rating)
+   - Player de vídeo para cursos
+   - Certificados de conclusão (PDF)
+   - Sistema de cupons/descontos
+
+5. **Criar testes automatizados**
+   - Unit tests (Vitest)
+   - Integration tests (Playwright)
+   - E2E tests para fluxos críticos (checkout, enrollment)
+
+6. **Melhorias de Performance**
+   - Otimizar imagens (next/image)
+   - Lazy loading de componentes
+   - Implementar ISR (Incremental Static Regeneration)
+   - Cache de queries (React Query)
+
+### Prioridade Baixa
+7. **DevOps e Monitoring**
+   - CI/CD com GitHub Actions
+   - Monitoring (Sentry, LogRocket)
+   - Analytics (Google Analytics, Mixpanel)
+   - Logs estruturados
+
+8. **SEO e Marketing**
+   - Metadata otimizado
+   - Sitemap dinâmico
+   - Open Graph tags
+   - Schema.org markup
 
 ---
 
