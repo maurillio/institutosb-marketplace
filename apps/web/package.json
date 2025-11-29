@@ -1,11 +1,12 @@
 {
   "name": "@thebeautypro/web",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "npm run db:prepare && next build",
     "db:prepare": "cd ../../packages/database && npx prisma generate && npx prisma db push --accept-data-loss --skip-generate",
+    "postinstall": "cd ../../packages/database && npx prisma generate",
     "start": "next start",
     "lint": "next lint",
     "clean": "rm -rf .next"

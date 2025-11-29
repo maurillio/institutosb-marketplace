@@ -164,9 +164,9 @@ const nextConfig = {
       'via.placeholder.com', // Remove in production
     ],
   },
-  // Força incluir Prisma Client e seus binários no bundle do Vercel
-  serverComponentsExternalPackages: ['@prisma/client', '@thebeautypro/database'],
   experimental: {
+    // Força incluir Prisma Client e seus binários no bundle do Vercel (Next.js 14)
+    serverComponentsExternalPackages: ['@prisma/client', '@thebeautypro/database'],
     // Garante que binários do Prisma sejam incluídos no deployment
     outputFileTracingIncludes: {
       '/api/**/*': ['../../node_modules/.prisma/client/**/*', '../../packages/database/node_modules/.prisma/client/**/*'],
