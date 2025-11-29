@@ -24,10 +24,11 @@ INSERT INTO categories (id, name, slug, description, "createdAt", "updatedAt") V
   (gen_random_uuid(), 'Acessórios', 'acessorios', 'Acessórios para profissionais de beleza', NOW(), NOW());
 ```
 
-### Opção 3: Via Vercel Postgres Dashboard
-1. Acesse o dashboard do Vercel
-2. Vá em Storage > Postgres
-3. Execute o SQL acima no Query editor
+### Opção 3: Via Neon Console (RECOMENDADO)
+1. Acesse o dashboard do Neon: https://console.neon.tech/
+2. Selecione o projeto The Beauty Pro
+3. Vá em SQL Editor
+4. Execute o SQL acima
 
 ## API Endpoints
 

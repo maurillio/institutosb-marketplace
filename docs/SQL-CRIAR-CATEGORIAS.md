@@ -1,9 +1,10 @@
-# Script SQL para criar categorias padrão no Vercel Postgres
+# Script SQL para criar categorias padrão no Neon PostgreSQL
 
 ## Instruções:
-1. Acesse: https://vercel.com/dashboard
-2. Vá em: Storage > Postgres > Query
-3. Cole e execute o SQL abaixo:
+1. Acesse o dashboard do Neon: https://console.neon.tech/
+2. Selecione o projeto do Beauty Pro
+3. Vá em SQL Editor
+4. Cole e execute o SQL abaixo:
 
 ```sql
 -- Criar categorias padrão

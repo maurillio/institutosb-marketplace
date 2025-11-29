@@ -3,6 +3,7 @@
 ## Estrutura
 - Monorepo Turborepo com apps/web (Next.js 14) e packages/database (Prisma)
 - Deploy: Vercel (thebeautypro.vercel.app)
+- **Banco de Dados: Neon PostgreSQL** (não Vercel Postgres!)
 - Stack: Next.js 14, TypeScript, Tailwind, Prisma, NextAuth, Vercel Blob
 
 ## Principais Rotas
