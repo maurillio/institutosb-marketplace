@@ -34,7 +34,8 @@
 9. ~~Perfil não exibe dados salvos (campo .image ao invés de .avatar)~~ ✅ CORRIGIDO
 10. ~~Warning autocomplete em campos de senha~~ ✅ CORRIGIDO
 11. ~~Erro 400 ao criar curso (faltando campo slug)~~ ✅ CORRIGIDO
-12. ~~Sistema de categorias não configurado~~ ✅ CORRIGIDO (ver docs/SQL-CRIAR-CATEGORIAS.md)
+12. ~~Sistema de categorias não configurado~~ ✅ CORRIGIDO (categorias criadas no Neon)
+13. ~~Erro 500 ao criar produto (sellerId errado)~~ ✅ CORRIGIDO
 
 ## Componentes Principais
 - Header/Footer: `@/components/layout/`
