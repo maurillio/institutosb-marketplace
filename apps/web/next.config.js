@@ -158,10 +158,19 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: [
-      'localhost',
-      'thebeautypro.s3.amazonaws.com',
-      'via.placeholder.com', // Remove in production
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.public.blob.vercel-storage.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'thebeautypro.s3.amazonaws.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com', // Remove in production
+      },
     ],
   },
   experimental: {
