@@ -7,97 +7,32 @@
   "background_color": "#ffffff",
   "theme_color": "#db2777",
   "orientation": "portrait-primary",
-  "icons": [
-    {
-      "src": "/icons/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable any"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/screenshot1.png",
-      "sizes": "540x720",
-      "type": "image/png"
-    },
-    {
-      "src": "/screenshots/screenshot2.png",
-      "sizes": "540x720",
-      "type": "image/png"
-    }
-  ],
+  "icons": [],
   "categories": ["shopping", "beauty", "education"],
   "shortcuts": [
     {
       "name": "Explorar Cursos",
       "short_name": "Cursos",
       "description": "Ver cursos disponíveis",
-      "url": "/cursos",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+      "url": "/cursos"
     },
     {
       "name": "Meus Cursos",
       "short_name": "Meus Cursos",
       "description": "Acessar meus cursos",
-      "url": "/meus-cursos",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+      "url": "/meus-cursos"
     },
     {
       "name": "Produtos",
       "short_name": "Produtos",
       "description": "Explorar produtos",
-      "url": "/produtos",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+      "url": "/produtos"
     },
     {
       "name": "Carrinho",
       "short_name": "Carrinho",
       "description": "Ver carrinho de compras",
-      "url": "/carrinho",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+      "url": "/carrinho"
     }
   ]
 }
