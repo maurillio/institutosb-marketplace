@@ -25,8 +25,10 @@
 1. Placeholders via.placeholder.com não carregam (usar imagem local)
 2. ~~PWA icons faltando (/icons/icon-*.png)~~ ✅ CORRIGIDO
 3. ~~Meta tag PWA deprecated~~ ✅ CORRIGIDO
-4. Erros 401/404 em APIs são normais quando não autenticado ou sem perfil configurado
+4. ~~Erros 401/404 em APIs são normais quando não autenticado ou sem perfil configurado~~ ✅ CORRIGIDO
 5. ~~Erro 400 em imagens Vercel Blob (configuração next.config)~~ ✅ CORRIGIDO
+6. ~~Perfil não salva alterações (JWT não atualiza)~~ ✅ CORRIGIDO
+7. ~~Dashboards vendedor/instrutor retornam 404 (perfis não criados)~~ ✅ CORRIGIDO
 
 ## Componentes Principais
 - Header/Footer: `@/components/layout/`
