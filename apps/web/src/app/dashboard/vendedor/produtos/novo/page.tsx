@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@thebeautypro/ui/button';
+import { ImageUpload } from '@/components/ImageUpload';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
@@ -22,7 +23,7 @@ export default function NewProductPage() {
     description: '',
     price: '',
     categoryId: '',
-    imageUrl: '',
+    images: [] as string[],
     condition: 'NEW',
     stock: '0',
     status: 'ACTIVE',
@@ -180,19 +181,17 @@ export default function NewProductPage() {
 
               <div>
                 <label className="mb-2 block text-sm font-medium">
-                  URL da Imagem
+                  Imagens do Produto
                 </label>
-                <input
-                  type="url"
-                  value={formData.imageUrl}
-                  onChange={(e) =>
-                    setFormData({ ...formData, imageUrl: e.target.value })
-                  }
-                  placeholder="https://exemplo.com/imagem.jpg"
-                  className="h-10 w-full rounded-md border px-3"
+                <ImageUpload
+                  value={formData.images}
+                  onChange={(urls) => setFormData({ ...formData, images: urls as string[] })}
+                  multiple
+                  maxFiles={5}
+                  disabled={loading}
                 />
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Cole a URL de uma imagem hospedada
+                  Faça upload de até 5 imagens do produto
                 </p>
               </div>
 

@@ -68,11 +68,14 @@ DATABASE_URL=postgresql://neondb_owner:...@ep-little-king-ahhg8snu-pooler.c-3.us
 NEXTAUTH_URL=https://thebeautypro.vercel.app
 NEXTAUTH_SECRET=dUzByhGAD8xjylzJ9MqxM4ZHvbFM713KYUOb0BAYZgY=
 
+# Vercel Blob Storage (✅ CONFIGURADO)
+BLOB_READ_WRITE_TOKEN=vercel_blob_rw_xxxxxxxxxxxx
+
 # Mercado Pago (a configurar)
 MERCADO_PAGO_ACCESS_TOKEN=
 MERCADO_PAGO_PUBLIC_KEY=
 
-# AWS S3 (a configurar)
+# AWS S3 (OPCIONAL - não usado, estamos usando Vercel Blob)
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 AWS_REGION=us-east-1
