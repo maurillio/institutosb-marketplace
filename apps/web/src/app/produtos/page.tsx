@@ -244,7 +244,9 @@ export default function ProductsPage() {
                   >
                     <option value="">Todas</option>
                     <option value="NEW">Novo</option>
-                    <option value="USED">Usado</option>
+                    <option value="USED_LIKE_NEW">Usado - Como Novo</option>
+                    <option value="USED_GOOD">Usado - Bom Estado</option>
+                    <option value="USED_FAIR">Usado - Estado Regular</option>
                   </select>
                 </div>
 

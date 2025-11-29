@@ -174,7 +174,9 @@ export default function NewProductPage() {
                     className="h-10 w-full rounded-md border px-3"
                   >
                     <option value="NEW">Novo</option>
-                    <option value="USED">Usado</option>
+                    <option value="USED_LIKE_NEW">Usado - Como Novo</option>
+                    <option value="USED_GOOD">Usado - Bom Estado</option>
+                    <option value="USED_FAIR">Usado - Estado Regular</option>
                   </select>
                 </div>
               </div>
