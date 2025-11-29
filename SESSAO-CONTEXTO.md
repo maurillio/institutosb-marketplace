@@ -36,6 +36,7 @@
 11. ~~Erro 400 ao criar curso (faltando campo slug)~~ ✅ CORRIGIDO
 12. ~~Sistema de categorias não configurado~~ ✅ CORRIGIDO (categorias criadas no Neon)
 13. ~~Erro 500 ao criar produto (sellerId errado)~~ ✅ CORRIGIDO
+14. ~~Logout após atualizar perfil e dar F5~~ ✅ CORRIGIDO
 
 ## Componentes Principais
 - Header/Footer: `@/components/layout/`
