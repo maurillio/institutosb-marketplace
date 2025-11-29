@@ -81,23 +81,33 @@ export const authOptions: NextAuthOptions = {
       
       // Quando update() é chamado
       if (trigger === 'update' && token.id) {
-        const updatedUser = await prisma.user.findUnique({
-          where: { id: token.id as string },
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            avatar: true,
-            roles: true,
-            status: true,
-          },
-        });
-        
-        if (updatedUser) {
-          token.name = updatedUser.name;
-          token.avatar = updatedUser.avatar;
-          token.roles = updatedUser.roles;
-          token.status = updatedUser.status;
+        try {
+          const updatedUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              avatar: true,
+              roles: true,
+              status: true,
+              phone: true,
+              cpfCnpj: true,
+            },
+          });
+          
+          if (updatedUser) {
+            token.name = updatedUser.name;
+            token.avatar = updatedUser.avatar;
+            token.roles = updatedUser.roles;
+            token.status = updatedUser.status;
+            // Mantém id e email inalterados para não quebrar a sessão
+          } else {
+            console.error('Usuário não encontrado durante update:', token.id);
+          }
+        } catch (error) {
+          console.error('Erro ao buscar usuário atualizado:', error);
+          // Em caso de erro, mantém o token atual para não quebrar a sessão
         }
       }
       

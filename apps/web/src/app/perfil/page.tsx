@@ -52,15 +52,25 @@ export default function PerfilPage() {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) throw new Error('Erro ao atualizar perfil');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Erro ao atualizar perfil');
+      }
 
-      // Atualizar sessão
-      await update();
+      const data = await response.json();
+      console.log('Perfil atualizado:', data);
+
+      // Atualizar sessão do NextAuth
+      const updateResult = await update();
+      console.log('Sessão atualizada:', updateResult);
 
       alert('Perfil atualizado com sucesso!');
+      
+      // Recarregar a página para garantir que os dados sejam atualizados
+      window.location.reload();
     } catch (error) {
-      console.error('Erro:', error);
-      alert('Erro ao atualizar perfil');
+      console.error('Erro completo:', error);
+      alert(error instanceof Error ? error.message : 'Erro ao atualizar perfil');
     } finally {
       setLoading(false);
     }

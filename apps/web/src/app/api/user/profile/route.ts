@@ -11,16 +11,24 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }
 
-    const { name, phone, avatar, cpfCnpj } = await request.json();
+    const body = await request.json();
+    console.log('Dados recebidos para atualização:', body);
+    
+    const { name, phone, avatar, cpfCnpj } = body;
+
+    // Validar campos obrigatórios
+    if (!name || !name.trim()) {
+      return NextResponse.json({ error: 'Nome é obrigatório' }, { status: 400 });
+    }
 
     // Atualizar usuário
     const updatedUser = await prisma.user.update({
       where: { id: session.user.id },
       data: {
-        name,
-        phone,
-        avatar,
-        cpfCnpj,
+        name: name.trim(),
+        phone: phone || null,
+        avatar: avatar || null,
+        cpfCnpj: cpfCnpj || null,
       },
       select: {
         id: true,
@@ -32,6 +40,8 @@ export async function PATCH(request: Request) {
         roles: true,
       },
     });
+
+    console.log('Usuário atualizado:', updatedUser);
 
     return NextResponse.json({
       message: 'Perfil atualizado com sucesso',
