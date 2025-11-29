@@ -31,10 +31,10 @@ export async function GET(request: Request) {
       );
     }
 
-    // Buscar produtos do vendedor
+    // Buscar produtos do vendedor (usando User.id, não SellerProfile.id)
     const products = await prisma.product.findMany({
       where: {
-        sellerId: sellerProfile.id,
+        sellerId: session.user.id, // Product.sellerId aponta para User.id
       },
       include: {
         category: {
@@ -53,6 +53,8 @@ export async function GET(request: Request) {
         createdAt: 'desc',
       },
     });
+
+    console.log('[Seller Products API] Produtos encontrados:', products.length);
 
     return NextResponse.json(products);
   } catch (error) {
