@@ -35,7 +35,7 @@ export default function PerfilPage() {
         name: session.user.name || '',
         email: session.user.email || '',
         phone: (session.user as any).phone || '',
-        avatar: session.user.image || '',
+        avatar: session.user.avatar || '',
         cpfCnpj: (session.user as any).cpfCnpj || '',
       });
     }

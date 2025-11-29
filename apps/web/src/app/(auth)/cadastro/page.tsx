@@ -115,6 +115,7 @@ export default function RegisterPage() {
                 id="name"
                 type="text"
                 required
+                autoComplete="name"
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
@@ -137,6 +138,7 @@ export default function RegisterPage() {
                 id="email"
                 type="email"
                 required
+                autoComplete="email"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
@@ -158,6 +160,7 @@ export default function RegisterPage() {
                 id="password"
                 type="password"
                 required
+                autoComplete="new-password"
                 value={formData.password}
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
@@ -183,6 +186,7 @@ export default function RegisterPage() {
                 id="confirmPassword"
                 type="password"
                 required
+                autoComplete="new-password"
                 value={formData.confirmPassword}
                 onChange={(e) =>
                   setFormData({ ...formData, confirmPassword: e.target.value })
