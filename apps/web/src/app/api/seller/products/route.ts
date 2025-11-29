@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { prisma } from '@thebeautypro/database';
+import { authOptions } from '../../auth/[...nextauth]/route';
 
 // GET /api/seller/products - Listar produtos do vendedor
 export async function GET(request: Request) {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }
@@ -66,7 +67,7 @@ export async function GET(request: Request) {
 // POST /api/seller/products - Criar novo produto
 export async function POST(request: Request) {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }

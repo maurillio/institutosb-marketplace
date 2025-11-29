@@ -1,11 +1,12 @@
 import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]/route';
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
     // Verificar autenticação
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session?.user) {
       return NextResponse.json(
         { error: 'Não autenticado' },

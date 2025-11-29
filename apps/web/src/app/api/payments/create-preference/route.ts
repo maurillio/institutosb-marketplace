@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
+import { authOptions } from '../../auth/[...nextauth]/route';
 
 // POST /api/payments/create-preference - Criar preferência de pagamento no Mercado Pago
 export async function POST(request: Request) {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }

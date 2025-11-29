@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { prisma } from '@thebeautypro/database';
+import { authOptions } from '../../../auth/[...nextauth]/route';
 
 // POST /api/lessons/[id]/progress - Marcar aula como completada
 export async function POST(
@@ -8,7 +9,7 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }
