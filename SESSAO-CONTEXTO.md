@@ -386,7 +386,9 @@ Error: ENOENT: no such file or directory, lstat
 '/vercel/path0/node_modules/.prisma/client/libquery_engine-rhel-openssl-3.0.x.so.node'
 ```
 
-**✅ SOLUÇÃO:**
+**✅ SOLUÇÃO (COMPLETA):**
+
+**1. Configurar binaryTargets no schema.prisma:**
 ```prisma
 // schema.prisma
 generator client {
@@ -395,14 +397,36 @@ generator client {
 }
 ```
 
+**2. Forçar inclusão dos binários no next.config.js:**
+```javascript
+// next.config.js
+const nextConfig = {
+  // ... outras configurações ...
+
+  // Força incluir Prisma Client e seus binários no bundle do Vercel
+  serverComponentsExternalPackages: ['@prisma/client', '@thebeautypro/database'],
+  experimental: {
+    // Garante que binários do Prisma sejam incluídos no deployment
+    outputFileTracingIncludes: {
+      '/api/**/*': [
+        '../../node_modules/.prisma/client/**/*',
+        '../../packages/database/node_modules/.prisma/client/**/*'
+      ],
+    },
+  },
+};
+```
+
 **LIÇÃO:**
 - Vercel usa RHEL (Red Hat Enterprise Linux)
 - Prisma precisa de binários específicos para cada plataforma
-- `binaryTargets` garante que os binários corretos sejam incluídos
+- `binaryTargets` garante que os binários corretos sejam gerados
+- `serverComponentsExternalPackages` evita que Next.js tente bundlar o Prisma
+- `outputFileTracingIncludes` força inclusão explícita dos binários no deployment
 - "native" = desenvolvimento local
 - "rhel-openssl-3.0.x" = Vercel/produção
 
-**IMPORTANTE:** Sempre incluir binaryTargets ao usar Prisma com deploy em Vercel!
+**IMPORTANTE:** Sempre incluir AMBAS configurações ao usar Prisma com deploy em Vercel! O cache do Vercel pode mascarar o problema, então também pode ser necessário incrementar a versão do package.json para forçar rebuild.
 
 ---
 
