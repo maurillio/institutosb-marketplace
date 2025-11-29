@@ -19,6 +19,9 @@ export const metadata: Metadata = {
     statusBarStyle: 'default',
     title: 'Beauty Pro',
   },
+  other: {
+    'mobile-web-app-capable': 'yes',
+  },
   applicationName: 'The Beauty Pro',
   formatDetection: {
     telephone: false,
