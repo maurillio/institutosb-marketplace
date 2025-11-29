@@ -9,6 +9,8 @@ import { Button } from '@thebeautypro/ui/button';
 import { ImageUpload } from '@/components/ImageUpload';
 import { User, Mail, Phone, MapPin } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default function PerfilPage() {
   const { data: session, update } = useSession();
   const router = useRouter();
