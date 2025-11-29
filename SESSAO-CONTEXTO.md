@@ -30,6 +30,8 @@
 6. ~~Perfil não salva alterações (JWT não atualiza)~~ ✅ CORRIGIDO
 7. ~~Dashboards vendedor/instrutor retornam 404 (perfis não criados)~~ ✅ CORRIGIDO
 8. ~~Erro rating.toFixed no dashboard vendedor (Decimal não convertido)~~ ✅ CORRIGIDO
+9. ~~Perfil não exibe dados salvos (campo .image ao invés de .avatar)~~ ✅ CORRIGIDO
+10. ~~Warning autocomplete em campos de senha~~ ✅ CORRIGIDO
 
 ## Componentes Principais
 - Header/Footer: `@/components/layout/`
