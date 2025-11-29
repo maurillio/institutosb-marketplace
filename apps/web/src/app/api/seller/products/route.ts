@@ -129,7 +129,7 @@ export async function POST(request: Request) {
         description,
         price: parseFloat(price),
         categoryId,
-        sellerId: sellerProfile.id, // CORRIGIDO: usar sellerProfile.id ao invés de session.user.id
+        sellerId: session.user.id, // sellerId aponta para User, não SellerProfile
         images: images || [],
         condition: condition || 'NEW',
         stock: parseInt(stock) || 0,
