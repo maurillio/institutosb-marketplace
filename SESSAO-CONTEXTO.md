@@ -32,6 +32,8 @@
 8. ~~Erro rating.toFixed no dashboard vendedor (Decimal não convertido)~~ ✅ CORRIGIDO
 9. ~~Perfil não exibe dados salvos (campo .image ao invés de .avatar)~~ ✅ CORRIGIDO
 10. ~~Warning autocomplete em campos de senha~~ ✅ CORRIGIDO
+11. ~~Erro 400 ao criar curso (faltando campo slug)~~ ✅ CORRIGIDO
+12. ~~Sistema de categorias não configurado~~ ✅ CORRIGIDO (ver docs/SQL-CRIAR-CATEGORIAS.md)
 
 ## Componentes Principais
 - Header/Footer: `@/components/layout/`
