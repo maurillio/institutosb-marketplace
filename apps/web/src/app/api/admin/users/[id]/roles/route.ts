@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { prisma } from '@thebeautypro/database';
-import { authOptions } from '../../../auth/[...nextauth]/route';
+import { authOptions } from '../../../../auth/[...nextauth]/route';
 
 export async function PATCH(
   request: Request,
