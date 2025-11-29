@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@thebeautypro/ui/button';
@@ -113,9 +114,10 @@ export default function SellerProductsPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <main className="flex-1 bg-gray-50">
+    <ErrorBoundary>
+      <div className="flex min-h-screen flex-col">
+        <Header />
+        <main className="flex-1 bg-gray-50">
         <div className="container py-8">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold">Meus Produtos</h1>
@@ -253,5 +255,6 @@ export default function SellerProductsPage() {
       </main>
       <Footer />
     </div>
+    </ErrorBoundary>
   );
 }
