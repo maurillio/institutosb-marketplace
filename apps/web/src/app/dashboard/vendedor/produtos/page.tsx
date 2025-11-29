@@ -17,7 +17,7 @@ interface Product {
   stock: number;
   status: string;
   condition: string;
-  imageUrl: string | null;
+  images: string[]; // Array de URLs, não imageUrl único
   category: {
     name: string;
   };
@@ -146,7 +146,7 @@ export default function SellerProductsPage() {
                         <div className="flex items-center gap-3">
                           <div className="relative h-12 w-12 overflow-hidden rounded-md bg-gray-100">
                             <Image
-                              src={product.imageUrl || 'https://via.placeholder.com/50'}
+                              src={product.images[0] || '/placeholder.png'}
                               alt={product.name}
                               fill
                               className="object-cover"
@@ -155,7 +155,11 @@ export default function SellerProductsPage() {
                           <div>
                             <p className="font-medium">{product.name}</p>
                             <p className="text-sm text-muted-foreground">
-                              {product.condition === 'NEW' ? 'Novo' : 'Usado'}
+                              {product.condition === 'NEW' ? 'Novo' : 
+                               product.condition === 'USED_LIKE_NEW' ? 'Usado - Como Novo' :
+                               product.condition === 'USED_GOOD' ? 'Usado - Bom Estado' :
+                               product.condition === 'USED_FAIR' ? 'Usado - Estado Regular' : 
+                               product.condition}
                             </p>
                           </div>
                         </div>
