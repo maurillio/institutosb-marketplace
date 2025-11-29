@@ -378,6 +378,34 @@ await prisma.instructorProfile.update({
 
 ---
 
+### 8. Prisma Binary Targets no Vercel
+
+**❌ ERRO:** Build falhando no Vercel com erro do Prisma engine
+```
+Error: ENOENT: no such file or directory, lstat
+'/vercel/path0/node_modules/.prisma/client/libquery_engine-rhel-openssl-3.0.x.so.node'
+```
+
+**✅ SOLUÇÃO:**
+```prisma
+// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]  // ✅ Adicionar
+}
+```
+
+**LIÇÃO:**
+- Vercel usa RHEL (Red Hat Enterprise Linux)
+- Prisma precisa de binários específicos para cada plataforma
+- `binaryTargets` garante que os binários corretos sejam incluídos
+- "native" = desenvolvimento local
+- "rhel-openssl-3.0.x" = Vercel/produção
+
+**IMPORTANTE:** Sempre incluir binaryTargets ao usar Prisma com deploy em Vercel!
+
+---
+
 ## 📝 CHECKLIST PRÉ-COMMIT
 
 Antes de fazer commit, SEMPRE verificar:
