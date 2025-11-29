@@ -18,9 +18,25 @@ export async function GET(request: Request) {
       );
     }
 
-    const sellerProfile = await prisma.sellerProfile.findUnique({
+    let sellerProfile = await prisma.sellerProfile.findUnique({
       where: { userId: session.user.id },
     });
+
+    // Criar perfil automaticamente se não existir e usuário tiver role SELLER
+    if (!sellerProfile && session.user.roles.includes('SELLER')) {
+      const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { name: true },
+      });
+
+      sellerProfile = await prisma.sellerProfile.create({
+        data: {
+          userId: session.user.id,
+          storeName: user?.name || 'Minha Loja',
+          storeSlug: `loja-${session.user.id.slice(-8)}`,
+        },
+      });
+    }
 
     if (!sellerProfile) {
       return NextResponse.json(

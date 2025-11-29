@@ -68,7 +68,8 @@ export const authOptions: NextAuthOptions = {
     maxAge: 7 * 24 * 60 * 60, // 7 dias
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      // No login inicial
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -77,6 +78,29 @@ export const authOptions: NextAuthOptions = {
         token.roles = user.roles;
         token.status = user.status;
       }
+      
+      // Quando update() é chamado
+      if (trigger === 'update' && token.id) {
+        const updatedUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            avatar: true,
+            roles: true,
+            status: true,
+          },
+        });
+        
+        if (updatedUser) {
+          token.name = updatedUser.name;
+          token.avatar = updatedUser.avatar;
+          token.roles = updatedUser.roles;
+          token.status = updatedUser.status;
+        }
+      }
+      
       return token;
     },
     async session({ session, token }) {

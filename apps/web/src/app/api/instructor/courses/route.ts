@@ -18,15 +18,17 @@ export async function GET(request: Request) {
       );
     }
 
-    const instructorProfile = await prisma.instructorProfile.findUnique({
+    let instructorProfile = await prisma.instructorProfile.findUnique({
       where: { userId: session.user.id },
     });
 
+    // Criar perfil automaticamente se não existir
     if (!instructorProfile) {
-      return NextResponse.json(
-        { error: 'Perfil de instrutor não encontrado' },
-        { status: 404 }
-      );
+      instructorProfile = await prisma.instructorProfile.create({
+        data: {
+          userId: session.user.id,
+        },
+      });
     }
 
     const courses = await prisma.course.findMany({
@@ -76,15 +78,17 @@ export async function POST(request: Request) {
       );
     }
 
-    const instructorProfile = await prisma.instructorProfile.findUnique({
+    let instructorProfile = await prisma.instructorProfile.findUnique({
       where: { userId: session.user.id },
     });
 
+    // Criar perfil automaticamente se não existir
     if (!instructorProfile) {
-      return NextResponse.json(
-        { error: 'Perfil de instrutor não encontrado' },
-        { status: 404 }
-      );
+      instructorProfile = await prisma.instructorProfile.create({
+        data: {
+          userId: session.user.id,
+        },
+      });
     }
 
     const body = await request.json();
