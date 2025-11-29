@@ -2,8 +2,6 @@ import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 
-export const runtime = 'edge';
-
 export async function POST(request: Request): Promise<NextResponse> {
   try {
     // Verificar autenticação
