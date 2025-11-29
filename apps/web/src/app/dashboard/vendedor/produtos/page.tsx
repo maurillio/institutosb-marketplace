@@ -31,6 +31,7 @@ export default function SellerProductsPage() {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -46,12 +47,24 @@ export default function SellerProductsPage() {
 
   const fetchProducts = async () => {
     try {
+      console.log('[Produtos Page] Buscando produtos...');
       const response = await fetch('/api/seller/products');
-      if (!response.ok) throw new Error('Erro ao buscar produtos');
+      
+      console.log('[Produtos Page] Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro ao buscar produtos');
+      }
+      
       const data = await response.json();
+      console.log('[Produtos Page] Produtos recebidos:', data);
+      
       setProducts(data);
+      setError(null);
     } catch (error) {
-      console.error('Erro:', error);
+      console.error('[Produtos Page] Erro ao buscar produtos:', error);
+      setError(error instanceof Error ? error.message : 'Erro desconhecido');
     } finally {
       setLoading(false);
     }
@@ -78,6 +91,21 @@ export default function SellerProductsPage() {
         <Header />
         <main className="flex flex-1 items-center justify-center">
           <p>Carregando...</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <Header />
+        <main className="flex flex-1 items-center justify-center">
+          <div className="text-center">
+            <p className="text-red-600 mb-4">❌ {error}</p>
+            <Button onClick={() => fetchProducts()}>Tentar Novamente</Button>
+          </div>
         </main>
         <Footer />
       </div>
