@@ -45,31 +45,51 @@ export default function PerfilPage() {
     e.preventDefault();
     setLoading(true);
 
+    console.log('[Frontend] ========== INÍCIO ATUALIZAÇÃO ==========');
+    console.log('[Frontend] Dados a enviar:', {
+      name: formData.name,
+      phone: formData.phone,
+      avatar: formData.avatar?.substring(0, 50) + '...',
+      cpfCnpj: formData.cpfCnpj,
+    });
+
     try {
+      console.log('[Frontend] Enviando requisição PATCH...');
+      
       const response = await fetch('/api/user/profile', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
+      console.log('[Frontend] Response status:', response.status);
+
       if (!response.ok) {
         const error = await response.json();
+        console.error('[Frontend] ❌ Erro na resposta:', error);
         throw new Error(error.error || 'Erro ao atualizar perfil');
       }
 
       const data = await response.json();
-      console.log('Perfil atualizado:', data);
+      console.log('[Frontend] ✅ Perfil atualizado:', data);
 
+      console.log('[Frontend] Chamando update() do NextAuth...');
+      
       // Atualizar sessão do NextAuth
       const updateResult = await update();
-      console.log('Sessão atualizada:', updateResult);
+      console.log('[Frontend] Update result:', updateResult);
 
       alert('Perfil atualizado com sucesso!');
       
-      // Recarregar a página para garantir que os dados sejam atualizados
-      window.location.reload();
+      console.log('[Frontend] Recarregando página em 1 segundo...');
+      
+      // Aguardar um pouco antes de recarregar
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      
     } catch (error) {
-      console.error('Erro completo:', error);
+      console.error('[Frontend] ❌ ERRO CRÍTICO:', error);
       alert(error instanceof Error ? error.message : 'Erro ao atualizar perfil');
     } finally {
       setLoading(false);

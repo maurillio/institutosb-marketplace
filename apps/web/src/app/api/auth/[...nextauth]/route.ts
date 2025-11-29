@@ -69,8 +69,11 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
+      console.log('[JWT Callback] Trigger:', trigger, 'User ID:', token.id);
+      
       // No login inicial
       if (user) {
+        console.log('[JWT Callback] Login inicial - User:', user.id);
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
@@ -81,6 +84,7 @@ export const authOptions: NextAuthOptions = {
       
       // Quando update() é chamado
       if (trigger === 'update' && token.id) {
+        console.log('[JWT Callback] Update triggered - Token ID:', token.id);
         try {
           const updatedUser = await prisma.user.findUnique({
             where: { id: token.id as string },
@@ -97,23 +101,31 @@ export const authOptions: NextAuthOptions = {
           });
           
           if (updatedUser) {
+            console.log('[JWT Callback] Usuário encontrado:', {
+              id: updatedUser.id,
+              name: updatedUser.name,
+              avatar: updatedUser.avatar,
+            });
             token.name = updatedUser.name;
             token.avatar = updatedUser.avatar;
             token.roles = updatedUser.roles;
             token.status = updatedUser.status;
             // Mantém id e email inalterados para não quebrar a sessão
           } else {
-            console.error('Usuário não encontrado durante update:', token.id);
+            console.error('[JWT Callback] ❌ Usuário não encontrado durante update:', token.id);
           }
         } catch (error) {
-          console.error('Erro ao buscar usuário atualizado:', error);
+          console.error('[JWT Callback] ❌ Erro ao buscar usuário atualizado:', error);
           // Em caso de erro, mantém o token atual para não quebrar a sessão
         }
       }
       
+      console.log('[JWT Callback] Token final:', { id: token.id, name: token.name, email: token.email });
       return token;
     },
     async session({ session, token }) {
+      console.log('[Session Callback] Token recebido:', { id: token.id, name: token.name });
+      
       if (token && session.user) {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
@@ -122,6 +134,12 @@ export const authOptions: NextAuthOptions = {
         session.user.roles = token.roles as string[];
         session.user.status = token.status as string;
       }
+      
+      console.log('[Session Callback] Session final:', { 
+        userId: session.user?.id, 
+        userName: session.user?.name 
+      });
+      
       return session;
     },
   },
