@@ -68,10 +68,36 @@ export async function GET(
       ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length
       : 0;
 
-    return NextResponse.json({
-      ...product,
+    // Converter Decimal para Number
+    const productWithNumbers = {
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      description: product.description,
+      price: Number(product.price),
+      categoryId: product.categoryId,
+      sellerId: product.sellerId,
+      images: product.images,
+      condition: product.condition,
+      stock: product.stock,
+      status: product.status,
+      category: product.category,
+      seller: {
+        ...product.seller,
+        sellerProfile: product.seller.sellerProfile ? {
+          ...product.seller.sellerProfile,
+          rating: product.seller.sellerProfile.rating ? Number(product.seller.sellerProfile.rating) : null,
+        } : null,
+      },
+      variations: product.variations,
+      reviews: product.reviews,
+      _count: product._count,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
       avgRating: parseFloat(avgRating.toFixed(1)),
-    });
+    };
+
+    return NextResponse.json(productWithNumbers);
   } catch (error) {
     console.error('Erro ao buscar produto:', error);
     return NextResponse.json(

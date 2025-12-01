@@ -43,7 +43,13 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(product);
+    // Converter Decimal para Number
+    const productWithNumber = {
+      ...product,
+      price: Number(product.price),
+    };
+
+    return NextResponse.json(productWithNumber);
   } catch (error) {
     console.error('Erro ao buscar produto:', error);
     return NextResponse.json(
@@ -121,7 +127,13 @@ export async function PUT(
       },
     });
 
-    return NextResponse.json(product);
+    // Converter Decimal para Number
+    const productWithNumber = {
+      ...product,
+      price: Number(product.price),
+    };
+
+    return NextResponse.json(productWithNumber);
   } catch (error) {
     console.error('Erro ao atualizar produto:', error);
     return NextResponse.json(
