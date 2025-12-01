@@ -1,34 +1,45 @@
 import Link from 'next/link';
-import { Sparkles, Scissors, Heart, Paintbrush } from 'lucide-react';
+import { Sparkles, Scissors, Heart, Paintbrush, Package } from 'lucide-react';
+import { prisma } from '@thebeautypro/database';
 
-const categories = [
-  {
-    name: 'Maquiagem',
-    slug: 'maquiagem',
-    icon: Paintbrush,
-    color: 'text-pink-500',
-  },
-  {
-    name: 'Cabelo',
-    slug: 'cabelo',
-    icon: Scissors,
-    color: 'text-purple-500',
-  },
-  {
-    name: 'Skincare',
-    slug: 'skincare',
-    icon: Heart,
-    color: 'text-rose-500',
-  },
-  {
-    name: 'Unhas',
-    slug: 'unhas',
-    icon: Sparkles,
-    color: 'text-blue-500',
-  },
-];
+// Mapeamento de ícones e cores por slug
+const iconMap: Record<string, any> = {
+  maquiagem: Paintbrush,
+  cabelo: Scissors,
+  skincare: Heart,
+  unhas: Sparkles,
+  equipamentos: Package,
+};
 
-export function Categories() {
+const colorMap: Record<string, string> = {
+  maquiagem: 'text-pink-500',
+  cabelo: 'text-purple-500',
+  skincare: 'text-rose-500',
+  unhas: 'text-blue-500',
+  equipamentos: 'text-orange-500',
+};
+
+export async function Categories() {
+  // Busca categorias principais (sem parent) do banco
+  const categoriesFromDb = await prisma.category.findMany({
+    where: {
+      parentId: null,
+      isActive: true,
+    },
+    orderBy: {
+      order: 'asc',
+    },
+    select: {
+      name: true,
+      slug: true,
+    },
+  });
+
+  const categories = categoriesFromDb.map((cat) => ({
+    ...cat,
+    icon: iconMap[cat.slug] || Package,
+    color: colorMap[cat.slug] || 'text-gray-500',
+  }));
   return (
     <section className="py-16">
       <div className="container">

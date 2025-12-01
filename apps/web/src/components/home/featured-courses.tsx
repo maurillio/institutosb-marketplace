@@ -2,50 +2,40 @@ import Link from 'next/link';
 import { Button } from '@thebeautypro/ui/button';
 import { Star, Users, Clock } from 'lucide-react';
 import { PLACEHOLDER_IMAGE } from '@/lib/constants';
-
-// Mock data - será substituído por dados reais do banco
-const courses = [
-  {
-    id: '1',
-    title: 'Curso Completo de Maquiagem Profissional',
-    price: 299.0,
-    image: PLACEHOLDER_IMAGE,
-    rating: 4.9,
-    students: 1234,
-    duration: 1200, // minutos
-    instructor: 'João Santos',
-    slug: 'curso-completo-maquiagem-profissional',
-  },
-  {
-    id: '2',
-    title: 'Técnicas Avançadas de Colorimetria Capilar',
-    price: 399.0,
-    image: PLACEHOLDER_IMAGE,
-    rating: 5.0,
-    students: 856,
-    duration: 900,
-    instructor: 'Maria Silva',
-    slug: 'tecnicas-avancadas-colorimetria',
-  },
-  {
-    id: '3',
-    title: 'Skincare do Básico ao Avançado',
-    price: 249.0,
-    image: PLACEHOLDER_IMAGE,
-    rating: 4.8,
-    students: 2341,
-    duration: 800,
-    instructor: 'Ana Costa',
-    slug: 'skincare-basico-avancado',
-  },
-];
+import { prisma } from '@thebeautypro/database';
 
 function formatDuration(minutes: number): string {
   const hours = Math.floor(minutes / 60);
   return `${hours}h`;
 }
 
-export function FeaturedCourses() {
+export async function FeaturedCourses() {
+  // Busca 6 cursos reais do banco - os mais bem avaliados e publicados
+  const courses = await prisma.course.findMany({
+    where: {
+      status: 'PUBLISHED',
+    },
+    orderBy: [
+      { rating: 'desc' },
+      { totalEnrollments: 'desc' },
+    ],
+    take: 6,
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      price: true,
+      rating: true,
+      thumbnail: true,
+      duration: true,
+      totalEnrollments: true,
+      instructor: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
   return (
     <section className="py-16">
       <div className="container">
@@ -66,7 +56,7 @@ export function FeaturedCourses() {
               <div className="overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg">
                 <div className="aspect-video overflow-hidden">
                   <img
-                    src={course.image}
+                    src={course.thumbnail || PLACEHOLDER_IMAGE}
                     alt={course.title}
                     className="h-full w-full object-cover transition-transform group-hover:scale-105"
                   />
@@ -76,26 +66,26 @@ export function FeaturedCourses() {
                     {course.title}
                   </h3>
                   <p className="text-sm text-muted-foreground mb-3">
-                    {course.instructor}
+                    {course.instructor.name}
                   </p>
 
                   <div className="flex items-center gap-4 mb-3 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span>{course.rating}</span>
+                      <span>{course.rating?.toFixed(1) || '0.0'}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Users className="h-4 w-4" />
-                      <span>{course.students}</span>
+                      <span>{course.totalEnrollments}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="h-4 w-4" />
-                      <span>{formatDuration(course.duration)}</span>
+                      <span>{course.duration ? formatDuration(course.duration) : '0h'}</span>
                     </div>
                   </div>
 
                   <p className="text-lg font-bold text-primary">
-                    R$ {course.price.toFixed(2)}
+                    R$ {Number(course.price).toFixed(2)}
                   </p>
                 </div>
               </div>

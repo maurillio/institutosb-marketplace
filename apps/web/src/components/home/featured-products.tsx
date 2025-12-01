@@ -2,44 +2,28 @@ import Link from 'next/link';
 import { Button } from '@thebeautypro/ui/button';
 import { Star } from 'lucide-react';
 import { PLACEHOLDER_IMAGE } from '@/lib/constants';
+import { prisma } from '@thebeautypro/database';
 
-// Mock data - será substituído por dados reais do banco
-const products = [
-  {
-    id: '1',
-    name: 'Shampoo Profissional 500ml',
-    price: 49.9,
-    image: PLACEHOLDER_IMAGE,
-    rating: 4.5,
-    slug: 'shampoo-profissional-500ml',
-  },
-  {
-    id: '2',
-    name: 'Kit de Pincéis Maquiagem',
-    price: 89.9,
-    image: PLACEHOLDER_IMAGE,
-    rating: 5,
-    slug: 'kit-pinceis-maquiagem',
-  },
-  {
-    id: '3',
-    name: 'Sérum Facial Anti-idade',
-    price: 129.9,
-    image: PLACEHOLDER_IMAGE,
-    rating: 4.8,
-    slug: 'serum-facial-anti-idade',
-  },
-  {
-    id: '4',
-    name: 'Esmalte Gel UV 3 Semanas',
-    price: 24.9,
-    image: PLACEHOLDER_IMAGE,
-    rating: 4.3,
-    slug: 'esmalte-gel-uv',
-  },
-];
-
-export function FeaturedProducts() {
+export async function FeaturedProducts() {
+  // Busca 8 produtos reais do banco - os mais bem avaliados e ativos
+  const products = await prisma.product.findMany({
+    where: {
+      status: 'ACTIVE',
+    },
+    orderBy: [
+      { rating: 'desc' },
+      { sales: 'desc' },
+    ],
+    take: 8,
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      price: true,
+      rating: true,
+      images: true,
+    },
+  });
   return (
     <section className="py-16 bg-muted/30">
       <div className="container">
@@ -60,7 +44,7 @@ export function FeaturedProducts() {
               <div className="overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg">
                 <div className="aspect-square overflow-hidden">
                   <img
-                    src={product.image}
+                    src={product.images?.[0] || PLACEHOLDER_IMAGE}
                     alt={product.name}
                     className="h-full w-full object-cover transition-transform group-hover:scale-105"
                   />
@@ -72,11 +56,11 @@ export function FeaturedProducts() {
                   <div className="flex items-center gap-1 mb-2">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                     <span className="text-sm text-muted-foreground">
-                      {product.rating}
+                      {product.rating?.toFixed(1) || '0.0'}
                     </span>
                   </div>
                   <p className="text-lg font-bold text-primary">
-                    R$ {product.price.toFixed(2)}
+                    R$ {Number(product.price).toFixed(2)}
                   </p>
                 </div>
               </div>

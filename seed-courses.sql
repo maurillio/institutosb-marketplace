@@ -1,0 +1,265 @@
+-- ============================================
+-- SEED CURSOS - THE BEAUTY PRO MARKETPLACE  
+-- 10 Cursos completos com módulos e aulas
+-- Execute APÓS seed.sql e seed-products.sql
+-- ============================================
+
+-- Curso 1: Maquiagem Profissional
+INSERT INTO "courses" (id, title, slug, description, "shortDescription", "instructorId", type, level, price, "compareAtPrice", thumbnail, "previewVideo", duration, "maxStudents", certificate, status, "publishedAt", rating, "totalReviews", "totalEnrollments", "createdAt", "updatedAt")
+VALUES
+('course-001', 'Maquiagem Profissional do Básico ao Avançado', 'maquiagem-profissional-basico-avancado',
+'Curso completo de maquiagem profissional. Aprenda desde os conceitos básicos até técnicas avançadas de maquiagem para eventos, noivas, editorial e artística.
+
+O que você vai aprender:
+- Visagismo e análise de rosto
+- Teoria das cores aplicada
+- Preparação de pele perfeita
+- Técnicas de contorno e iluminação
+- Maquiagem para diferentes ocasiões
+- Maquiagem de noiva (natural e clássica)
+- Maquiagem editorial e artística
+- Fotografia e iluminação
+- Como montar kit profissional
+- Precificação e atendimento ao cliente
+
+Certificado: Digital e impresso, reconhecido nacionalmente.',
+'Do zero ao profissional: técnicas, teoria e prática de maquiagem',
+'instrutor-001', 'ONLINE', 'ALL_LEVELS', 497.00, 897.00, '/images/courses/maquiagem-completo.jpg', NULL, 1800, NULL, TRUE, 'PUBLISHED',
+NOW(), 4.7, 89, 456, NOW(), NOW());
+
+-- Módulos do Curso 1
+INSERT INTO "course_modules" (id, "courseId", title, description, "order", "createdAt", "updatedAt")
+VALUES
+('module-001-1', 'course-001', 'Módulo 1: Fundamentos da Maquiagem', 'Conceitos básicos, ferramentas e produtos essenciais', 1, NOW(), NOW()),
+('module-001-2', 'course-001', 'Módulo 2: Técnicas de Base e Correção', 'Pele perfeita com base, corretivo e pó', 2, NOW(), NOW()),
+('module-001-3', 'course-001', 'Módulo 3: Contorno e Iluminação', 'Técnicas de esculpir o rosto com luz e sombra', 3, NOW(), NOW()),
+('module-001-4', 'course-001', 'Módulo 4: Olhos', 'Técnicas de sombra, esfumado e delineado', 4, NOW(), NOW()),
+('module-001-5', 'course-001', 'Módulo 5: Sobrancelhas', 'Design e preenchimento profissional', 5, NOW(), NOW()),
+('module-001-6', 'course-001', 'Módulo 6: Boca', 'Lábios perfeitos e harmoniosos', 6, NOW(), NOW()),
+('module-001-7', 'course-001', 'Módulo 7: Maquiagem para Ocasiões', 'Dia, noite, festa e eventos especiais', 7, NOW(), NOW()),
+('module-001-8', 'course-001', 'Módulo 8: Maquiagem de Noiva', 'Especialização em noivas', 8, NOW(), NOW()),
+('module-001-9', 'course-001', 'Módulo 9: Negócios e Carreira', 'Como se profissionalizar e ganhar dinheiro', 9, NOW(), NOW());
+
+-- Aulas do Curso 1
+INSERT INTO "course_lessons" ("moduleId", title, description, "order", duration, "isFree", "createdAt", "updatedAt")
+VALUES
+-- Módulo 1
+('module-001-1', 'Bem-vindo ao curso', 'Apresentação do curso, metodologia e objetivos', 1, 15, true, NOW(), NOW()),
+('module-001-1', 'Tipos de pele e preparação', 'Como identificar tipos de pele e preparar para maquiagem', 2, 45, false, NOW(), NOW()),
+('module-001-1', 'Ferramentas essenciais', 'Pincéis, esponjas e ferramentas profissionais', 3, 40, false, NOW(), NOW()),
+('module-001-1', 'Teoria das cores aplicada', 'Círculo cromático e harmonização de cores', 4, 50, false, NOW(), NOW()),
+-- Módulo 2
+('module-001-2', 'Escolha e aplicação de primer', NULL, 1, 35, false, NOW(), NOW()),
+('module-001-2', 'Técnicas de aplicação de base', NULL, 2, 45, false, NOW(), NOW()),
+('module-001-2', 'Correção de olheiras e imperfeições', NULL, 3, 40, false, NOW(), NOW()),
+('module-001-2', 'Selagem e fixação', NULL, 4, 30, false, NOW(), NOW()),
+-- Módulo 3
+('module-001-3', 'Visagismo: análise de rosto', NULL, 1, 50, false, NOW(), NOW()),
+('module-001-3', 'Técnicas de contorno', NULL, 2, 45, false, NOW(), NOW()),
+('module-001-3', 'Iluminação estratégica', NULL, 3, 40, false, NOW(), NOW()),
+('module-001-3', 'Prática: contorno em diferentes formatos de rosto', NULL, 4, 60, false, NOW(), NOW()),
+-- Módulo 4
+('module-001-4', 'Formatos de olhos e técnicas', NULL, 1, 45, false, NOW(), NOW()),
+('module-001-4', 'Esfumado perfeito', NULL, 2, 50, false, NOW(), NOW()),
+('module-001-4', 'Delineado e traços', NULL, 3, 40, false, NOW(), NOW()),
+('module-001-4', 'Cílios postiços', NULL, 4, 35, false, NOW(), NOW()),
+-- Módulo 5
+('module-001-5', 'Design de sobrancelhas', NULL, 1, 45, false, NOW(), NOW()),
+('module-001-5', 'Técnicas de preenchimento', NULL, 2, 40, false, NOW(), NOW()),
+-- Módulo 6
+('module-001-6', 'Contorno e preenchimento labial', NULL, 1, 35, false, NOW(), NOW()),
+('module-001-6', 'Técnicas de longa duração', NULL, 2, 30, false, NOW(), NOW()),
+-- Módulo 7
+('module-001-7', 'Maquiagem para o dia', NULL, 1, 45, false, NOW(), NOW()),
+('module-001-7', 'Maquiagem para festa e balada', NULL, 2, 50, false, NOW(), NOW()),
+('module-001-7', 'Maquiagem de formatura', NULL, 3, 45, false, NOW(), NOW()),
+-- Módulo 8
+('module-001-8', 'Consulta e prova de maquiagem', NULL, 1, 40, false, NOW(), NOW()),
+('module-001-8', 'Técnicas de longa duração para noivas', NULL, 2, 50, false, NOW(), NOW()),
+('module-001-8', 'Maquiagem de noiva: passo a passo completo', NULL, 3, 90, false, NOW(), NOW()),
+-- Módulo 9
+('module-001-9', 'Montando seu kit profissional', NULL, 1, 30, false, NOW(), NOW()),
+('module-001-9', 'Precificação de serviços', NULL, 2, 40, false, NOW(), NOW()),
+('module-001-9', 'Marketing para maquiadores', NULL, 3, 45, false, NOW(), NOW()),
+('module-001-9', 'Atendimento ao cliente', NULL, 4, 35, false, NOW(), NOW());
+
+-- Curso 2: Design de Sobrancelhas
+INSERT INTO "courses" (id, title, slug, description, "shortDescription", "instructorId", type, level, price, "compareAtPrice", thumbnail, "previewVideo", duration, "maxStudents", certificate, status, "publishedAt", rating, "totalReviews", "totalEnrollments", "createdAt", "updatedAt")
+VALUES
+('course-002', 'Design de Sobrancelhas e Micropigmentação', 'design-sobrancelhas-micropigmentacao',
+'Aprenda design de sobrancelhas com técnicas modernas + introdução à micropigmentação (henna, henna híbrida e conceitos de micro). Visagismo, medidas, colorimetria. Certificado reconhecido.',
+'Design, henna e introdução à micropigmentação',
+'instrutor-002', 'ONLINE', 'BEGINNER', 397.00, 697.00, '/images/courses/design-sobrancelhas.jpg', NULL, 900, NULL, TRUE, 'PUBLISHED',
+NOW(), 4.8, 124, 678, NOW(), NOW());
+
+-- Módulos e Aulas do Curso 2
+INSERT INTO "course_modules" (id, "courseId", title, "order", "createdAt", "updatedAt")
+VALUES
+('module-002-1', 'course-002', 'Módulo 1: Fundamentos', 1, NOW(), NOW()),
+('module-002-2', 'course-002', 'Módulo 2: Design', 2, NOW(), NOW()),
+('module-002-3', 'course-002', 'Módulo 3: Colorimetria e Henna', 3, NOW(), NOW()),
+('module-002-4', 'course-002', 'Módulo 4: Micropigmentação', 4, NOW(), NOW()),
+('module-002-5', 'course-002', 'Módulo 5: Negócios', 5, NOW(), NOW());
+
+INSERT INTO "course_lessons" ("moduleId", title, "order", duration, "isFree", "createdAt", "updatedAt")
+VALUES
+('module-002-1', 'Introdução ao curso', 1, 15, true, NOW(), NOW()),
+('module-002-1', 'Anatomia da sobrancelha', 2, 30, false, NOW(), NOW()),
+('module-002-1', 'Visagismo aplicado', 3, 45, false, NOW(), NOW()),
+('module-002-1', 'Medidas e proporções', 4, 50, false, NOW(), NOW()),
+('module-002-2', 'Técnica do design com linha', 1, 40, false, NOW(), NOW()),
+('module-002-2', 'Depilação com pinça', 2, 35, false, NOW(), NOW()),
+('module-002-2', 'Depilação com cera', 3, 30, false, NOW(), NOW()),
+('module-002-2', 'Design com linha egípcia', 4, 45, false, NOW(), NOW()),
+('module-002-3', 'Teoria das cores para sobrancelhas', 1, 40, false, NOW(), NOW()),
+('module-002-3', 'Henna tradicional', 2, 45, false, NOW(), NOW()),
+('module-002-3', 'Henna híbrida', 3, 50, false, NOW(), NOW()),
+('module-002-4', 'Conceitos de micropigmentação', 1, 60, false, NOW(), NOW()),
+('module-002-4', 'Técnicas: Fio a Fio, Shadow, Ombre', 2, 70, false, NOW(), NOW()),
+('module-002-4', 'Biossegurança e regulamentação', 3, 40, false, NOW(), NOW()),
+('module-002-5', 'Montando seu espaço', 1, 30, false, NOW(), NOW()),
+('module-002-5', 'Precificação', 2, 35, false, NOW(), NOW()),
+('module-002-5', 'Marketing no Instagram', 3, 40, false, NOW(), NOW());
+
+-- Curso 3: Colorimetria
+INSERT INTO "courses" (id, title, slug, description, "shortDescription", "instructorId", type, level, price, "compareAtPrice", thumbnail, "previewVideo", duration, "maxStudents", certificate, status, "publishedAt", rating, "totalReviews", "totalEnrollments", "createdAt", "updatedAt")
+VALUES
+('course-003', 'Colorimetria Capilar Avançada', 'colorimetria-capilar-avancada',
+'Domine a arte da colorimetria capilar. Aprenda a criar nuances perfeitas, correções de cor, mechas e técnicas de descoloração seguras. Teoria da cor, balayage, ombre, matização. Certificado profissionalizante.',
+'Domine cores, mechas, balayage e correções',
+'instrutor-003', 'ONLINE', 'INTERMEDIATE', 897.00, NULL, '/images/courses/colorimetria.jpg', NULL, 1200, NULL, TRUE, 'PUBLISHED',
+NOW(), 4.9, 156, 534, NOW(), NOW());
+
+-- Módulos e aulas resumidos para Curso 3-10
+INSERT INTO "course_modules" (id, "courseId", title, "order", "createdAt", "updatedAt")
+VALUES
+('module-003-1', 'course-003', 'Módulo 1: Teoria da Cor', 1, NOW(), NOW()),
+('module-003-2', 'course-003', 'Módulo 2: Coloração Global', 2, NOW(), NOW()),
+('module-003-3', 'course-003', 'Módulo 3: Descoloração', 3, NOW(), NOW()),
+('module-003-4', 'course-003', 'Módulo 4: Técnicas de Mechas', 4, NOW(), NOW()),
+('module-003-5', 'course-003', 'Módulo 5: Matização e Tonalização', 5, NOW(), NOW()),
+('module-003-6', 'course-003', 'Módulo 6: Negócios', 6, NOW(), NOW());
+
+INSERT INTO "course_lessons" ("moduleId", title, "order", duration, "isFree", "createdAt", "updatedAt")
+VALUES
+('module-003-1', 'Introdução à colorimetria', 1, 20, true, NOW(), NOW()),
+('module-003-1', 'Círculo cromático capilar', 2, 60, false, NOW(), NOW()),
+('module-003-1', 'Fundos de clareamento', 3, 60, false, NOW(), NOW()),
+('module-003-2', 'Técnicas de aplicação', 1, 60, false, NOW(), NOW()),
+('module-003-2', 'Prática: coloração global', 2, 90, false, NOW(), NOW()),
+('module-003-3', 'Descoloração segura', 1, 60, false, NOW(), NOW()),
+('module-003-3', 'Prática: descoloração', 2, 80, false, NOW(), NOW()),
+('module-003-4', 'Balayage', 1, 70, false, NOW(), NOW()),
+('module-003-4', 'Ombre e Babylights', 2, 60, false, NOW(), NOW()),
+('module-003-5', 'Matização de loiros', 1, 50, false, NOW(), NOW()),
+('module-003-5', 'Correção de cor', 2, 70, false, NOW(), NOW()),
+('module-003-6', 'Precificação de serviços de cor', 1, 40, false, NOW(), NOW());
+
+-- Demais cursos (4-10) - versão resumida
+INSERT INTO "courses" (id, title, slug, description, "shortDescription", "instructorId", type, level, price, "compareAtPrice", thumbnail, "previewVideo", duration, "maxStudents", certificate, status, "publishedAt", rating, "totalReviews", "totalEnrollments", "createdAt", "updatedAt")
+VALUES
+('course-004', 'Skincare Profissional e Tratamentos Faciais', 'skincare-profissional-tratamentos-faciais',
+'Aprenda a realizar tratamentos faciais profissionais, limpeza de pele completa, e protocolos de tratamento para diferentes necessidades. Certificado profissionalizante.',
+'Limpeza de pele, tratamentos e protocolos faciais',
+'instrutor-004', 'ONLINE', 'BEGINNER', 547.00, NULL, '/images/courses/skincare-profissional.jpg', NULL, 720, NULL, TRUE, 'PUBLISHED',
+NOW(), 4.6, 98, 412, NOW(), NOW()),
+
+('course-005', 'Nail Art Avançado - Técnicas e Decoração', 'nail-art-avancado-tecnicas-decoracao',
+'Curso completo de Nail Art. Aprenda técnicas de decoração artística em unhas, desde o básico até designs complexos. Certificado profissionalizante.',
+'Decore unhas como uma artista profissional',
+'instrutor-005', 'ONLINE', 'INTERMEDIATE', 447.00, NULL, '/images/courses/nail-art.jpg', NULL, 600, NULL, TRUE, 'PUBLISHED',
+NOW(), 4.7, 112, 523, NOW(), NOW()),
+
+('course-006', 'Alongamento de Cílios - Técnicas Fio a Fio', 'alongamento-cilios-tecnicas-fio-a-fio',
+'Aprenda a técnica de alongamento de cílios fio a fio, desde o básico até técnicas avançadas como volume russo e mega volume. Certificado profissionalizante.',
+'Alongamento clássico, volume russo e mega volume',
+'instrutor-006', 'HYBRID', 'BEGINNER', 697.00, 997.00, '/images/courses/alongamento-cilios.jpg', NULL, 480, NULL, TRUE, 'PUBLISHED',
+NOW(), 4.8, 87, 389, NOW(), NOW()),
+
+('course-007', 'Maquiagem Editorial e Artística', 'maquiagem-editorial-artistica',
+'Curso avançado de maquiagem editorial para fashion, fotografia, passarela e trabalhos artísticos. Certificado de especialização profissional.',
+'Maquiagem para moda, fotografia e arte',
+'instrutor-001', 'IN_PERSON', 'ADVANCED', 1497.00, NULL, '/images/courses/maquiagem-editorial.jpg', NULL, 960, NULL, TRUE, 'PUBLISHED',
+NOW(), 4.9, 64, 187, NOW(), NOW()),
+
+('course-008', 'Corte e Escova Profissional', 'corte-escova-profissional',
+'Curso completo de cabeleireiro: técnicas de corte (feminino e masculino), escova e penteados. Certificado profissionalizante com estágio supervisionado.',
+'Técnicas de corte, escova e penteados profissionais',
+'instrutor-002', 'IN_PERSON', 'ALL_LEVELS', 1897.00, NULL, '/images/courses/corte-escova.jpg', NULL, 2400, NULL, TRUE, 'PUBLISHED',
+NOW(), 4.8, 143, 456, NOW(), NOW()),
+
+('course-009', 'Marketing Digital para Profissionais de Beleza', 'marketing-digital-profissionais-beleza',
+'Aprenda a divulgar seus serviços, atrair clientes e vender mais usando Instagram, TikTok e outras redes sociais. Certificado digital.',
+'Instagram, TikTok e vendas online para beauty',
+'instrutor-003', 'ONLINE', 'BEGINNER', 297.00, 497.00, '/images/courses/marketing-beauty.jpg', NULL, 480, NULL, TRUE, 'PUBLISHED',
+NOW(), 4.7, 198, 823, NOW(), NOW()),
+
+('course-010', 'Gestão de Salão de Beleza - Do Básico ao Avançado', 'gestao-salao-beleza-basico-avancado',
+'Aprenda a gerenciar um salão de beleza de forma profissional e lucrativa. Desde abertura até crescimento e expansão. Certificado de Gestão de Negócios.',
+'Gerencie seu salão de forma profissional e lucrativa',
+'instrutor-004', 'ONLINE', 'ALL_LEVELS', 697.00, 997.00, '/images/courses/gestao-salao.jpg', NULL, 1200, NULL, TRUE, 'PUBLISHED',
+NOW(), 4.8, 176, 612, NOW(), NOW());
+
+-- Módulos básicos para cursos 4-10
+INSERT INTO "course_modules" (id, "courseId", title, "order", "createdAt", "updatedAt")
+VALUES
+('module-004-1', 'course-004', 'Módulo 1: Fundamentos da Pele', 1, NOW(), NOW()),
+('module-004-2', 'course-004', 'Módulo 2: Limpeza de Pele', 2, NOW(), NOW()),
+('module-004-3', 'course-004', 'Módulo 3: Tratamentos Específicos', 3, NOW(), NOW()),
+('module-005-1', 'course-005', 'Módulo 1: Fundamentos', 1, NOW(), NOW()),
+('module-005-2', 'course-005', 'Módulo 2: Técnicas Básicas', 2, NOW(), NOW()),
+('module-005-3', 'course-005', 'Módulo 3: Técnicas Avançadas', 3, NOW(), NOW()),
+('module-006-1', 'course-006', 'Módulo 1: Teórico Online', 1, NOW(), NOW()),
+('module-006-2', 'course-006', 'Módulo 2: Técnica Clássica', 2, NOW(), NOW()),
+('module-006-3', 'course-006', 'Módulo 3: Volume Russo', 3, NOW(), NOW()),
+('module-007-1', 'course-007', 'Dia 1: Maquiagem para Fotografia', 1, NOW(), NOW()),
+('module-007-2', 'course-007', 'Dia 2: Maquiagem Editorial', 2, NOW(), NOW()),
+('module-008-1', 'course-008', 'Semana 1: Fundamentos', 1, NOW(), NOW()),
+('module-008-2', 'course-008', 'Semana 2: Corte Feminino', 2, NOW(), NOW()),
+('module-008-3', 'course-008', 'Semana 3: Corte Masculino', 3, NOW(), NOW()),
+('module-009-1', 'course-009', 'Módulo 1: Fundamentos', 1, NOW(), NOW()),
+('module-009-2', 'course-009', 'Módulo 2: Instagram', 2, NOW(), NOW()),
+('module-009-3', 'course-009', 'Módulo 3: Vendas Online', 3, NOW(), NOW()),
+('module-010-1', 'course-010', 'Módulo 1: Planejamento', 1, NOW(), NOW()),
+('module-010-2', 'course-010', 'Módulo 2: Financeiro', 2, NOW(), NOW()),
+('module-010-3', 'course-010', 'Módulo 3: Gestão de Pessoas', 3, NOW(), NOW());
+
+-- Aulas básicas para completar
+INSERT INTO "course_lessons" ("moduleId", title, "order", duration, "isFree", "createdAt", "updatedAt")
+VALUES
+-- Curso 4
+('module-004-1', 'Bem-vindo ao curso de skincare', 1, 15, true, NOW(), NOW()),
+('module-004-1', 'Anatomia e fisiologia da pele', 2, 50, false, NOW(), NOW()),
+('module-004-2', 'Protocolo completo de limpeza de pele', 1, 60, false, NOW(), NOW()),
+('module-004-3', 'Tratamento anti-idade', 1, 50, false, NOW(), NOW()),
+-- Curso 5
+('module-005-1', 'Introdução ao nail art', 1, 20, true, NOW(), NOW()),
+('module-005-2', 'Pintura à mão livre', 1, 50, false, NOW(), NOW()),
+('module-005-3', 'Pedrarias e aplicações', 1, 50, false, NOW(), NOW()),
+-- Curso 6
+('module-006-1', 'Anatomia dos cílios', 1, 30, true, NOW(), NOW()),
+('module-006-2', 'Técnica fio a fio (1x1)', 1, 60, false, NOW(), NOW()),
+('module-006-3', 'Montagem de leques', 1, 50, false, NOW(), NOW()),
+-- Curso 7
+('module-007-1', 'Luz, câmera e maquiagem', 1, 120, false, NOW(), NOW()),
+('module-007-2', 'Referências e moodboard', 1, 90, false, NOW(), NOW()),
+-- Curso 8
+('module-008-1', 'Introdução ao curso', 1, 60, true, NOW(), NOW()),
+('module-008-2', 'Corte reto e graduado', 1, 240, false, NOW(), NOW()),
+('module-008-3', 'Degradê e fade', 1, 240, false, NOW(), NOW()),
+-- Curso 9
+('module-009-1', 'Bem-vindo ao curso', 1, 15, true, NOW(), NOW()),
+('module-009-2', 'Perfil que vende', 1, 45, false, NOW(), NOW()),
+('module-009-3', 'Agendamento online', 1, 35, false, NOW(), NOW()),
+-- Curso 10
+('module-010-1', 'Introdução à gestão de salões', 1, 20, true, NOW(), NOW()),
+('module-010-2', 'Controle financeiro básico', 1, 60, false, NOW(), NOW()),
+('module-010-3', 'Contratação e equipe', 1, 50, false, NOW(), NOW());
+
+-- ============================================
+-- FIM DOS CURSOS
+-- ============================================
+-- Total: 10 cursos completos
+-- Distribuídos entre 6 instrutores
+-- Com módulos e aulas estruturados
+-- ============================================
