@@ -24,11 +24,8 @@ export async function Categories() {
   const categoriesFromDb = await prisma.category.findMany({
     where: {
       parentId: null,
-      isActive: true,
     },
-    orderBy: {
-      order: 'asc',
-    },
+    take: 5, // Limita a 5 categorias principais
     select: {
       name: true,
       slug: true,
