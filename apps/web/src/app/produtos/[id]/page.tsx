@@ -357,10 +357,7 @@ export default function ProductDetailsPage() {
                 {/* Informações do vendedor */}
                 <div className="mt-8 border-t pt-6">
                   <h3 className="font-semibold">Vendido por</h3>
-                  <Link
-                    href={`/vendedor/${product.seller.id}`}
-                    className="mt-2 flex items-center gap-3 hover:opacity-80"
-                  >
+                  <div className="mt-2 flex items-center gap-3">
                     <div className="relative h-12 w-12 overflow-hidden rounded-full bg-gray-200">
                       {product.seller.avatar && (
                         <Image
@@ -381,7 +378,7 @@ export default function ProductDetailsPage() {
                         </span>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </div>
               </div>
 
