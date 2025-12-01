@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useSession } from 'next-auth/react';
+import { toast } from 'sonner';
 
 interface WishlistItem {
   id: string;
@@ -53,7 +54,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
 
   const addToWishlist = async (productId: string) => {
     if (!session) {
-      alert('Faça login para adicionar produtos à sua lista de desejos');
+      toast.error('Faça login para adicionar produtos à sua lista de desejos');
       return;
     }
 
@@ -74,9 +75,10 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       }
 
       setWishlistItems([...wishlistItems, productId]);
+      toast.success('Adicionado à lista de desejos');
     } catch (error: any) {
       console.error('Erro ao adicionar à wishlist:', error);
-      alert(error.message || 'Erro ao adicionar à wishlist');
+      toast.error(error.message || 'Erro ao adicionar à wishlist');
     } finally {
       setIsLoading(false);
     }
@@ -94,9 +96,10 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       }
 
       setWishlistItems(wishlistItems.filter((id) => id !== productId));
+      toast.success('Removido da lista de desejos');
     } catch (error: any) {
       console.error('Erro ao remover da wishlist:', error);
-      alert(error.message || 'Erro ao remover da wishlist');
+      toast.error(error.message || 'Erro ao remover da wishlist');
     } finally {
       setIsLoading(false);
     }
