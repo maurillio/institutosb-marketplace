@@ -108,19 +108,35 @@ export async function GET(request: Request) {
     ]);
 
     // Converter Decimal para number e ajustar estrutura
-    const productsWithNumbers = products.map((product) => ({
-      ...product,
-      price: Number(product.price),
-      imageUrl: product.images && product.images.length > 0 ? product.images[0] : null,
-      seller: {
-        user: {
-          name: product.seller.name,
+    const productsWithNumbers = products.map((product) => {
+      const priceAsNumber = Number(product.price);
+      const ratingAsNumber = product.seller.sellerProfile?.rating
+        ? Number(product.seller.sellerProfile.rating)
+        : null;
+
+      // Debug: verificar tipos
+      console.log('[API Products] Product:', product.name);
+      console.log('[API Products] Price - Original:', product.price, 'Type:', typeof product.price);
+      console.log('[API Products] Price - Converted:', priceAsNumber, 'Type:', typeof priceAsNumber);
+
+      return {
+        id: product.id,
+        name: product.name,
+        price: priceAsNumber,
+        imageUrl: product.images && product.images.length > 0 ? product.images[0] : null,
+        condition: product.condition,
+        stock: product.stock,
+        status: product.status,
+        category: product.category,
+        seller: {
+          user: {
+            name: product.seller.name,
+          },
+          rating: ratingAsNumber,
         },
-        rating: product.seller.sellerProfile?.rating
-          ? Number(product.seller.sellerProfile.rating)
-          : null,
-      },
-    }));
+        _count: product._count,
+      };
+    });
 
     return NextResponse.json({
       products: productsWithNumbers,
