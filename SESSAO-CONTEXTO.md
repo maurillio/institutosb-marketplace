@@ -49,6 +49,11 @@
 22. ~~Erro 500 ao criar curso - campo duration não convertido corretamente~~ ⚠️ TENTATIVA DE CORREÇÃO (conversão string→Int com tratamento de vazio)
 23. ~~TypeError: Cannot read properties of undefined (reading 'name') no dashboard instrutor~~ ⚠️ TENTATIVA DE CORREÇÃO (removida referência a course.category)
 24. ~~TypeError: Cannot read properties of undefined (reading 'name') na página de detalhes do curso~~ ⚠️ TENTATIVA DE CORREÇÃO (removida category, corrigida estrutura instructor)
+25. **Imagens 404 - produtos e cursos não têm arquivos físicos** ⚠️ CORREÇÃO PENDENTE
+   - Erro: GET /images/products/*.jpg retorna 404
+   - Erro: Next.js Image retorna 400 Bad Request ao tentar otimizar imagens inexistentes
+   - Solução temporária: Script SQL `fix-images-placeholder.sql` para usar `/placeholder.png`
+   - Solução definitiva: Upload de imagens reais via dashboard ou Vercel Blob
 
 ## Componentes Principais
 - Header/Footer: `@/components/layout/`
@@ -74,6 +79,15 @@
   - Categories busca categorias principais do banco
   - **BANCO POPULADO**: 50 produtos reais + 10 cursos completos (via SQL no Neon)
   - Scripts de validação: validate-seed.sql, quick-check.sql
+- Commit `8edf8c3`: **Correção erro isActive em Categories**
+  - Removido filtro `isActive: true` que não existe no schema
+  - Adicionado `take: 5` para limitar categorias exibidas
+  - Deploy bem-sucedido mas com erros 404 nas imagens
+
+## Próximos Passos
+1. **[URGENTE]** Executar `fix-images-placeholder.sql` no Neon para corrigir erro 404 nas imagens
+2. Futuramente: Implementar upload de imagens reais via dashboard
+3. Considerar sistema de busca global funcional (produtos + cursos)
 
 ## Branch Atual
 main (deployado automaticamente no Vercel)
