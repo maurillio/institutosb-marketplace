@@ -178,22 +178,38 @@ export default function EditarCursoPage() {
   };
 
   const saveModules = async () => {
+    console.log('[Edit Course] Salvando módulos...', modules.length);
     setSaving(true);
+
     try {
+      console.log('[Edit Course] Enviando requisição...');
       const response = await fetch(`/api/instructor/courses/${params.id}/modules`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ modules }),
       });
 
-      if (!response.ok) throw new Error('Erro ao salvar módulos');
+      console.log('[Edit Course] Response status:', response.status);
 
-      alert('Módulos salvos com sucesso!');
-      fetchCourse(); // Recarregar dados
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('[Edit Course] Erro na resposta:', errorData);
+        throw new Error(errorData.error || 'Erro ao salvar módulos');
+      }
+
+      const data = await response.json();
+      console.log('[Edit Course] Módulos salvos:', data);
+
+      alert('✅ Módulos salvos com sucesso!');
+
+      console.log('[Edit Course] Recarregando dados...');
+      await fetchCourse(); // Recarregar dados
+      console.log('[Edit Course] Dados recarregados');
     } catch (error) {
-      console.error('Erro:', error);
-      alert('Erro ao salvar módulos');
+      console.error('[Edit Course] Erro ao salvar módulos:', error);
+      alert('❌ Erro ao salvar módulos: ' + (error instanceof Error ? error.message : 'Erro desconhecido'));
     } finally {
+      console.log('[Edit Course] Finalizando...');
       setSaving(false);
     }
   };
