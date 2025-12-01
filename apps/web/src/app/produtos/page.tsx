@@ -126,6 +126,10 @@ export default function ProductsPage() {
       const response = await fetch(`/api/products?${params}`);
       const data = await response.json();
 
+      console.log('[Produtos Page] Resposta da API:', data);
+      console.log('[Produtos Page] Primeiro produto:', data.products?.[0]);
+      console.log('[Produtos Page] Tipo do price:', typeof data.products?.[0]?.price);
+
       setProducts(data.products);
       setTotalPages(data.pagination.totalPages);
     } catch (error) {
