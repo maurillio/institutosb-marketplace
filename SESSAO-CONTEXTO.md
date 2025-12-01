@@ -46,6 +46,7 @@
 20. ~~TypeError: Cannot read properties of undefined (reading 'avatar') na página /produtos/[id]~~ ⚠️ TENTATIVA DE CORREÇÃO (interface corrigida para seller.avatar)
 21. ~~Erro 404 ao fazer prefetch de /vendedor/[id] (rota não existe)~~ ⚠️ TENTATIVA DE CORREÇÃO (link removido temporariamente)
 22. ~~Erro 500 ao criar curso - campo duration não convertido corretamente~~ ⚠️ TENTATIVA DE CORREÇÃO (conversão string→Int com tratamento de vazio)
+23. ~~TypeError: Cannot read properties of undefined (reading 'name') no dashboard instrutor~~ ⚠️ TENTATIVA DE CORREÇÃO (removida referência a course.category)
 
 ## Componentes Principais
 - Header/Footer: `@/components/layout/`
@@ -54,12 +55,12 @@
 - CurrencyInput: `@/components/CurrencyInput` (formatação R$ automática)
 
 ## Últimas Alterações
+- Commit `98f6e44`: Correção do dashboard instrutor (course.category undefined)
+- Commit `dfdb417`: Documentação do problema 22 (erro ao criar curso)
 - Commit `a049e6b`: Correção da conversão do campo duration na criação de curso
 - Commit `437ea74`: Documentação do problema 21 (404 em /vendedor/[id])
 - Commit `2b7c0fb`: Remoção de link para /vendedor/[id] (rota não implementada)
 - Commit `61923db`: Documentação do problema 20 (avatar em /produtos/[id])
-- Commit `5ef94c6`: Correção de estrutura seller (avatar e rating) em /produtos/[id]
-- Commit `4144f16`: Correção do link de edição em dashboard vendedor
 
 ## Branch Atual
 main (deployado automaticamente no Vercel)
