@@ -1,15 +1,18 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { ShoppingCart, Search, Menu, Heart } from 'lucide-react';
 import { Button } from '@thebeautypro/ui/button';
 import { UserMenu } from './user-menu';
+import { MobileMenu } from './mobile-menu';
 import { useCart } from '@/contexts/cart-context';
 import { useWishlist } from '@/contexts/wishlist-context';
 
 export function Header() {
   const { itemsCount } = useCart();
   const { wishlistItems } = useWishlist();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
@@ -82,13 +85,24 @@ export function Header() {
           {/* User Menu */}
           <UserMenu />
 
-          {/* Mobile Menu */}
-          <Button variant="ghost" size="icon" className="md:hidden">
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsMobileMenuOpen(true)}
+          >
             <Menu className="h-5 w-5" />
             <span className="sr-only">Menu</span>
           </Button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+      />
 
       {/* Secondary Nav - Vender */}
       <div className="border-t">
