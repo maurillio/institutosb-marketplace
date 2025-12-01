@@ -46,6 +46,7 @@
 - Header/Footer: `@/components/layout/`
 - ProductCard: `@/components/products/product-card`
 - ImageUpload: `@/components/ImageUpload`
+- CurrencyInput: `@/components/CurrencyInput` (formatação R$ automática)
 
 ## Branch Atual
 main (deployado automaticamente no Vercel)
