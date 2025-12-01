@@ -107,8 +107,23 @@ export async function GET(request: Request) {
       prisma.product.count({ where }),
     ]);
 
+    // Converter Decimal para number e ajustar estrutura
+    const productsWithNumbers = products.map((product) => ({
+      ...product,
+      price: Number(product.price),
+      imageUrl: product.images && product.images.length > 0 ? product.images[0] : null,
+      seller: {
+        user: {
+          name: product.seller.name,
+        },
+        rating: product.seller.sellerProfile?.rating
+          ? Number(product.seller.sellerProfile.rating)
+          : null,
+      },
+    }));
+
     return NextResponse.json({
-      products,
+      products: productsWithNumbers,
       pagination: {
         page,
         limit,
