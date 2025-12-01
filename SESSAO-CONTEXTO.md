@@ -14,13 +14,14 @@
 - `/perfil` - Perfil do usuário
 
 ## Funcionalidades Implementadas
-- Auth (NextAuth)
+- Auth (NextAuth com authOptions exportado)
 - Upload de imagens (Vercel Blob via /api/upload)
-- Marketplace (produtos)
+- Marketplace (produtos com conversão Decimal→Number na API)
 - Cursos online
 - Wishlist
 - Carrinho
 - PWA
+- Input monetário com formatação automática (R$)
 
 ## Problemas Conhecidos a Corrigir
 1. ~~Placeholders via.placeholder.com não carregam (usar imagem local)~~ ✅ CORRIGIDO
@@ -39,14 +40,21 @@
 14. ~~Logout após atualizar perfil e dar F5~~ ⚠️ EM INVESTIGAÇÃO (logs adicionados - ver docs/DEBUG-LOGS.md)
 15. ~~Erro ao criar produto - enum ProductCondition inválido (USED)~~ ✅ CORRIGIDO
 16. ~~Produtos não aparecem na listagem (busca por SellerProfile.id errado)~~ ✅ CORRIGIDO
-17. ~~Application error na listagem - campo imageUrl não existe~~ ✅ CORRIGIDO (ErrorBoundary adicionado)
-18. ~~TypeError: price.toFixed is not a function na página de produtos~~ ✅ CORRIGIDO (Decimal → number na API)
+17. ~~Application error na listagem - campo imageUrl não existe~~ ⚠️ TENTATIVA DE CORREÇÃO (ErrorBoundary + conversão na API)
+18. ~~TypeError: price.toFixed is not a function na página de produtos~~ ⚠️ TENTATIVA DE CORREÇÃO (Decimal → Number em /api/products)
+19. ~~Campos de preço aceitam letras e não têm formatação clara~~ ⚠️ IMPLEMENTADO (CurrencyInput com formatação R$)
 
 ## Componentes Principais
 - Header/Footer: `@/components/layout/`
 - ProductCard: `@/components/products/product-card`
 - ImageUpload: `@/components/ImageUpload`
 - CurrencyInput: `@/components/CurrencyInput` (formatação R$ automática)
+
+## Últimas Alterações
+- Commit `d4d8047`: Conversão Decimal→Number na API de produtos
+- Commit `3009bc0`: Componente CurrencyInput para formatação monetária
+- Commit `6f174a2`: Correção de interface TypeScript em categorias/[slug]
+- Commit `6f174a2`: Ajuste de chamada de API (categoryId ao invés de category)
 
 ## Branch Atual
 main (deployado automaticamente no Vercel)
