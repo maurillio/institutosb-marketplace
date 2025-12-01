@@ -171,6 +171,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'via.placeholder.com', // Remove in production
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
   },
   experimental: {
