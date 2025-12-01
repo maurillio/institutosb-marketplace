@@ -39,7 +39,8 @@
 14. ~~Logout após atualizar perfil e dar F5~~ ⚠️ EM INVESTIGAÇÃO (logs adicionados - ver docs/DEBUG-LOGS.md)
 15. ~~Erro ao criar produto - enum ProductCondition inválido (USED)~~ ✅ CORRIGIDO
 16. ~~Produtos não aparecem na listagem (busca por SellerProfile.id errado)~~ ✅ CORRIGIDO
-17. ~~Application error na listagem - campo imageUrl não existe~~ ⚠️ EM INVESTIGAÇÃO (ErrorBoundary adicionado)
+17. ~~Application error na listagem - campo imageUrl não existe~~ ✅ CORRIGIDO (ErrorBoundary adicionado)
+18. ~~TypeError: price.toFixed is not a function na página de produtos~~ ✅ CORRIGIDO (Decimal → number na API)
 
 ## Componentes Principais
 - Header/Footer: `@/components/layout/`
