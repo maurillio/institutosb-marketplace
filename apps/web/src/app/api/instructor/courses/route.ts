@@ -112,25 +112,41 @@ export async function POST(request: Request) {
       );
     }
 
+    // Converter duration para inteiro ou null
+    const durationInt = duration && duration !== '' ? parseInt(duration, 10) : null;
+
+    console.log('[Create Course API] Dados recebidos:', {
+      title,
+      slug,
+      type,
+      price,
+      duration: duration,
+      durationInt,
+      level,
+      status,
+    });
+
     const course = await prisma.course.create({
       data: {
         title,
         slug,
         description,
-        shortDescription,
+        shortDescription: shortDescription || null,
         price: parseFloat(price),
         instructorId: session.user.id,
         thumbnail: thumbnail || null,
-        type, // ONLINE ou PRESENCIAL
-        duration: duration || null,
+        type, // ONLINE, IN_PERSON ou HYBRID
+        duration: durationInt,
         level: level || 'ALL_LEVELS',
         status: status || 'DRAFT',
       },
     });
 
+    console.log('[Create Course API] Curso criado com sucesso:', course.id);
+
     return NextResponse.json(course, { status: 201 });
   } catch (error) {
-    console.error('Erro ao criar curso:', error);
+    console.error('[Create Course API] Erro ao criar curso:', error);
     return NextResponse.json(
       { error: 'Erro ao criar curso' },
       { status: 500 }
