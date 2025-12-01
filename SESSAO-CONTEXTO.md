@@ -56,16 +56,24 @@
 - ImageUpload: `@/components/ImageUpload`
 - CurrencyInput: `@/components/CurrencyInput` (formatação R$ automática)
 
-## Últimas Alterações
-- Commit `f57f8d3`: **Homepage 100% dinâmica com dados reais do banco** 🎉
+## Últimas Alterações (Sessão de Modernização)
+- Commit `8d29497`: **Menu mobile funcional com Sheet** ✨
+  - Painel deslizante com overlay e animação suave
+  - Navegação completa para mobile
+  - Seção de usuário dinâmica (autenticado/não autenticado)
+- Commit `e4698a9`: **Sistema de Toast notifications**
+  - Biblioteca sonner integrada
+  - Substitui alerts() por toast.success/error
+  - Feedback visual melhorado (wishlist)
+- Commit `870e7e6`: **Loading skeletons animados**
+  - ProductCardSkeleton e CourseCardSkeleton
+  - Melhora UX durante carregamento
+- Commit `f57f8d3`: **Homepage 100% dinâmica com dados reais** 🎉
   - FeaturedProducts busca 8 produtos reais (ACTIVE, ordenados por rating/sales)
   - FeaturedCourses busca 6 cursos reais (PUBLISHED, ordenados por rating/enrollments)
   - Categories busca categorias principais do banco
   - **BANCO POPULADO**: 50 produtos reais + 10 cursos completos (via SQL no Neon)
   - Scripts de validação: validate-seed.sql, quick-check.sql
-- Commit `667741e`: Dois botões de salvamento (continuar/voltar) com feedback visual
-- Commit `235ba8d`: Documentação de debug de salvamento
-- Commit `94f3d4a`: Logs detalhados ao salvar módulos (debug de interface)
 
 ## Branch Atual
 main (deployado automaticamente no Vercel)
