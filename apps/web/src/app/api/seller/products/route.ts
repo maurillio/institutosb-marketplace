@@ -56,7 +56,35 @@ export async function GET(request: Request) {
 
     console.log('[Seller Products API] Produtos encontrados:', products.length);
 
-    return NextResponse.json(products);
+    // Converter Decimal para Number
+    const productsWithNumbers = products.map((product) => {
+      const priceAsNumber = Number(product.price);
+
+      console.log('[Seller Products API] Produto:', product.name);
+      console.log('[Seller Products API] Price - Original:', product.price, 'Type:', typeof product.price);
+      console.log('[Seller Products API] Price - Converted:', priceAsNumber, 'Type:', typeof priceAsNumber);
+
+      return {
+        id: product.id,
+        name: product.name,
+        slug: product.slug,
+        description: product.description,
+        price: priceAsNumber,
+        categoryId: product.categoryId,
+        sellerId: product.sellerId,
+        images: product.images,
+        condition: product.condition,
+        stock: product.stock,
+        status: product.status,
+        category: product.category,
+        variations: product.variations,
+        _count: product._count,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
+      };
+    });
+
+    return NextResponse.json(productsWithNumbers);
   } catch (error) {
     console.error('Erro ao buscar produtos:', error);
     return NextResponse.json(
