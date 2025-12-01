@@ -35,13 +35,13 @@ interface ProductDetails {
   };
   seller: {
     id: string;
-    user: {
-      id: string;
-      name: string;
-      avatar: string | null;
-    };
-    rating: number | null;
-    totalSales: number;
+    name: string;
+    avatar: string | null;
+    sellerProfile: {
+      rating: number | null;
+      totalSales: number;
+      storeName: string | null;
+    } | null;
   };
   variations: Array<{
     id: string;
@@ -362,22 +362,22 @@ export default function ProductDetailsPage() {
                     className="mt-2 flex items-center gap-3 hover:opacity-80"
                   >
                     <div className="relative h-12 w-12 overflow-hidden rounded-full bg-gray-200">
-                      {product.seller.user.avatar && (
+                      {product.seller.avatar && (
                         <Image
-                          src={product.seller.user.avatar}
-                          alt={product.seller.user.name}
+                          src={product.seller.avatar}
+                          alt={product.seller.name}
                           fill
                           className="object-cover"
                         />
                       )}
                     </div>
                     <div>
-                      <p className="font-medium">{product.seller.user.name}</p>
+                      <p className="font-medium">{product.seller.name}</p>
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                         <span>
-                          {product.seller.rating?.toFixed(1) || '0.0'} •{' '}
-                          {product.seller.totalSales} vendas
+                          {product.seller.sellerProfile?.rating?.toFixed(1) || '0.0'} •{' '}
+                          {product.seller.sellerProfile?.totalSales || 0} vendas
                         </span>
                       </div>
                     </div>
