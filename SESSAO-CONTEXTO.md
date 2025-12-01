@@ -44,6 +44,7 @@
 18. ~~TypeError: price.toFixed is not a function na página de produtos~~ ⚠️ TENTATIVA DE CORREÇÃO (Decimal → Number em TODAS as APIs de produtos)
 19. ~~Campos de preço aceitam letras e não têm formatação clara~~ ⚠️ IMPLEMENTADO (CurrencyInput com formatação R$)
 20. ~~TypeError: Cannot read properties of undefined (reading 'avatar') na página /produtos/[id]~~ ⚠️ TENTATIVA DE CORREÇÃO (interface corrigida para seller.avatar)
+21. ~~Erro 404 ao fazer prefetch de /vendedor/[id] (rota não existe)~~ ⚠️ TENTATIVA DE CORREÇÃO (link removido temporariamente)
 
 ## Componentes Principais
 - Header/Footer: `@/components/layout/`
@@ -52,12 +53,12 @@
 - CurrencyInput: `@/components/CurrencyInput` (formatação R$ automática)
 
 ## Últimas Alterações
+- Commit `2b7c0fb`: Remoção de link para /vendedor/[id] (rota não implementada)
+- Commit `61923db`: Documentação do problema 20 (avatar em /produtos/[id])
 - Commit `5ef94c6`: Correção de estrutura seller (avatar e rating) em /produtos/[id]
 - Commit `4144f16`: Correção do link de edição em dashboard vendedor
 - Commit `0536842`: Conversão Decimal→Number em /api/seller/products
 - Commit `d4d8047`: Conversão Decimal→Number na API de produtos
-- Commit `3009bc0`: Componente CurrencyInput para formatação monetária
-- Commit `6f174a2`: Correção de interface TypeScript em categorias/[slug]
 
 ## Branch Atual
 main (deployado automaticamente no Vercel)
