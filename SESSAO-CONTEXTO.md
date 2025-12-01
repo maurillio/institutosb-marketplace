@@ -57,12 +57,12 @@
 - CurrencyInput: `@/components/CurrencyInput` (formatação R$ automática)
 
 ## Últimas Alterações
+- Commit `667741e`: Dois botões de salvamento (continuar/voltar) com feedback visual
+- Commit `235ba8d`: Documentação de debug de salvamento
 - Commit `94f3d4a`: Logs detalhados ao salvar módulos (debug de interface)
 - Commit `55685e4`: Documentação de gestão de cursos e módulos
 - Commit `c9f780c`: Implementação completa de edição de curso com módulos e aulas
 - Commit `1ed2d9c`: Adição de botões editar/ver no dashboard instrutor
-- Commit `bd8039c`: Documentação do problema 24 (detalhes do curso)
-- Commit `6ab8cb6`: Correção da página de detalhes do curso (category e instructor)
 
 ## Branch Atual
 main (deployado automaticamente no Vercel)
