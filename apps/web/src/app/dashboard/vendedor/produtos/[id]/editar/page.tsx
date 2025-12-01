@@ -6,6 +6,7 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@thebeautypro/ui/button';
 import { ImageUpload } from '@/components/ImageUpload';
+import { CurrencyInput } from '@/components/CurrencyInput';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
@@ -152,16 +153,18 @@ export default function EditarProdutoPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-2 block text-sm font-medium">
-                    Preço (R$) *
+                    Preço *
                   </label>
-                  <input
-                    type="number"
-                    step="0.01"
+                  <CurrencyInput
                     required
                     value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    onChange={(value) => setFormData({ ...formData, price: value })}
                     className="h-10 w-full rounded-md border px-3"
+                    placeholder="R$ 0,00"
                   />
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Digite o valor e ele será formatado automaticamente
+                  </p>
                 </div>
 
                 <div>
