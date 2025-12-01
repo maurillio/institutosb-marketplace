@@ -232,7 +232,7 @@ export default function SellerProductsPage() {
                             </Link>
                           </Button>
                           <Button variant="ghost" size="icon" asChild>
-                            <Link href={`/dashboard/vendedor/produtos/${product.id}`}>
+                            <Link href={`/dashboard/vendedor/produtos/${product.id}/editar`}>
                               <Edit className="h-4 w-4" />
                             </Link>
                           </Button>
