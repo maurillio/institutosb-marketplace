@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { CourseGridSkeleton } from '@/components/courses/course-card-skeleton';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@thebeautypro/ui/button';
@@ -95,8 +96,8 @@ export default function CoursesPage() {
           </div>
 
           {loading ? (
-            <div className="mt-12 flex justify-center">
-              <p>Carregando cursos...</p>
+            <div className="mt-8">
+              <CourseGridSkeleton count={6} />
             </div>
           ) : courses.length === 0 ? (
             <div className="mt-12 flex flex-col items-center rounded-lg border bg-white p-12">

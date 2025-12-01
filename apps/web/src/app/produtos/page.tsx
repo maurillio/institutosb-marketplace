@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { ProductCard } from '@/components/products/product-card';
+import { ProductGridSkeleton } from '@/components/products/product-card-skeleton';
 import { Filter, Search, ChevronDown } from 'lucide-react';
 import { Button } from '@thebeautypro/ui/button';
 
@@ -373,9 +374,7 @@ export default function ProductsPage() {
 
           {/* Grid de produtos */}
           {loading ? (
-            <div className="flex h-64 items-center justify-center">
-              <p className="text-muted-foreground">Carregando produtos...</p>
-            </div>
+            <ProductGridSkeleton count={12} />
           ) : products.length === 0 ? (
             <div className="flex h-64 flex-col items-center justify-center">
               <p className="text-lg font-medium">Nenhum produto encontrado</p>
