@@ -45,6 +45,7 @@
 19. ~~Campos de preço aceitam letras e não têm formatação clara~~ ⚠️ IMPLEMENTADO (CurrencyInput com formatação R$)
 20. ~~TypeError: Cannot read properties of undefined (reading 'avatar') na página /produtos/[id]~~ ⚠️ TENTATIVA DE CORREÇÃO (interface corrigida para seller.avatar)
 21. ~~Erro 404 ao fazer prefetch de /vendedor/[id] (rota não existe)~~ ⚠️ TENTATIVA DE CORREÇÃO (link removido temporariamente)
+22. ~~Erro 500 ao criar curso - campo duration não convertido corretamente~~ ⚠️ TENTATIVA DE CORREÇÃO (conversão string→Int com tratamento de vazio)
 
 ## Componentes Principais
 - Header/Footer: `@/components/layout/`
@@ -53,12 +54,12 @@
 - CurrencyInput: `@/components/CurrencyInput` (formatação R$ automática)
 
 ## Últimas Alterações
+- Commit `a049e6b`: Correção da conversão do campo duration na criação de curso
+- Commit `437ea74`: Documentação do problema 21 (404 em /vendedor/[id])
 - Commit `2b7c0fb`: Remoção de link para /vendedor/[id] (rota não implementada)
 - Commit `61923db`: Documentação do problema 20 (avatar em /produtos/[id])
 - Commit `5ef94c6`: Correção de estrutura seller (avatar e rating) em /produtos/[id]
 - Commit `4144f16`: Correção do link de edição em dashboard vendedor
-- Commit `0536842`: Conversão Decimal→Number em /api/seller/products
-- Commit `d4d8047`: Conversão Decimal→Number na API de produtos
 
 ## Branch Atual
 main (deployado automaticamente no Vercel)
