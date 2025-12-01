@@ -17,7 +17,8 @@
 - Auth (NextAuth com authOptions exportado)
 - Upload de imagens (Vercel Blob via /api/upload)
 - Marketplace (produtos com conversão Decimal→Number na API)
-- Cursos online
+- Cursos online (com gestão de módulos e aulas)
+- Dashboard do instrutor (criar/editar cursos, módulos e aulas)
 - Wishlist
 - Carrinho
 - PWA
@@ -56,12 +57,12 @@
 - CurrencyInput: `@/components/CurrencyInput` (formatação R$ automática)
 
 ## Últimas Alterações
+- Commit `c9f780c`: Implementação completa de edição de curso com módulos e aulas
+- Commit `1ed2d9c`: Adição de botões editar/ver no dashboard instrutor
+- Commit `bd8039c`: Documentação do problema 24 (detalhes do curso)
 - Commit `6ab8cb6`: Correção da página de detalhes do curso (category e instructor)
 - Commit `587a7a7`: Documentação do problema 23 (dashboard instrutor)
 - Commit `98f6e44`: Correção do dashboard instrutor (course.category undefined)
-- Commit `dfdb417`: Documentação do problema 22 (erro ao criar curso)
-- Commit `a049e6b`: Correção da conversão do campo duration na criação de curso
-- Commit `437ea74`: Documentação do problema 21 (404 em /vendedor/[id])
 
 ## Branch Atual
 main (deployado automaticamente no Vercel)
