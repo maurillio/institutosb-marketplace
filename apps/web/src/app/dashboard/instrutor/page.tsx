@@ -179,9 +179,16 @@ export default function InstructorDashboardPage() {
                         <p className="text-2xl font-bold text-primary">
                           R$ {course.price.toFixed(2)}
                         </p>
-                        <Button size="sm" variant="outline" asChild className="mt-2">
-                          <Link href={`/cursos/${course.id}`}>Ver Curso</Link>
-                        </Button>
+                        <div className="mt-2 flex gap-2">
+                          <Button size="sm" variant="outline" asChild>
+                            <Link href={`/dashboard/instrutor/cursos/${course.id}/editar`}>
+                              Editar
+                            </Link>
+                          </Button>
+                          <Button size="sm" variant="outline" asChild>
+                            <Link href={`/cursos/${course.id}`}>Ver</Link>
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
