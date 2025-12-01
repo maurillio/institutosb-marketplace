@@ -53,7 +53,15 @@ export async function GET(request: Request) {
       },
     });
 
-    return NextResponse.json(courses);
+    // Converter Decimal para Number
+    const coursesWithNumbers = courses.map((course) => ({
+      ...course,
+      price: Number(course.price),
+      compareAtPrice: course.compareAtPrice ? Number(course.compareAtPrice) : null,
+      rating: Number(course.rating),
+    }));
+
+    return NextResponse.json(coursesWithNumbers);
   } catch (error) {
     console.error('Erro ao buscar cursos:', error);
     return NextResponse.json(

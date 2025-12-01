@@ -153,7 +153,13 @@ export default function InstructorDashboardPage() {
                       <div className="flex-1">
                         <h3 className="font-semibold">{course.title}</h3>
                         <p className="text-sm text-muted-foreground">
-                          {course.category.name} • {course.type}
+                          {course.type === 'ONLINE' ? 'Online' :
+                           course.type === 'IN_PERSON' ? 'Presencial' :
+                           'Híbrido'} • {
+                           course.level === 'BEGINNER' ? 'Iniciante' :
+                           course.level === 'INTERMEDIATE' ? 'Intermediário' :
+                           course.level === 'ADVANCED' ? 'Avançado' :
+                           'Todos os níveis'}
                         </p>
                         <div className="mt-2 flex items-center gap-4 text-sm">
                           <span>{course._count.enrollments} alunos</span>
