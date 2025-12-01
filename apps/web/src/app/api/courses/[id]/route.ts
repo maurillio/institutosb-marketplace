@@ -91,17 +91,33 @@ export async function GET(
       ? course.reviews.reduce((sum, review) => sum + review.rating, 0) / course.reviews.length
       : 0;
 
-    // Calcular duração total do curso (soma das aulas)
+    // Calcular duração total do curso (soma das aulas em minutos)
     const totalDuration = course.modules.reduce((total, module) => {
       return total + module.lessons.reduce((sum, lesson) => sum + (lesson.duration || 0), 0);
     }, 0);
 
-    return NextResponse.json({
+    // Converter duração de minutos para horas
+    const totalDurationHours = Math.round(totalDuration / 60);
+
+    // Converter Decimals para Number
+    const courseWithNumbers = {
       ...course,
+      price: Number(course.price),
+      compareAtPrice: course.compareAtPrice ? Number(course.compareAtPrice) : null,
+      rating: Number(course.rating),
       avgRating: parseFloat(avgRating.toFixed(1)),
-      totalDuration,
+      totalDuration: totalDurationHours,
       totalLessons: course.modules.reduce((sum, m) => sum + m.lessons.length, 0),
-    });
+      instructor: {
+        ...course.instructor,
+        instructorProfile: course.instructor.instructorProfile ? {
+          ...course.instructor.instructorProfile,
+          rating: course.instructor.instructorProfile.rating ? Number(course.instructor.instructorProfile.rating) : null,
+        } : null,
+      },
+    };
+
+    return NextResponse.json(courseWithNumbers);
   } catch (error) {
     console.error('Erro ao buscar curso:', error);
     return NextResponse.json(

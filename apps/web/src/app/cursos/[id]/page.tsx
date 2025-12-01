@@ -78,14 +78,18 @@ export default function CourseDetailsPage() {
       <main className="flex-1 bg-gray-50">
         <div className="relative aspect-video w-full overflow-hidden bg-gray-900">
           <Image
-            src={course.imageUrl || 'https://via.placeholder.com/1200x600'}
+            src={course.thumbnail || '/placeholder.png'}
             alt={course.title}
             fill
             className="object-cover opacity-60"
           />
           <div className="container relative h-full flex items-center">
             <div className="max-w-2xl text-white">
-              <p className="text-sm">{course.category.name}</p>
+              <p className="text-sm">
+                {course.type === 'ONLINE' ? 'Curso Online' :
+                 course.type === 'IN_PERSON' ? 'Curso Presencial' :
+                 'Curso Híbrido'}
+              </p>
               <h1 className="mt-2 text-4xl font-bold">{course.title}</h1>
               <p className="mt-4 text-lg">{course.description}</p>
               <div className="mt-6 flex items-center gap-6">
@@ -152,26 +156,26 @@ export default function CourseDetailsPage() {
                 <h2 className="text-xl font-bold">Instrutor</h2>
                 <div className="mt-4 flex items-center gap-4">
                   <div className="relative h-16 w-16 overflow-hidden rounded-full bg-gray-200">
-                    {course.instructor.user.avatar && (
+                    {course.instructor.avatar && (
                       <Image
-                        src={course.instructor.user.avatar}
-                        alt={course.instructor.user.name}
+                        src={course.instructor.avatar}
+                        alt={course.instructor.name}
                         fill
                         className="object-cover"
                       />
                     )}
                   </div>
                   <div>
-                    <p className="font-semibold">{course.instructor.user.name}</p>
+                    <p className="font-semibold">{course.instructor.name}</p>
                     <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                      <span>⭐ {course.instructor.rating?.toFixed(1) || '0.0'}</span>
-                      <span>• {course.instructor.totalStudents} alunos</span>
+                      <span>⭐ {course.instructor.instructorProfile?.rating?.toFixed(1) || '0.0'}</span>
+                      <span>• {course.instructor.instructorProfile?.totalStudents || 0} alunos</span>
                     </div>
                   </div>
                 </div>
-                {course.instructor.bio && (
+                {course.instructor.instructorProfile?.bio && (
                   <p className="mt-4 text-sm text-muted-foreground">
-                    {course.instructor.bio}
+                    {course.instructor.instructorProfile.bio}
                   </p>
                 )}
               </div>
