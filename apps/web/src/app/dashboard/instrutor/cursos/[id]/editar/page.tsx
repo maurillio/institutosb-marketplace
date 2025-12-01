@@ -177,7 +177,7 @@ export default function EditarCursoPage() {
     setModules(newModules);
   };
 
-  const saveModules = async () => {
+  const saveModules = async (shouldReturn: boolean = false) => {
     console.log('[Edit Course] Salvando módulos...', modules.length);
     setSaving(true);
 
@@ -202,9 +202,16 @@ export default function EditarCursoPage() {
 
       alert('✅ Módulos salvos com sucesso!');
 
-      console.log('[Edit Course] Recarregando dados...');
-      await fetchCourse(); // Recarregar dados
-      console.log('[Edit Course] Dados recarregados');
+      if (shouldReturn) {
+        console.log('[Edit Course] Redirecionando para dashboard...');
+        router.push('/dashboard/instrutor');
+      } else {
+        console.log('[Edit Course] Recarregando dados...');
+        await fetchCourse(); // Recarregar dados
+        console.log('[Edit Course] Dados recarregados');
+        // Fechar todos os módulos para dar feedback visual
+        setExpandedModule(null);
+      }
     } catch (error) {
       console.error('[Edit Course] Erro ao salvar módulos:', error);
       alert('❌ Erro ao salvar módulos: ' + (error instanceof Error ? error.message : 'Erro desconhecido'));
@@ -589,9 +596,27 @@ export default function EditarCursoPage() {
 
               {modules.length > 0 && (
                 <div className="mt-6 border-t pt-6">
-                  <Button onClick={saveModules} disabled={saving} className="w-full">
-                    {saving ? 'Salvando...' : 'Salvar Módulos e Aulas'}
-                  </Button>
+                  <div className="flex gap-3">
+                    <Button
+                      onClick={() => saveModules(false)}
+                      disabled={saving}
+                      variant="outline"
+                      className="flex-1"
+                    >
+                      {saving ? 'Salvando...' : 'Salvar e Continuar Editando'}
+                    </Button>
+                    <Button
+                      onClick={() => saveModules(true)}
+                      disabled={saving}
+                      className="flex-1"
+                    >
+                      {saving ? 'Salvando...' : 'Salvar e Voltar'}
+                    </Button>
+                  </div>
+                  <p className="mt-2 text-xs text-center text-muted-foreground">
+                    "Continuar Editando" recarrega os dados mantendo você na página.
+                    "Voltar" salva e retorna ao dashboard.
+                  </p>
                 </div>
               )}
             </div>
