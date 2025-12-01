@@ -10,12 +10,22 @@ import { ProductCard } from '@/components/products/product-card';
 interface Product {
   id: string;
   name: string;
-  description: string;
   price: number;
-  images: string[];
+  imageUrl: string | null;
   condition: string;
-  seller: {
+  stock?: number;
+  category: {
     name: string;
+    slug: string;
+  };
+  seller: {
+    user: {
+      name: string;
+    };
+    rating: number | null;
+  };
+  _count: {
+    reviews: number;
   };
 }
 
@@ -39,13 +49,7 @@ export default function CategoriaPage() {
 
   const fetchCategoryAndProducts = async () => {
     try {
-      // Buscar produtos por categoria
-      const response = await fetch(`/api/products?category=${params.slug}`);
-      const data = await response.json();
-
-      setProducts(data);
-
-      // Buscar informações da categoria
+      // Buscar informações da categoria primeiro
       const categoriesResponse = await fetch('/api/categories');
       const categories = await categoriesResponse.json();
       const currentCategory = categories.find(
@@ -54,6 +58,11 @@ export default function CategoriaPage() {
 
       if (currentCategory) {
         setCategory(currentCategory);
+
+        // Buscar produtos por categoria ID
+        const response = await fetch(`/api/products?categoryId=${currentCategory.id}`);
+        const data = await response.json();
+        setProducts(data.products || []);
       }
     } catch (error) {
       console.error('Erro:', error);
