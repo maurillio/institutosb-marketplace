@@ -57,12 +57,15 @@
 - CurrencyInput: `@/components/CurrencyInput` (formatação R$ automática)
 
 ## Últimas Alterações
+- Commit `f57f8d3`: **Homepage 100% dinâmica com dados reais do banco** 🎉
+  - FeaturedProducts busca 8 produtos reais (ACTIVE, ordenados por rating/sales)
+  - FeaturedCourses busca 6 cursos reais (PUBLISHED, ordenados por rating/enrollments)
+  - Categories busca categorias principais do banco
+  - **BANCO POPULADO**: 50 produtos reais + 10 cursos completos (via SQL no Neon)
+  - Scripts de validação: validate-seed.sql, quick-check.sql
 - Commit `667741e`: Dois botões de salvamento (continuar/voltar) com feedback visual
 - Commit `235ba8d`: Documentação de debug de salvamento
 - Commit `94f3d4a`: Logs detalhados ao salvar módulos (debug de interface)
-- Commit `55685e4`: Documentação de gestão de cursos e módulos
-- Commit `c9f780c`: Implementação completa de edição de curso com módulos e aulas
-- Commit `1ed2d9c`: Adição de botões editar/ver no dashboard instrutor
 
 ## Branch Atual
 main (deployado automaticamente no Vercel)
