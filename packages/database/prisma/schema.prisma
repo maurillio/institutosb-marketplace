@@ -783,3 +783,18 @@ model Wishlist {
   @@index([productId])
   @@map("wishlists")
 }
+
+// ========================================
+// CONFIGURAÇÕES DO SISTEMA
+// ========================================
+
+model SystemSettings {
+  id        String   @id @default(cuid())
+  key       String   @unique // Chave única da configuração (ex: "platform_fee_percentage")
+  value     Json     // Valor da configuração em JSON (flexível para diferentes tipos)
+  updatedAt DateTime @updatedAt
+  updatedBy String?  // ID do admin que atualizou
+
+  @@index([key])
+  @@map("system_settings")
+}
