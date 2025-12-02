@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@thebeautypro/ui/button';
 import { useCart } from '@/contexts/cart-context';
+import { ReviewsSection } from '@/components/reviews/reviews-section';
 import {
   Heart,
   Share2,
@@ -69,6 +71,7 @@ interface ProductDetails {
 export default function ProductDetailsPage() {
   const params = useParams();
   const router = useRouter();
+  const { data: session } = useSession();
   const { addItem } = useCart();
   const [product, setProduct] = useState<ProductDetails | null>(null);
   const [loading, setLoading] = useState(true);
@@ -76,6 +79,7 @@ export default function ProductDetailsPage() {
   const [selectedVariation, setSelectedVariation] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [activeTab, setActiveTab] = useState<'description' | 'reviews'>('description');
 
   useEffect(() => {
     if (params.id) {
@@ -409,76 +413,51 @@ export default function ProductDetailsPage() {
           </div>
 
           {/* Descrição e avaliações */}
-          <div className="mt-8 rounded-lg bg-white p-6">
+          <div className="mt-8">
             {/* Tabs */}
-            <div className="border-b">
-              <div className="flex gap-8">
-                <button className="border-b-2 border-primary pb-3 font-medium">
+            <div className="rounded-t-lg border-b bg-white">
+              <div className="container flex gap-8 px-6">
+                <button
+                  onClick={() => setActiveTab('description')}
+                  className={`border-b-2 pb-3 font-medium transition-colors ${
+                    activeTab === 'description'
+                      ? 'border-primary text-primary'
+                      : 'border-transparent text-muted-foreground hover:text-foreground'
+                  }`}
+                >
                   Descrição
                 </button>
-                <button className="pb-3 text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => setActiveTab('reviews')}
+                  className={`border-b-2 pb-3 font-medium transition-colors ${
+                    activeTab === 'reviews'
+                      ? 'border-primary text-primary'
+                      : 'border-transparent text-muted-foreground hover:text-foreground'
+                  }`}
+                >
                   Avaliações ({product._count.reviews})
                 </button>
               </div>
             </div>
 
-            {/* Conteúdo da descrição */}
-            <div className="mt-6">
-              <p className="whitespace-pre-line text-muted-foreground">
-                {product.description}
-              </p>
-            </div>
-          </div>
-
-          {/* Avaliações */}
-          {product.reviews.length > 0 && (
-            <div className="mt-8 rounded-lg bg-white p-6">
-              <h2 className="text-xl font-bold">Avaliações dos clientes</h2>
-              <div className="mt-6 space-y-6">
-                {product.reviews.map((review) => (
-                  <div key={review.id} className="border-b pb-6 last:border-0">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="relative h-10 w-10 overflow-hidden rounded-full bg-gray-200">
-                          {review.user.avatar && (
-                            <Image
-                              src={review.user.avatar}
-                              alt={review.user.name}
-                              fill
-                              className="object-cover"
-                            />
-                          )}
-                        </div>
-                        <div>
-                          <p className="font-medium">{review.user.name}</p>
-                          <div className="flex items-center gap-1">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <Star
-                                key={star}
-                                className={`h-4 w-4 ${
-                                  star <= review.rating
-                                    ? 'fill-yellow-400 text-yellow-400'
-                                    : 'text-gray-300'
-                                }`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                      <span className="text-sm text-muted-foreground">
-                        {new Date(review.createdAt).toLocaleDateString('pt-BR')}
-                      </span>
-                    </div>
-                    {review.comment && (
-                      <p className="mt-3 text-muted-foreground">
-                        {review.comment}
-                      </p>
-                    )}
-                  </div>
-                ))}
+            {/* Conteúdo */}
+            {activeTab === 'description' && (
+              <div className="rounded-b-lg bg-white p-6">
+                <p className="whitespace-pre-line text-muted-foreground leading-relaxed">
+                  {product.description}
+                </p>
               </div>
-            </div>
-          )}
+            )}
+
+            {activeTab === 'reviews' && (
+              <div className="rounded-b-lg bg-gray-50 p-6">
+                <ReviewsSection
+                  productId={product.id}
+                  isOwner={session?.user?.id === product.seller.id}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </main>
 

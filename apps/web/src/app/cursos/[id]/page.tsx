@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@thebeautypro/ui/button';
+import { ReviewsSection } from '@/components/reviews/reviews-section';
 import Image from 'next/image';
 import { Clock, Users, Star, Play, CheckCircle } from 'lucide-react';
 
@@ -178,6 +179,14 @@ export default function CourseDetailsPage() {
                     {course.instructor.instructorProfile.bio}
                   </p>
                 )}
+              </div>
+
+              {/* Avaliações */}
+              <div className="mt-6">
+                <ReviewsSection
+                  courseId={course.id}
+                  isOwner={session?.user?.id === course.instructorId}
+                />
               </div>
             </div>
 
