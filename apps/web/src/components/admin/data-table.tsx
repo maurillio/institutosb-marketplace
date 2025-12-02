@@ -107,11 +107,13 @@ export function DataTable<T extends Record<string, any>>({
 
       {/* Paginação */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between rounded-lg border bg-white px-6 py-3">
-          <div className="text-sm text-muted-foreground">
-            Mostrando <span className="font-medium">{startItem}</span> a{' '}
-            <span className="font-medium">{endItem}</span> de{' '}
-            <span className="font-medium">{total}</span> resultados
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-lg border bg-white px-4 sm:px-6 py-3">
+          <div className="text-sm text-muted-foreground text-center sm:text-left">
+            <span className="hidden sm:inline">
+              Mostrando <span className="font-medium">{startItem}</span> a{' '}
+              <span className="font-medium">{endItem}</span> de{' '}
+            </span>
+            <span className="font-medium">{total}</span> resultado{total !== 1 ? 's' : ''}
           </div>
 
           <div className="flex items-center space-x-2">
@@ -120,9 +122,10 @@ export function DataTable<T extends Record<string, any>>({
               size="sm"
               onClick={() => onPageChange(page - 1)}
               disabled={page === 1}
+              className="px-2 sm:px-3"
             >
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              Anterior
+              <ChevronLeft className="h-4 w-4" />
+              <span className="hidden sm:inline ml-1">Anterior</span>
             </Button>
 
             <div className="flex items-center space-x-1">
@@ -139,7 +142,7 @@ export function DataTable<T extends Record<string, any>>({
                   // Mostrar reticências
                   if (pageNumber === page - 2 || pageNumber === page + 2) {
                     return (
-                      <span key={index} className="px-2 text-muted-foreground">
+                      <span key={index} className="px-2 text-muted-foreground text-xs sm:text-sm">
                         ...
                       </span>
                     );
@@ -153,7 +156,7 @@ export function DataTable<T extends Record<string, any>>({
                     variant={pageNumber === page ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => onPageChange(pageNumber)}
-                    className="min-w-[2.5rem]"
+                    className="min-w-[2rem] sm:min-w-[2.5rem] px-2 sm:px-3"
                   >
                     {pageNumber}
                   </Button>
@@ -166,9 +169,10 @@ export function DataTable<T extends Record<string, any>>({
               size="sm"
               onClick={() => onPageChange(page + 1)}
               disabled={page === totalPages}
+              className="px-2 sm:px-3"
             >
-              Próxima
-              <ChevronRight className="h-4 w-4 ml-1" />
+              <span className="hidden sm:inline mr-1">Próxima</span>
+              <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
         </div>
