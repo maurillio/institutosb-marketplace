@@ -15,18 +15,17 @@ interface Course {
   description: string;
   price: number;
   imageUrl: string | null;
+  thumbnail: string | null;
   type: string;
   level: string;
   duration: number | null;
-  category: {
-    name: string;
-  };
   instructor: {
-    user: {
-      name: string;
-      avatar: string | null;
-    };
-    rating: number | null;
+    id: string;
+    name: string;
+    avatar: string | null;
+    instructorProfile: {
+      rating: number | null;
+    } | null;
   };
   _count: {
     enrollments: number;
@@ -114,7 +113,7 @@ export default function CoursesPage() {
                 >
                   <div className="relative aspect-video overflow-hidden bg-gray-100">
                     <Image
-                      src={course.imageUrl || 'https://via.placeholder.com/400x225'}
+                      src={course.thumbnail || course.imageUrl || '/placeholder.png'}
                       alt={course.title}
                       fill
                       className="object-cover transition-transform group-hover:scale-105"
@@ -134,7 +133,7 @@ export default function CoursesPage() {
 
                   <div className="p-4">
                     <p className="text-xs text-muted-foreground">
-                      {course.category.name}
+                      {course.level === 'BEGINNER' ? 'Iniciante' : course.level === 'INTERMEDIATE' ? 'Intermediário' : course.level === 'ADVANCED' ? 'Avançado' : 'Todos os níveis'}
                     </p>
                     <h3 className="mt-1 font-bold line-clamp-2 group-hover:text-primary">
                       {course.title}
@@ -142,12 +141,12 @@ export default function CoursesPage() {
 
                     <div className="mt-2 flex items-center gap-1 text-sm text-muted-foreground">
                       <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span>{course.instructor.rating?.toFixed(1) || '0.0'}</span>
+                      <span>{course.instructor.instructorProfile?.rating?.toFixed(1) || '0.0'}</span>
                       <span>({course._count.reviews})</span>
                     </div>
 
                     <p className="mt-1 text-sm text-muted-foreground">
-                      Por {course.instructor.user.name}
+                      Por {course.instructor.name}
                     </p>
 
                     <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
