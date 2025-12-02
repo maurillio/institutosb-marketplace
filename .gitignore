@@ -56,3 +56,10 @@ prisma/migrations/
 **/public/sw.js.map
 **/public/workbox-*.js.map
 **/public/worker-*.js.map
+
+# Arquivos com credenciais sensíveis (NUNCA COMMITAR)
+SESSAO-CONTEXTO.md
+CREDENCIAIS.md
+*.sql
+test-bcrypt.js
+listar-usuarios.sql

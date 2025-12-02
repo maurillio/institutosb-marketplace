@@ -19,7 +19,9 @@ export default function DashboardPage() {
     // Redirect baseado nas roles do usuário
     const roles = session.user.roles || [];
 
-    if (roles.includes('SELLER')) {
+    if (roles.includes('ADMIN')) {
+      router.push('/admin');
+    } else if (roles.includes('SELLER')) {
       router.push('/dashboard/vendedor');
     } else if (roles.includes('INSTRUCTOR')) {
       router.push('/dashboard/instrutor');
