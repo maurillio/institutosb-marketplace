@@ -39,7 +39,7 @@ export async function GET(request: Request) {
       ];
     }
 
-    const [courses, total] = await Promise.all([
+    const [coursesRaw, total] = await Promise.all([
       prisma.course.findMany({
         where,
         include: {
@@ -70,6 +70,19 @@ export async function GET(request: Request) {
       }),
       prisma.course.count({ where }),
     ]);
+
+    // Converter Decimal para Number
+    const courses = coursesRaw.map((course) => ({
+      ...course,
+      price: Number(course.price),
+      compareAtPrice: course.compareAtPrice ? Number(course.compareAtPrice) : null,
+      instructor: {
+        ...course.instructor,
+        instructorProfile: course.instructor.instructorProfile ? {
+          rating: course.instructor.instructorProfile.rating ? Number(course.instructor.instructorProfile.rating) : null,
+        } : null,
+      },
+    }));
 
     return NextResponse.json({
       courses,
