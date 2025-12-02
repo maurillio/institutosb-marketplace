@@ -21,12 +21,12 @@
 
 | ID | Email | Nome | Senha |
 |---|---|---|---|
-| instrutor-001 | instrutor-001@thebeautypro.com | Carolina Lima | password123 |
-| instrutor-002 | instrutor-002@thebeautypro.com | Roberto Silva | password123 |
-| instrutor-003 | instrutor-003@thebeautypro.com | Juliana Santos | password123 |
-| instrutor-004 | instrutor-004@thebeautypro.com | Fernando Costa | password123 |
-| instrutor-005 | instrutor-005@thebeautypro.com | Patrícia Alves | password123 |
-| instrutor-006 | instrutor-006@thebeautypro.com | Ricardo Mendes | password123 |
+| instrutor-001 | instrutor1@thebeautypro.com | Carla Mendes | password123 |
+| instrutor-002 | instrutor2@thebeautypro.com | Roberto Silva | password123 |
+| instrutor-003 | instrutor3@thebeautypro.com | Juliana Santos | password123 |
+| instrutor-004 | instrutor4@thebeautypro.com | Fernando Costa | password123 |
+| instrutor-005 | instrutor5@thebeautypro.com | Amanda Oliveira | password123 |
+| instrutor-006 | instrutor6@thebeautypro.com | Paulo Ribeiro | password123 |
 
 **Acesso:** `/dashboard/instrutor`
 
@@ -36,16 +36,16 @@
 
 | ID | Email | Nome | Senha |
 |---|---|---|---|
-| seller-001 | seller-001@thebeautypro.com | Maria Silva | password123 |
-| seller-002 | seller-002@thebeautypro.com | João Santos | password123 |
-| seller-003 | seller-003@thebeautypro.com | Ana Costa | password123 |
-| seller-004 | seller-004@thebeautypro.com | Pedro Oliveira | password123 |
-| seller-005 | seller-005@thebeautypro.com | Juliana Rodrigues | password123 |
-| seller-006 | seller-006@thebeautypro.com | Carlos Ferreira | password123 |
-| seller-007 | seller-007@thebeautypro.com | Beatriz Almeida | password123 |
-| seller-008 | seller-008@thebeautypro.com | Lucas Pereira | password123 |
-| seller-009 | seller-009@thebeautypro.com | Camila Souza | password123 |
-| seller-010 | seller-010@thebeautypro.com | Rafael Lima | password123 |
+| vendedor-001 | vendedor1@thebeautypro.com | Maria Silva | password123 |
+| vendedor-002 | vendedor2@thebeautypro.com | João Santos | password123 |
+| vendedor-003 | vendedor3@thebeautypro.com | Ana Costa | password123 |
+| vendedor-004 | vendedor4@thebeautypro.com | Pedro Oliveira | password123 |
+| vendedor-005 | vendedor5@thebeautypro.com | Juliana Souza | password123 |
+| vendedor-006 | vendedor6@thebeautypro.com | Carlos Ferreira | password123 |
+| vendedor-007 | vendedor7@thebeautypro.com | Fernanda Lima | password123 |
+| vendedor-008 | vendedor8@thebeautypro.com | Ricardo Alves | password123 |
+| vendedor-009 | vendedor9@thebeautypro.com | Patrícia Rocha | password123 |
+| vendedor-010 | vendedor10@thebeautypro.com | Lucas Martins | password123 |
 
 **Acesso:** `/dashboard/vendedor`
 
