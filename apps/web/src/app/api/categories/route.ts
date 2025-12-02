@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@thebeautypro/database';
 
 // GET /api/categories - Listar todas as categorias
@@ -62,10 +64,43 @@ export async function GET(request: Request) {
 // POST /api/categories - Criar nova categoria (apenas ADMIN)
 export async function POST(request: Request) {
   try {
+    // Autenticação
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+    }
+
+    // Verificar role ADMIN
+    const roles = session.user.roles || [];
+    if (!roles.includes('ADMIN')) {
+      return NextResponse.json(
+        { error: 'Acesso negado. Somente administradores podem criar categorias.' },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const { name, slug, description, imageUrl, parentId } = body;
 
-    // TODO: Adicionar validação de autenticação/autorização (apenas ADMIN)
+    // Validações básicas
+    if (!name || !slug) {
+      return NextResponse.json(
+        { error: 'Nome e slug são obrigatórios' },
+        { status: 400 }
+      );
+    }
+
+    // Verificar se slug já existe
+    const existingCategory = await prisma.category.findUnique({
+      where: { slug },
+    });
+
+    if (existingCategory) {
+      return NextResponse.json(
+        { error: 'Já existe uma categoria com este slug' },
+        { status: 400 }
+      );
+    }
 
     const category = await prisma.category.create({
       data: {

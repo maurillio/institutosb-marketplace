@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@thebeautypro/database';
+import { NotificationService } from '@/lib/notifications';
 
 export async function PATCH(
   request: NextRequest,
@@ -89,9 +90,28 @@ export async function PATCH(
       },
     });
 
-    // TODO: Enviar notificação ao vendedor
-    // Se aprovado: "Seu produto foi aprovado!"
-    // Se reprovado: "Seu produto foi reprovado. Motivo: {reason}"
+    // Enviar notificação ao vendedor
+    try {
+      if (newStatus === 'ACTIVE' && product.status !== 'ACTIVE') {
+        // Produto aprovado
+        await NotificationService.notifyProductApproved(
+          product.sellerId,
+          product.name,
+          product.id
+        );
+      } else if (newStatus === 'INACTIVE' && reason) {
+        // Produto reprovado com motivo
+        await NotificationService.notifyProductRejected(
+          product.sellerId,
+          product.name,
+          product.id,
+          reason
+        );
+      }
+    } catch (notificationError) {
+      // Log do erro mas não bloqueia a operação principal
+      console.error('[Admin Products API] Erro ao enviar notificação:', notificationError);
+    }
 
     const statusMessages: Record<string, string> = {
       ACTIVE: 'Produto aprovado com sucesso',
