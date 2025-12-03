@@ -1,4 +1,5 @@
 import { prisma } from '@thebeautypro/database';
+import { EmailService } from './email/email-service';
 
 /**
  * Tipos de notificação disponíveis no sistema
@@ -55,13 +56,35 @@ export class NotificationService {
    * Notifica vendedor sobre aprovação de produto
    */
   static async notifyProductApproved(sellerId: string, productName: string, productId: string) {
-    return this.create({
+    // Criar notificação in-app
+    const notification = await this.create({
       userId: sellerId,
       type: 'PRODUCT_APPROVED',
       title: '✅ Produto Aprovado',
       message: `Seu produto "${productName}" foi aprovado e está agora visível na plataforma!`,
       metadata: { productId },
     });
+
+    // Enviar email (não-bloqueante)
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: sellerId },
+        select: { email: true, name: true },
+      });
+
+      if (user?.email) {
+        EmailService.sendProductApproved({
+          to: user.email,
+          userName: user.name || 'Vendedor',
+          productName,
+          productId,
+        }).catch(err => console.error('[Email] Erro ao enviar:', err));
+      }
+    } catch (error) {
+      console.error('[NotificationService] Erro ao enviar email:', error);
+    }
+
+    return notification;
   }
 
   /**
@@ -72,26 +95,70 @@ export class NotificationService {
       ? `Seu produto "${productName}" foi reprovado. Motivo: ${reason}`
       : `Seu produto "${productName}" foi reprovado. Entre em contato com o suporte para mais informações.`;
 
-    return this.create({
+    // Criar notificação in-app
+    const notification = await this.create({
       userId: sellerId,
       type: 'PRODUCT_REJECTED',
       title: '❌ Produto Reprovado',
       message,
       metadata: { productId, reason },
     });
+
+    // Enviar email (não-bloqueante)
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: sellerId },
+        select: { email: true, name: true },
+      });
+
+      if (user?.email) {
+        EmailService.sendProductRejected({
+          to: user.email,
+          userName: user.name || 'Vendedor',
+          productName,
+          reason: reason || 'Entre em contato com o suporte para mais informações.',
+        }).catch(err => console.error('[Email] Erro ao enviar:', err));
+      }
+    } catch (error) {
+      console.error('[NotificationService] Erro ao enviar email:', error);
+    }
+
+    return notification;
   }
 
   /**
    * Notifica instrutor sobre aprovação de curso
    */
   static async notifyCourseApproved(instructorId: string, courseTitle: string, courseId: string) {
-    return this.create({
+    // Criar notificação in-app
+    const notification = await this.create({
       userId: instructorId,
       type: 'COURSE_APPROVED',
       title: '✅ Curso Publicado',
       message: `Seu curso "${courseTitle}" foi aprovado e publicado na plataforma!`,
       metadata: { courseId },
     });
+
+    // Enviar email (não-bloqueante)
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: instructorId },
+        select: { email: true, name: true },
+      });
+
+      if (user?.email) {
+        EmailService.sendCourseApproved({
+          to: user.email,
+          userName: user.name || 'Instrutor',
+          courseTitle,
+          courseId,
+        }).catch(err => console.error('[Email] Erro ao enviar:', err));
+      }
+    } catch (error) {
+      console.error('[NotificationService] Erro ao enviar email:', error);
+    }
+
+    return notification;
   }
 
   /**
@@ -102,13 +169,35 @@ export class NotificationService {
       ? `Seu curso "${courseTitle}" foi arquivado. Motivo: ${reason}`
       : `Seu curso "${courseTitle}" foi arquivado. Entre em contato com o suporte para mais informações.`;
 
-    return this.create({
+    // Criar notificação in-app
+    const notification = await this.create({
       userId: instructorId,
       type: 'COURSE_REJECTED',
       title: '📚 Curso Arquivado',
       message,
       metadata: { courseId, reason },
     });
+
+    // Enviar email (não-bloqueante)
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: instructorId },
+        select: { email: true, name: true },
+      });
+
+      if (user?.email) {
+        EmailService.sendCourseRejected({
+          to: user.email,
+          userName: user.name || 'Instrutor',
+          courseTitle,
+          reason: reason || 'Entre em contato com o suporte para mais informações.',
+        }).catch(err => console.error('[Email] Erro ao enviar:', err));
+      }
+    } catch (error) {
+      console.error('[NotificationService] Erro ao enviar email:', error);
+    }
+
+    return notification;
   }
 
   /**
