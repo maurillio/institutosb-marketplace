@@ -83,6 +83,7 @@ export default function MyCourseDetailsPage() {
   const [expandedModules, setExpandedModules] = useState<Set<string>>(
     new Set()
   );
+  const [downloadingCertificate, setDownloadingCertificate] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -129,6 +130,39 @@ export default function MyCourseDetailsPage() {
       }
       return newSet;
     });
+  };
+
+  const handleDownloadCertificate = async () => {
+    if (!course) return;
+
+    setDownloadingCertificate(true);
+    try {
+      const response = await fetch(`/api/my-courses/${course.id}/certificate`);
+
+      if (!response.ok) {
+        const data = await response.json();
+        toast.error(data.message || data.error || 'Erro ao baixar certificado');
+        return;
+      }
+
+      // Baixar o PDF
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `certificado-${course.title.toLowerCase().replace(/\s+/g, '-')}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      toast.success('Certificado baixado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao baixar certificado:', error);
+      toast.error('Erro ao baixar certificado');
+    } finally {
+      setDownloadingCertificate(false);
+    }
   };
 
   const getNextLesson = () => {
@@ -231,23 +265,29 @@ export default function MyCourseDetailsPage() {
                           course.enrollment.completedAt!
                         ).toLocaleDateString('pt-BR')}
                       </p>
-                      {course.enrollment.certificateUrl ? (
-                        <Button
-                          asChild
-                          className="mt-4 bg-green-600 hover:bg-green-700"
-                        >
-                          <a
-                            href={course.enrollment.certificateUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
+                      <Button
+                        onClick={handleDownloadCertificate}
+                        disabled={downloadingCertificate}
+                        className="mt-4 bg-green-600 hover:bg-green-700"
+                      >
+                        {downloadingCertificate ? (
+                          <>
+                            <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                            Gerando certificado...
+                          </>
+                        ) : (
+                          <>
                             <Download className="mr-2 h-4 w-4" />
                             Baixar Certificado
-                          </a>
-                        </Button>
-                      ) : (
-                        <p className="mt-2 text-sm text-green-600">
-                          Seu certificado está sendo gerado...
+                          </>
+                        )}
+                      </Button>
+                      {course.enrollment.certificateIssuedAt && (
+                        <p className="mt-2 text-sm text-green-700">
+                          Certificado emitido em{' '}
+                          {new Date(
+                            course.enrollment.certificateIssuedAt
+                          ).toLocaleDateString('pt-BR')}
                         </p>
                       )}
                     </div>
