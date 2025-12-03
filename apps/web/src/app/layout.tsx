@@ -5,6 +5,8 @@ import { AuthProvider } from '@/providers/auth-provider';
 import { CartProvider } from '@/contexts/cart-context';
 import { WishlistProvider } from '@/contexts/wishlist-context';
 import { ToasterProvider } from '@/components/providers/toaster-provider';
+import { JsonLdScript } from '@/components/seo/jsonld-script';
+import { generateOrganizationSchema, generateWebsiteSchema } from '@/lib/seo/jsonld';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -62,8 +64,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const organizationSchema = generateOrganizationSchema();
+  const websiteSchema = generateWebsiteSchema();
+
   return (
     <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <JsonLdScript data={organizationSchema} />
+        <JsonLdScript data={websiteSchema} />
+      </head>
       <body className={inter.className}>
         <AuthProvider>
           <WishlistProvider>
