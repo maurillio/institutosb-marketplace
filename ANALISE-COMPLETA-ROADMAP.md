@@ -9,23 +9,25 @@
 
 ### Status Geral
 - **Total de Funcionalidades Mapeadas:** ~250+
-- **Implementadas e Funcionais:** ~185 (74%)
-- **Estruturadas mas Incompletas:** ~10 (4%)
+- **Implementadas e Funcionais:** ~190 (76%)
+- **Estruturadas mas Incompletas:** ~5 (2%)
 - **Pendentes:** ~55 (22%)
 
 ### Principais Conquistas ✅
 1. ✅ **Painel Admin Completo** (8 fases - 100%)
-2. ✅ **Carrinho de Compras** (100%)
-3. ✅ **Checkout com Mercado Pago** (100%)
-4. ✅ **Dashboard Vendedor** (estrutura completa)
-5. ✅ **Dashboard Instrutor** (estrutura completa)
-6. ✅ **Sistema de Notificações** (in-app + email completo)
-7. ✅ **Sistema de Cupons** (100% - validações robustas)
-8. ✅ **Notificações por Email** (100% - templates profissionais)
-9. ✅ **Planos de Assinatura** (85% - 4 planos com limites e comissões)
-10. ✅ **Upload de Imagens** (Vercel Blob)
-11. ✅ **Autenticação NextAuth** (completo)
-12. ✅ **Deploy em Produção** (Vercel + Neon)
+2. ✅ **Plataforma EAD** (100% - com certificados PDF)
+3. ✅ **Marketplace de Produtos** (90% - filtros avançados)
+4. ✅ **Carrinho de Compras** (100%)
+5. ✅ **Checkout com Mercado Pago** (100%)
+6. ✅ **Dashboard Vendedor** (estrutura completa)
+7. ✅ **Dashboard Instrutor** (estrutura completa)
+8. ✅ **Sistema de Notificações** (in-app + email completo)
+9. ✅ **Sistema de Cupons** (100% - validações robustas)
+10. ✅ **Notificações por Email** (100% - templates profissionais)
+11. ✅ **Planos de Assinatura** (85% - 4 planos com limites e comissões)
+12. ✅ **Upload de Imagens** (Vercel Blob)
+13. ✅ **Autenticação NextAuth** (completo)
+14. ✅ **Deploy em Produção** (Vercel + Neon)
 
 ---
 
@@ -96,7 +98,7 @@
 - ✅ GET /api/products/filters
 - ✅ POST/PUT/DELETE via /api/seller/products (com limites de plano)
 
-### 5. PLATAFORMA EAD (CURSOS) ✅ 95% COMPLETO
+### 5. PLATAFORMA EAD (CURSOS) ✅ 100% COMPLETO
 
 **Frontend:**
 - ✅ /cursos - Listagem com dados reais
@@ -107,7 +109,8 @@
 - ✅ Progresso visual (barras de % em tempo real)
 - ✅ Navegação entre aulas (prev/next)
 - ✅ Check marks em aulas concluídas
-- ⏳ **FALTA: Geração de certificado PDF** (estrutura pronta, falta biblioteca)
+- ✅ **Geração de certificado PDF** (template profissional com jsPDF)
+- ✅ **Botão de download** com loading state
 
 **Backend:**
 - ✅ GET /api/courses - Listagem pública
@@ -121,7 +124,9 @@
 - ✅ Detecção de conclusão 100%
 - ✅ GET /api/instructor/courses
 - ✅ POST /api/instructor/courses/[id]/modules
-- ⏳ **FALTA: API de geração de certificado**
+- ✅ **GET /api/my-courses/[courseId]/certificate** (geração sob demanda)
+- ✅ **Código único de certificado** (verificável)
+- ✅ **Template PDF profissional** (branding completo)
 
 ### 6. CARRINHO E CHECKOUT ✅ 100% COMPLETO
 - ✅ CartContext com localStorage
