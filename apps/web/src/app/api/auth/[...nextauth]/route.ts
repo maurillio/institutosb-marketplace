@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
 import { prisma } from '@thebeautypro/database';
 import bcrypt from 'bcrypt';
 
@@ -57,6 +58,18 @@ export const authOptions: NextAuthOptions = {
         };
       },
     }),
+    // Google OAuth
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+      authorization: {
+        params: {
+          prompt: 'consent',
+          access_type: 'offline',
+          response_type: 'code'
+        }
+      }
+    }),
   ],
   pages: {
     signIn: '/entrar',
@@ -68,6 +81,53 @@ export const authOptions: NextAuthOptions = {
     maxAge: 7 * 24 * 60 * 60, // 7 dias
   },
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // Login via Google OAuth
+      if (account?.provider === 'google' && profile?.email) {
+        try {
+          // Verificar se usuário já existe
+          let existingUser = await prisma.user.findUnique({
+            where: { email: profile.email },
+          });
+
+          if (!existingUser) {
+            // Criar novo usuário com dados do Google
+            existingUser = await prisma.user.create({
+              data: {
+                email: profile.email,
+                name: profile.name || profile.email.split('@')[0],
+                avatar: (profile as any).picture || null,
+                emailVerified: new Date(),
+                password: '', // Sem senha para OAuth
+                roles: ['CUSTOMER'],
+                status: 'ACTIVE',
+              },
+            });
+            console.log('[OAuth] Novo usuário criado:', existingUser.id);
+          } else {
+            // Atualizar último login
+            await prisma.user.update({
+              where: { id: existingUser.id },
+              data: { lastLoginAt: new Date() },
+            });
+            console.log('[OAuth] Usuário existente:', existingUser.id);
+          }
+
+          // Adicionar dados ao user object para o callback JWT
+          user.id = existingUser.id;
+          user.roles = existingUser.roles;
+          user.status = existingUser.status;
+          user.avatar = existingUser.avatar;
+
+          return true;
+        } catch (error) {
+          console.error('[OAuth] Erro ao processar login Google:', error);
+          return false;
+        }
+      }
+
+      return true;
+    },
     async jwt({ token, user, trigger, session }) {
       console.log('[JWT Callback] Trigger:', trigger, 'User ID:', token.id);
       
