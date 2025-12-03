@@ -66,8 +66,8 @@ export async function GET(request: NextRequest) {
           _count: {
             select: {
               orders: true,
-              products: true,
-              courses: true,
+              productsCreated: true,
+              coursesCreated: true,
             },
           },
         },
