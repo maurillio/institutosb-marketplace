@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { prisma } from '@thebeautypro/database';
 import { authOptions } from '../../auth/[...nextauth]/route';
+import { checkInstructorCourseLimit } from '@/lib/subscription/limits';
 
 // GET /api/instructor/courses - Listar cursos do instrutor
 export async function GET(request: Request) {
@@ -97,6 +98,19 @@ export async function POST(request: Request) {
           userId: session.user.id,
         },
       });
+    }
+
+    // Verificar limite de cursos do plano
+    const limitCheck = await checkInstructorCourseLimit(session.user.id);
+    if (!limitCheck.canCreateCourse) {
+      return NextResponse.json(
+        {
+          error: limitCheck.reason || 'Limite de cursos atingido',
+          currentCount: limitCheck.currentCount,
+          maxAllowed: limitCheck.maxAllowed,
+        },
+        { status: 403 }
+      );
     }
 
     const body = await request.json();

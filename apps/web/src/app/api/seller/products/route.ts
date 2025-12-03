@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { prisma } from '@thebeautypro/database';
 import { authOptions } from '../../auth/[...nextauth]/route';
+import { checkSellerProductLimit } from '@/lib/subscription/limits';
 
 // GET /api/seller/products - Listar produtos do vendedor
 export async function GET(request: Request) {
@@ -117,6 +118,19 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: 'Perfil de vendedor não encontrado' },
         { status: 404 }
+      );
+    }
+
+    // Verificar limite de produtos do plano
+    const limitCheck = await checkSellerProductLimit(session.user.id);
+    if (!limitCheck.canCreateProduct) {
+      return NextResponse.json(
+        {
+          error: limitCheck.reason || 'Limite de produtos atingido',
+          currentCount: limitCheck.currentCount,
+          maxAllowed: limitCheck.maxAllowed,
+        },
+        { status: 403 }
       );
     }
 
