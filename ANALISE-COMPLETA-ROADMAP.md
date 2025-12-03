@@ -9,8 +9,8 @@
 
 ### Status Geral
 - **Total de Funcionalidades Mapeadas:** ~250+
-- **Implementadas e Funcionais:** ~180 (72%)
-- **Estruturadas mas Incompletas:** ~15 (6%)
+- **Implementadas e Funcionais:** ~185 (74%)
+- **Estruturadas mas Incompletas:** ~10 (4%)
 - **Pendentes:** ~55 (22%)
 
 ### Principais Conquistas ✅
@@ -75,24 +75,26 @@
 - ✅ EmptyState / ErrorState
 - ✅ Tabs, Dialog, Dropdown
 
-### 4. MARKETPLACE DE PRODUTOS ⚠️ 70% COMPLETO
+### 4. MARKETPLACE DE PRODUTOS ✅ 90% COMPLETO
 
 **Frontend:**
 - ✅ /produtos - Listagem (estrutura pronta)
 - ✅ /produtos/[id] - Detalhes (estrutura pronta)
 - ✅ /categorias - Navegação
-- ⚠️ **FALTA: Conectar com dados reais** (ainda usa alguns mocks)
-- ⚠️ **FALTA: Filtros avançados** (preço, avaliação, etc)
-- ⏳ **FALTA: Sistema de avaliações/reviews** (modelo existe, UI não)
-- ⏳ **FALTA: Produtos relacionados**
+- ⚠️ **FALTA: UI de filtros avançados na página** (API pronta)
 - ✅ **Wishlist funcional** (contexto, API completa e integração)
+- ✅ **Sistema de Reviews completo** (UI + API + validações)
 
 **Backend:**
-- ✅ GET /api/products (com filtros)
+- ✅ GET /api/products (com filtros avançados)
+  - Filtros: price range, rating, stock, condition, category, brand, skinType, concern, tag, search
+  - Ordenação: price, rating, sales, views, createdAt
 - ✅ GET /api/products/[id]
+- ✅ GET /api/products/[id]/related (algoritmo multi-critério)
+- ✅ GET /api/products/[id]/reviews
+- ✅ POST /api/products/[id]/reviews (com validações)
 - ✅ GET /api/products/filters
-- ✅ POST/PUT/DELETE via /api/seller/products
-- ⏳ **FALTA: API de Reviews** (POST /api/products/[id]/reviews)
+- ✅ POST/PUT/DELETE via /api/seller/products (com limites de plano)
 
 ### 5. PLATAFORMA EAD (CURSOS) ✅ 95% COMPLETO
 
