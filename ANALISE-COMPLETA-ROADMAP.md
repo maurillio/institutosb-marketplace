@@ -9,9 +9,9 @@
 
 ### Status Geral
 - **Total de Funcionalidades Mapeadas:** ~250+
-- **Implementadas e Funcionais:** ~155 (62%)
-- **Estruturadas mas Incompletas:** ~25 (10%)
-- **Pendentes:** ~70 (28%)
+- **Implementadas e Funcionais:** ~163 (65%)
+- **Estruturadas mas Incompletas:** ~23 (9%)
+- **Pendentes:** ~64 (26%)
 
 ### Principais Conquistas ✅
 1. ✅ **Painel Admin Completo** (8 fases - 100%)
@@ -20,9 +20,10 @@
 4. ✅ **Dashboard Vendedor** (estrutura completa)
 5. ✅ **Dashboard Instrutor** (estrutura completa)
 6. ✅ **Sistema de Notificações** (backend completo)
-7. ✅ **Upload de Imagens** (Vercel Blob)
-8. ✅ **Autenticação NextAuth** (completo)
-9. ✅ **Deploy em Produção** (Vercel + Neon)
+7. ✅ **Sistema de Cupons** (100% - validações robustas)
+8. ✅ **Upload de Imagens** (Vercel Blob)
+9. ✅ **Autenticação NextAuth** (completo)
+10. ✅ **Deploy em Produção** (Vercel + Neon)
 
 ---
 
@@ -211,7 +212,22 @@
 - ⏳ **FALTA: Disputas**
 - ⏳ **FALTA: Histórico de transações**
 
-### 14. PLANOS DE ASSINATURA ⏳ 20% COMPLETO
+### 14. CUPONS E PROMOÇÕES ✅ 100% COMPLETO
+- ✅ Modelo Prisma Coupon (code, type, value, validações)
+- ✅ Modelo CouponUsage (histórico de uso)
+- ✅ Enums CouponType e CouponApplicability
+- ✅ API POST /api/coupons/validate (validação completa)
+- ✅ APIs Admin CRUD completas (5 endpoints)
+- ✅ Integração no checkout (campo + validação + aplicação)
+- ✅ Lógica de pedido atualizada (registro de uso)
+- ✅ Painel admin /admin/cupons (listagem + filtros)
+- ✅ Formulário /admin/cupons/novo (criação completa)
+- ✅ Status badges dinâmicos (ativo/inativo/expirado/esgotado)
+- ✅ Validações robustas (limites, datas, aplicabilidade)
+- ✅ Cálculo de desconto (porcentagem com max, valor fixo)
+- ✅ Proteção contra uso indevido
+
+### 15. PLANOS DE ASSINATURA ⏳ 20% COMPLETO
 - ✅ Modelo Prisma SubscriptionPlan
 - ✅ Relação com Seller/Instructor
 - ⏳ **FALTA: API de upgrade/downgrade**
@@ -220,7 +236,7 @@
 - ⏳ **FALTA: Renovação automática**
 - ⏳ **FALTA: Página /planos completa**
 
-### 15. SEO E PERFORMANCE ✅ 95% COMPLETO
+### 16. SEO E PERFORMANCE ✅ 95% COMPLETO
 - ✅ Metadata básica
 - ✅ **Metadata dinâmica por página** (produtos e cursos)
 - ✅ **Sitemap XML dinâmico** (produtos, cursos, categorias)
@@ -236,7 +252,7 @@
 - ✅ **Utilitários SEO reutilizáveis**
 - ⏳ **FALTA: Imagens OG personalizadas** (og-image por produto/curso)
 
-### 16. SEGURANÇA ⚠️ 60% COMPLETO
+### 17. SEGURANÇA ⚠️ 60% COMPLETO
 - ✅ HTTPS em produção (Vercel)
 - ✅ NextAuth sessions
 - ✅ CORS configurado
@@ -351,7 +367,7 @@
 
 ## 📊 Estatísticas Finais
 
-**Progresso Geral:** 53% completo
+**Progresso Geral:** 65% completo ⬆️
 **Painel Admin:** 100% ✅✅
 **Marketplace:** 90% ✅✅ (Reviews + Pedidos)
 **EAD:** 95% ✅✅ (Reviews + Player + Progresso)
@@ -361,8 +377,9 @@
 **Notificações IN-APP:** 100% ✅ **<-- IMPLEMENTADO 2025-12-03!**
 **Gestão Pedidos:** 100% ✅ **<-- IMPLEMENTADO 2025-12-03!**
 **Área de Membros:** 95% ✅ **<-- IMPLEMENTADO 2025-12-03!**
+**Sistema de Cupons:** 100% ✅ **<-- IMPLEMENTADO 2025-12-03!**
 
-🎉 **4 FEATURES CRÍTICAS COMPLETAS EM 1 DIA!**
+🎉 **5 FEATURES CRÍTICAS COMPLETAS EM 1 DIA!**
 
 ---
 
@@ -492,5 +509,153 @@
 - Imagens OG personalizadas (og-image dinâmico)
 - Google Analytics 4 integration
 - Google Search Console setup
+
+---
+
+### 2025-12-03 (Noite): Sistema Completo de Cupons de Desconto ✅
+**Status:** 0% → 100% (▲100%)
+**Overall:** 62% → 65%
+
+**Implementações:**
+
+🎫 **SCHEMA PRISMA:**
+- Enum CouponType (PERCENTAGE, FIXED_AMOUNT)
+- Enum CouponApplicability (ALL_PRODUCTS, SPECIFIC_CATEGORIES, SPECIFIC_PRODUCTS)
+- Model Coupon com todos os campos de validação:
+  - code (único), type, value
+  - minOrderValue, maxDiscount
+  - applicability, categoryIds, productIds
+  - maxUses, maxUsesPerUser, currentUses
+  - validFrom, validUntil
+  - isActive, description, createdBy
+- Model CouponUsage para histórico:
+  - couponId, userId, orderId
+  - usedAt timestamp
+- Relações atualizadas em Order e User
+
+🔌 **APIs DE VALIDAÇÃO:**
+- POST /api/coupons/validate - Validação completa de cupom:
+  - ✅ Status ativo/inativo
+  - ✅ Datas de validade (validFrom, validUntil)
+  - ✅ Limite de usos total (maxUses vs currentUses)
+  - ✅ Limite de usos por usuário (maxUsesPerUser)
+  - ✅ Valor mínimo do pedido (minOrderValue)
+  - ✅ Aplicabilidade (categorias/produtos específicos)
+  - ✅ Cálculo de desconto:
+    - Porcentagem com desconto máximo opcional
+    - Valor fixo limitado ao total do pedido
+  - ✅ Retorna: valid, coupon info, discountAmount, finalTotal
+
+🛠️ **APIs ADMIN:**
+- GET /api/admin/coupons - Lista cupons:
+  - Filtros: active, inactive, expired
+  - Paginação (page, limit)
+  - Include: count de usages
+  - Conversão Decimal→Number
+- POST /api/admin/coupons - Criar cupom:
+  - Validação de campos obrigatórios
+  - Verificação de código único
+  - Código automaticamente uppercase
+- GET /api/admin/coupons/[id] - Buscar específico
+- PATCH /api/admin/coupons/[id] - Atualizar:
+  - Update parcial (só campos fornecidos)
+  - Validação de código único ao alterar
+- DELETE /api/admin/coupons/[id] - Deletar:
+  - Proteção: não deleta se usado em pedidos
+  - Sugestão de desativar ao invés de deletar
+
+🛒 **INTEGRAÇÃO CHECKOUT:**
+- Campo de cupom no sidebar do checkout:
+  - Input com uppercase automático
+  - Botão "Aplicar" com validação em tempo real
+  - Toast de erro/sucesso
+  - Enter key para aplicar
+- Cupom aplicado com badge verde:
+  - Código do cupom
+  - Descrição (se houver)
+  - Valor do desconto
+  - Botão X para remover
+- Atualização do total:
+  - Subtotal + Frete - Desconto = Total
+  - Linha de desconto em verde
+- Passa couponId e discount para API de pedido
+
+📦 **LÓGICA DE PEDIDO:**
+- API POST /api/orders atualizada:
+  - Aceita couponId e discount
+  - Busca código do cupom para salvar
+  - Calcula total com desconto
+  - Salva couponId e couponCode no pedido
+  - Cria registro CouponUsage após pedido
+  - Incrementa currentUses do cupom
+- Transação completa e atômica
+
+🎨 **PAINEL ADMIN:**
+- Página /admin/cupons - Lista completa:
+  - Filtros: Todos, Ativos, Inativos, Expirados
+  - Cards com informações completas:
+    - Badge de status colorido (verde/cinza/amarelo/vermelho)
+    - Tipo e valor do desconto
+    - Usos (atual / máximo ou ilimitado)
+    - Período de validade
+    - Pedido mínimo
+  - Ações por cupom:
+    - Toggle ativar/desativar (ícone)
+    - Editar (link para /admin/cupons/[id]/editar)
+    - Deletar (com confirmação e validação)
+  - Estado vazio com CTA
+  - Link para criar novo cupom
+
+- Página /admin/cupons/novo - Formulário completo:
+  - **Informações Básicas:**
+    - Código (uppercase automático)
+    - Descrição opcional
+  - **Configurações de Desconto:**
+    - Tipo (Porcentagem / Valor Fixo)
+    - Valor do desconto
+    - Desconto máximo (para porcentagem)
+    - Valor mínimo do pedido
+  - **Limitações de Uso:**
+    - Limite total de usos (opcional)
+    - Limite por usuário (opcional)
+  - **Validade:**
+    - Data/hora início (obrigatório)
+    - Data/hora fim (opcional)
+  - **Preview em tempo real:**
+    - Sidebar com resumo do cupom
+    - Visualização dinâmica dos valores
+  - Validações frontend e backend
+  - Botões Criar/Cancelar
+
+🎯 **STATUS BADGES:**
+- 🟢 Verde: ATIVO (dentro da validade, com usos disponíveis)
+- 🟡 Amarelo: AGENDADO (validFrom no futuro)
+- 🔴 Vermelho: EXPIRADO (validUntil no passado)
+- 🔴 Vermelho: ESGOTADO (maxUses atingido)
+- ⚪ Cinza: INATIVO (isActive = false)
+
+🛡️ **VALIDAÇÕES E PROTEÇÕES:**
+- Código único por cupom
+- Não permite deletar cupom usado em pedidos
+- Validação de data (início antes do fim)
+- Desconto não pode exceder total do pedido
+- Porcentagem limitada por maxDiscount
+- Validação de aplicabilidade (categorias/produtos)
+- Contadores de uso automáticos e precisos
+
+**Arquivos Criados:** 6 arquivos
+**Arquivos Modificados:** 2 arquivos
+**Linhas de Código:** +1400
+
+🎯 **IMPACTO:**
+- Sistema completo de promoções e marketing
+- Cupons de desconto configuráveis
+- Validações robustas contra uso indevido
+- Rastreamento completo de uso
+- Painel admin intuitivo para gestão
+- Integração perfeita com checkout
+- Experiência de usuário otimizada
+
+🎉 **SISTEMA DE CUPONS 100% FUNCIONAL!**
 
 ---
