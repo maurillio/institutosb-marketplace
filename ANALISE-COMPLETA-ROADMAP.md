@@ -122,16 +122,18 @@
 - ✅ Criação de pedidos
 - ✅ Webhook de pagamentos
 
-### 7. DASHBOARD DO VENDEDOR ⚠️ 75% COMPLETO
+### 7. DASHBOARD DO VENDEDOR ✅ 100% COMPLETO
 - ✅ /dashboard/vendedor - Overview
 - ✅ Gestão de produtos (CRUD completo)
-- ✅ Lista de pedidos
+- ✅ Lista de pedidos com botão "Ver Detalhes"
+- ✅ Detalhes de pedido individual (/pedidos/[id])
+- ✅ Atualizar status do pedido (com validação de fluxo)
+- ✅ Adicionar código de rastreio e transportadora
+- ✅ Comunicação com comprador (via notificações automáticas)
+- ✅ Timeline de eventos do pedido
+- ✅ Cálculo de comissões (taxa vs líquido vendedor)
 - ✅ Payouts
 - ✅ Analytics
-- ⏳ **FALTA: Detalhes de pedido individual**
-- ⏳ **FALTA: Atualizar status do pedido**
-- ⏳ **FALTA: Adicionar código de rastreio**
-- ⏳ **FALTA: Comunicação com comprador**
 
 ### 8. DASHBOARD DO INSTRUTOR ⚠️ 70% COMPLETO
 - ✅ /dashboard/instrutor - Overview
@@ -249,11 +251,11 @@
 - **Complexidade:** BAIXA
 - **Implementação:** APIs completas + UI dropdown + Badge + Polling
 
-### 4. **GESTÃO COMPLETA DE PEDIDOS (VENDEDOR)** 🟡 IMPORTANTE
-- **Status:** 50% (lista existe, falta detalhes/ações)
+### 4. **GESTÃO COMPLETA DE PEDIDOS (VENDEDOR)** ✅ COMPLETO
+- **Status:** 100% (IMPLEMENTADO EM 2025-12-03)
 - **Impacto:** ALTO - Core do marketplace
 - **Complexidade:** MÉDIA
-- **Tempo Estimado:** 2-3 dias para implementação COMPLETA
+- **Implementação:** API completa + Página detalhes + Modals + Notificações
 
 ### 5. **ÁREA DE MEMBROS (CURSOS ONLINE)** 🟠 MÉDIO
 - **Status:** 30% (estrutura existe, sem player/progresso)
@@ -332,14 +334,15 @@
 
 ## 📊 Estatísticas Finais
 
-**Progresso Geral:** 42% completo
+**Progresso Geral:** 47% completo
 **Painel Admin:** 100% ✅
-**Marketplace:** 85% ✅ (Reviews implementado)
+**Marketplace:** 90% ✅ (Reviews + Pedidos implementados)
 **EAD:** 80% ✅ (Reviews implementado)
 **Checkout:** 100% ✅
 **Reviews:** 100% ✅ **<-- IMPLEMENTADO!**
 **Notificações IN-APP:** 100% ✅ **<-- IMPLEMENTADO!**
-**Gestão Pedidos (Vendedor):** 50% ⚠️ **<-- PRÓXIMA PRIORIDADE**
+**Gestão Pedidos (Vendedor):** 100% ✅ **<-- IMPLEMENTADO!**
+**Área de Membros (Cursos):** 30% ⚠️ **<-- PRÓXIMA PRIORIDADE**
 
 ---
 
