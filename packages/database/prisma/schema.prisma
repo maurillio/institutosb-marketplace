@@ -166,6 +166,10 @@ model InstructorProfile {
   bio         String?  @db.Text
   expertise   String[] // Áreas de expertise
 
+  // Plano de assinatura
+  plan        SubscriptionPlan @default(FREE)
+  planExpiresAt DateTime?
+
   // Métricas
   totalStudents Int    @default(0)
   rating        Decimal @default(0) @db.Decimal(3, 2)
