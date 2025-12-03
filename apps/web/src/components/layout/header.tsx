@@ -6,6 +6,7 @@ import { ShoppingCart, Search, Menu, Heart } from 'lucide-react';
 import { Button } from '@thebeautypro/ui/button';
 import { UserMenu } from './user-menu';
 import { MobileMenu } from './mobile-menu';
+import { NotificationsDropdown } from './notifications-dropdown';
 import { useCart } from '@/contexts/cart-context';
 import { useWishlist } from '@/contexts/wishlist-context';
 
@@ -81,6 +82,9 @@ export function Header() {
               <span className="sr-only">Carrinho ({itemsCount})</span>
             </Link>
           </Button>
+
+          {/* Notifications */}
+          <NotificationsDropdown />
 
           {/* User Menu */}
           <UserMenu />
