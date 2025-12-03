@@ -57,6 +57,7 @@ model User {
   reviews       Review[]
   courseEnrollments CourseEnrollment[]
   wishlist      Wishlist[]
+  couponUsages  CouponUsage[]
 
   // Como vendedor
   sellerProfile SellerProfile?
@@ -551,6 +552,78 @@ enum PaymentStatus {
   REFUNDED
 }
 
+enum CouponType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+enum CouponApplicability {
+  ALL_PRODUCTS
+  SPECIFIC_CATEGORIES
+  SPECIFIC_PRODUCTS
+}
+
+model Coupon {
+  id          String   @id @default(cuid())
+  code        String   @unique // Código do cupom (ex: WELCOME10)
+
+  // Tipo e valor
+  type        CouponType
+  value       Decimal  @db.Decimal(10, 2) // % ou valor fixo
+
+  // Restrições
+  minOrderValue Decimal? @db.Decimal(10, 2) // Valor mínimo do pedido
+  maxDiscount   Decimal? @db.Decimal(10, 2) // Desconto máximo (para %)
+
+  // Aplicabilidade
+  applicability CouponApplicability @default(ALL_PRODUCTS)
+  categoryIds   String[] // IDs das categorias (se SPECIFIC_CATEGORIES)
+  productIds    String[] // IDs dos produtos (se SPECIFIC_PRODUCTS)
+
+  // Limites de uso
+  maxUses       Int?     // Total de usos permitidos (null = ilimitado)
+  maxUsesPerUser Int?    // Usos por usuário (null = ilimitado)
+  currentUses   Int      @default(0) // Contador de usos
+
+  // Validade
+  validFrom   DateTime
+  validUntil  DateTime?
+
+  // Status
+  isActive    Boolean  @default(true)
+
+  // Metadata
+  description String?
+  createdBy   String?  // ID do admin que criou
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relações
+  usages      CouponUsage[]
+  orders      Order[]
+
+  @@map("coupons")
+}
+
+model CouponUsage {
+  id        String   @id @default(cuid())
+
+  couponId  String
+  coupon    Coupon   @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  orderId   String?  @unique
+  order     Order?   @relation(fields: [orderId], references: [id])
+
+  usedAt    DateTime @default(now())
+
+  @@index([couponId])
+  @@index([userId])
+  @@map("coupon_usages")
+}
+
 model Order {
   id          String   @id @default(cuid())
   orderNumber String   @unique // Número do pedido amigável
@@ -591,9 +664,15 @@ model Order {
   shippedAt   DateTime?
   deliveredAt DateTime?
 
+  // Cupom aplicado
+  couponId    String?
+  coupon      Coupon?  @relation(fields: [couponId], references: [id])
+  couponCode  String?  // Código usado (para histórico)
+
   // Relações
   items       OrderItem[]
   payment     Payment?
+  couponUsage CouponUsage?
 
   @@index([buyerId])
   @@index([sellerId])

@@ -9,7 +9,8 @@ import { useCart } from '@/contexts/cart-context';
 import { Button } from '@thebeautypro/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, CreditCard, Truck, MapPin } from 'lucide-react';
+import { ArrowLeft, CreditCard, Truck, MapPin, Tag, Check, X } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Address {
   zipCode: string;
@@ -42,6 +43,18 @@ export default function CheckoutPage() {
 
   const [shippingCost, setShippingCost] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState<'credit_card' | 'pix' | 'boleto'>('credit_card');
+
+  // Cupom de desconto
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    id: string;
+    code: string;
+    type: string;
+    value: number;
+    description: string | null;
+  } | null>(null);
+  const [discount, setDiscount] = useState(0);
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
 
   // Redirecionar se não estiver autenticado
   useEffect(() => {
@@ -95,6 +108,49 @@ export default function CheckoutPage() {
     setShippingCost(estimated);
   };
 
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      toast.error('Digite um código de cupom');
+      return;
+    }
+
+    setValidatingCoupon(true);
+    try {
+      const response = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: couponCode.trim(),
+          orderTotal: total,
+          productIds: items.map(item => item.productId),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.valid) {
+        toast.error(data.error || 'Cupom inválido');
+        return;
+      }
+
+      setAppliedCoupon(data.coupon);
+      setDiscount(data.discountAmount);
+      toast.success('Cupom aplicado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao validar cupom:', error);
+      toast.error('Erro ao validar cupom');
+    } finally {
+      setValidatingCoupon(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setDiscount(0);
+    setCouponCode('');
+    toast.success('Cupom removido');
+  };
+
   const handleCreateOrder = async () => {
     setLoading(true);
     try {
@@ -114,6 +170,8 @@ export default function CheckoutPage() {
           billingAddress: address,
           paymentMethod,
           shippingCost,
+          couponId: appliedCoupon?.id,
+          discount,
         }),
       });
 
@@ -124,6 +182,7 @@ export default function CheckoutPage() {
       const order = await orderResponse.json();
 
       // 2. Criar preferência de pagamento no Mercado Pago
+      const finalTotal = total + shippingCost - discount;
       const paymentResponse = await fetch('/api/payments/create-preference', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -136,7 +195,7 @@ export default function CheckoutPage() {
             quantity: item.quantity,
             price: item.price,
           })),
-          total: total + shippingCost,
+          total: finalTotal,
         }),
       });
 
@@ -509,6 +568,60 @@ export default function CheckoutPage() {
                   ))}
                 </div>
 
+                {/* Cupom de desconto */}
+                <div className="mt-6 border-t pt-4">
+                  <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold">
+                    <Tag className="h-4 w-4" />
+                    Cupom de Desconto
+                  </h3>
+
+                  {!appliedCoupon ? (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                        onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
+                        placeholder="Digite o código"
+                        className="h-9 flex-1 rounded-md border border-input bg-white px-3 text-sm uppercase"
+                        disabled={validatingCoupon}
+                      />
+                      <Button
+                        size="sm"
+                        onClick={handleApplyCoupon}
+                        disabled={validatingCoupon || !couponCode.trim()}
+                      >
+                        {validatingCoupon ? 'Validando...' : 'Aplicar'}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="rounded-md border border-green-500 bg-green-50 p-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-1 text-sm font-medium text-green-900">
+                            <Check className="h-4 w-4" />
+                            {appliedCoupon.code}
+                          </div>
+                          {appliedCoupon.description && (
+                            <p className="mt-1 text-xs text-green-700">
+                              {appliedCoupon.description}
+                            </p>
+                          )}
+                          <p className="mt-1 text-sm font-bold text-green-900">
+                            -R$ {discount.toFixed(2)}
+                          </p>
+                        </div>
+                        <button
+                          onClick={handleRemoveCoupon}
+                          className="text-green-700 hover:text-green-900"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 {/* Totais */}
                 <div className="mt-6 space-y-2 border-t pt-4 text-sm">
                   <div className="flex justify-between">
@@ -523,10 +636,16 @@ export default function CheckoutPage() {
                         : 'Calcular'}
                     </span>
                   </div>
+                  {discount > 0 && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Desconto</span>
+                      <span className="font-medium">-R$ {discount.toFixed(2)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between border-t pt-2 text-lg font-bold">
                     <span>Total</span>
                     <span className="text-primary">
-                      R$ {(total + shippingCost).toFixed(2)}
+                      R$ {(total + shippingCost - discount).toFixed(2)}
                     </span>
                   </div>
                 </div>

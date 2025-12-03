@@ -80,6 +80,8 @@ export async function POST(request: Request) {
       billingAddress,
       paymentMethod,
       shippingCost,
+      couponId,
+      discount,
     } = body;
 
     if (!items || items.length === 0) {
@@ -142,11 +144,21 @@ export async function POST(request: Request) {
     }
 
     const shippingCostDecimal = shippingCost || 0;
-    const total = subtotal + shippingCostDecimal;
+    const discountDecimal = discount || 0;
+    const total = subtotal + shippingCostDecimal - discountDecimal;
 
     // Calcular taxa da plataforma (10%)
     const platformFee = total * 0.1;
     const sellerAmount = total - platformFee;
+
+    // Buscar cupom se aplicado
+    let couponCode = null;
+    if (couponId) {
+      const coupon = await prisma.coupon.findUnique({
+        where: { id: couponId },
+      });
+      couponCode = coupon?.code || null;
+    }
 
     // Buscar ou criar endereço padrão do usuário
     let userAddress = await prisma.address.findFirst({
@@ -188,9 +200,12 @@ export async function POST(request: Request) {
         status: 'PENDING',
         subtotal,
         shippingCost: shippingCostDecimal,
+        discount: discountDecimal,
         total,
         platformFee,
         sellerAmount,
+        couponId: couponId || null,
+        couponCode: couponCode,
         items: {
           create: orderItems,
         },
@@ -211,6 +226,28 @@ export async function POST(request: Request) {
         data: {
           stock: {
             decrement: item.quantity,
+          },
+        },
+      });
+    }
+
+    // Registrar uso do cupom se aplicado
+    if (couponId) {
+      // Criar registro de uso
+      await prisma.couponUsage.create({
+        data: {
+          couponId,
+          userId: session.user.id,
+          orderId: order.id,
+        },
+      });
+
+      // Incrementar contador de usos
+      await prisma.coupon.update({
+        where: { id: couponId },
+        data: {
+          currentUses: {
+            increment: 1,
           },
         },
       });
