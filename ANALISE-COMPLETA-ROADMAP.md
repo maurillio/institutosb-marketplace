@@ -1010,3 +1010,112 @@ Com base no roadmap atual (77% completo), as próximas prioridades são:
 
 **Última Atualização:** 2025-12-03 (Filtros Avançados)
 **Próxima Prioridade:** Dashboard Instrutor - Lista de Alunos
+
+### 2025-12-03 (Final): Dashboard Instrutor - Lista de Alunos ✅
+**Status:** 70% → 85% (▲15%)
+**Overall:** 77% → 78%
+
+**Implementações:**
+
+👥 **API DE ALUNOS:**
+- **GET /api/instructor/courses/[id]/students**
+  - Lista alunos matriculados com progresso individual
+  - Paginação completa (page, limit, skip)
+  - Filtros avançados:
+    - Por status: completed, in_progress, not_started
+    - Busca por nome (case insensitive)
+  - Estatísticas agregadas:
+    - Total de alunos
+    - Completados / Em progresso / Não iniciados
+    - Progresso médio do curso
+  - Segurança:
+    - Validação de instrutor
+    - Verificação de propriedade do curso
+    - Conversão Decimal→Number
+
+📊 **PÁGINA DE ALUNOS:**
+- **/dashboard/instrutor/cursos/[id]/alunos**
+  - Cards de estatísticas visuais:
+    - Total de alunos (ícone Users)
+    - Concluíram (ícone Award)
+    - Em progresso (ícone Clock)
+    - Progresso médio (ícone TrendingUp)
+  - Tabela profissional:
+    - Avatar do aluno (com fallback de inicial)
+    - Nome e email
+    - Progress bar visual (%)
+    - Status badge colorido
+    - Data de matrícula e último acesso
+  - Filtros funcionais:
+    - Busca em tempo real por nome
+    - Select de status (todos/completo/em progresso/não iniciado)
+  - Paginação completa
+  - Breadcrumb navigation
+  - Exportação para CSV:
+    - Formatação pt-BR
+    - BOM para UTF-8
+    - Nome do arquivo com data
+
+🎨 **UX E DESIGN:**
+- Layout consistente com dashboard
+- Status badges coloridos:
+  - Verde: Concluído
+  - Azul: Em Progresso
+  - Cinza: Não Iniciado
+- Empty states informativos
+- Loading states
+- Responsive design (scroll horizontal mobile)
+- Toast notifications
+
+🔗 **INTEGRAÇÃO:**
+- Botão "Alunos" adicionado nos cards de cursos
+- Ordenação lógica: Alunos → Editar → Ver
+- Link direto por curso
+
+**Arquivos Criados:** 2 arquivos
+**Arquivos Modificados:** 1 arquivo
+**Linhas de Código:** +599
+
+🎯 **IMPACTO:**
+- Instrutores podem gerenciar e monitorar alunos
+- Visibilidade de progresso individual
+- Identificação de alunos que precisam de suporte
+- Exportação de dados para análise externa
+- Melhora comunicação instrutor-aluno
+
+📈 **DASHBOARD INSTRUTOR AGORA 85% COMPLETO!**
+
+**Pendentes (para 100%):**
+- Upload de vídeos de aulas (infraestrutura)
+- Gestão de agendas presenciais (opcional)
+
+---
+
+## 📊 PROGRESSO FINAL - 2025-12-03
+
+**Progresso Geral: 78%** (77% → 78%)
+
+### Funcionalidades Concluídas Hoje:
+1. ✅ Filtros Avançados de Produtos (95%)
+2. ✅ Dashboard Instrutor - Lista de Alunos (85%)
+
+### Próximas Prioridades Alta (Semana 1):
+1. 🎯 **Recuperação de Senha** (1 dia)
+   - /api/auth/forgot-password
+   - /api/auth/reset-password  
+   - Email com link temporário
+
+2. 🎯 **Upload de Vídeos de Aulas** (3-4 dias)
+   - Vercel Blob ou Cloudinary
+   - Progress bar
+   - Thumbnails automáticos
+
+3. 🎯 **Mercado Pago - Planos Recorrentes** (3-4 dias)
+   - Preferências de assinatura
+   - Webhook renovação
+   - Histórico de cobranças
+
+---
+
+**Última Atualização:** 2025-12-03 23:45 (Lista de Alunos)
+**Próxima Prioridade:** Recuperação de Senha (Quick Win - 1 dia)
