@@ -6,7 +6,9 @@ import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import Image from 'next/image';
-import { Package } from 'lucide-react';
+import { Package, Eye } from 'lucide-react';
+import { Button } from '@thebeautypro/ui/button';
+import Link from 'next/link';
 
 interface Order {
   id: string;
@@ -150,6 +152,15 @@ export default function SellerOrdersPage() {
                         R$ {order.total.toFixed(2)}
                       </p>
                     </div>
+                  </div>
+
+                  <div className="mt-4 border-t pt-4">
+                    <Button asChild className="w-full">
+                      <Link href={`/dashboard/vendedor/pedidos/${order.id}`}>
+                        <Eye className="mr-2 h-4 w-4" />
+                        Ver Detalhes
+                      </Link>
+                    </Button>
                   </div>
                 </div>
               ))}
