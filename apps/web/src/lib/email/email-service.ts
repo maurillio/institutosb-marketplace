@@ -255,4 +255,46 @@ export class EmailService {
       html: html.trim(),
     });
   }
+
+  // Recuperação de senha
+  static async sendPasswordResetEmail(to: string, userName: string, resetUrl: string) {
+    const html = `
+      <h2>Recuperação de Senha</h2>
+      <p>Olá <strong>${userName}</strong>,</p>
+      <p>
+        Recebemos uma solicitação para redefinir a senha da sua conta na The Beauty Pro.
+      </p>
+
+      <div class="info-box" style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 16px; margin: 24px 0;">
+        ⚠️ <strong>Importante:</strong> Se você não solicitou esta redefinição, por favor ignore este email.
+        Sua senha permanecerá inalterada.
+      </div>
+
+      <p>
+        Para criar uma nova senha, clique no botão abaixo. Este link é válido por <strong>1 hora</strong>.
+      </p>
+
+      <a href="${resetUrl}" class="button" style="display: inline-block; background-color: #db2777; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 16px 0;">
+        Redefinir Senha
+      </a>
+
+      <p style="margin-top: 24px; font-size: 14px; color: #6b7280;">
+        <strong>Não funcionou?</strong> Copie e cole este link no seu navegador:<br>
+        <span style="color: #9ca3af; word-break: break-all;">${resetUrl}</span>
+      </p>
+
+      <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+        <p style="font-size: 13px; color: #9ca3af; margin: 0;">
+          Por questões de segurança, este link expira em 1 hora. Se precisar de um novo link,
+          visite a página de recuperação de senha novamente.
+        </p>
+      </div>
+    `;
+
+    return sendEmail({
+      to,
+      subject: 'Recuperação de Senha - The Beauty Pro',
+      html: html.trim(),
+    });
+  }
 }

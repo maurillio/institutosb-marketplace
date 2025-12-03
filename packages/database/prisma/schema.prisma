@@ -39,6 +39,10 @@ model User {
   avatar        String?
   password      String    // Hashed
 
+  // Reset de senha
+  resetToken        String? @unique
+  resetTokenExpiry  DateTime?
+
   roles         UserRole[] @default([CUSTOMER])
   status        AccountStatus @default(PENDING_VERIFICATION)
 
