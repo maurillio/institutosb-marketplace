@@ -43,6 +43,10 @@ model User {
   resetToken        String? @unique
   resetTokenExpiry  DateTime?
 
+  // Verificação de email
+  emailVerificationToken  String? @unique
+  emailVerificationExpiry DateTime?
+
   roles         UserRole[] @default([CUSTOMER])
   status        AccountStatus @default(PENDING_VERIFICATION)
 

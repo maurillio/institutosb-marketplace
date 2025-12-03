@@ -297,4 +297,55 @@ export class EmailService {
       html: html.trim(),
     });
   }
+
+  // Verificação de email
+  static async sendEmailVerification(to: string, userName: string, verificationUrl: string) {
+    const html = `
+      <h2>Bem-vindo(a) à The Beauty Pro! 🎉</h2>
+      <p>Olá <strong>${userName}</strong>,</p>
+      <p>
+        Obrigado por se cadastrar! Para garantir a segurança da sua conta e começar a usar
+        todos os recursos da plataforma, precisamos verificar seu endereço de email.
+      </p>
+
+      <div class="info-box" style="background-color: #dbeafe; border-left: 4px solid #3b82f6; padding: 16px; margin: 24px 0;">
+        📧 <strong>Verificação Necessária:</strong> Clique no botão abaixo para ativar sua conta.
+        Este link é válido por 24 horas.
+      </div>
+
+      <a href="${verificationUrl}" class="button" style="display: inline-block; background-color: #db2777; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 16px 0;">
+        Verificar Meu Email
+      </a>
+
+      <p style="margin-top: 24px; font-size: 14px; color: #6b7280;">
+        <strong>Não funcionou?</strong> Copie e cole este link no seu navegador:<br>
+        <span style="color: #9ca3af; word-break: break-all;">${verificationUrl}</span>
+      </p>
+
+      <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+        <p style="font-size: 14px; color: #374151; margin: 0 0 12px 0;">
+          <strong>Após a verificação, você poderá:</strong>
+        </p>
+        <ul style="color: #6b7280; line-height: 1.8; margin: 0; padding-left: 20px;">
+          <li>Comprar produtos e se matricular em cursos</li>
+          <li>Tornar-se vendedor ou instrutor</li>
+          <li>Gerenciar seus pedidos e matrículas</li>
+          <li>Receber notificações importantes</li>
+        </ul>
+      </div>
+
+      <div style="margin-top: 24px; padding: 16px; background-color: #f9fafb; border-radius: 6px;">
+        <p style="font-size: 13px; color: #9ca3af; margin: 0;">
+          ⚠️ Se você não criou uma conta na The Beauty Pro, por favor ignore este email.
+          Nenhuma ação adicional será necessária.
+        </p>
+      </div>
+    `;
+
+    return sendEmail({
+      to,
+      subject: 'Verifique seu Email - The Beauty Pro',
+      html: html.trim(),
+    });
+  }
 }

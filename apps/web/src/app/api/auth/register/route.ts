@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@thebeautypro/database';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import { z } from 'zod';
+import { EmailService } from '@/lib/email/email-service';
 
 const registerSchema = z.object({
   name: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
@@ -35,14 +37,20 @@ export async function POST(request: Request) {
     // Hash da senha
     const hashedPassword = await bcrypt.hash(validatedData.password, 10);
 
+    // Gerar token de verificação
+    const emailVerificationToken = crypto.randomBytes(32).toString('hex');
+    const emailVerificationExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 horas
+
     // Cria o usuário
     const user = await prisma.user.create({
       data: {
         name: validatedData.name,
         email: validatedData.email,
         password: hashedPassword,
-        roles: ['CUSTOMER'], // Papel padrão
-        status: 'ACTIVE', // Ativado automaticamente (pode mudar para PENDING_VERIFICATION)
+        roles: ['CUSTOMER'],
+        status: 'PENDING_VERIFICATION',
+        emailVerificationToken,
+        emailVerificationExpiry,
       },
       select: {
         id: true,
@@ -54,9 +62,20 @@ export async function POST(request: Request) {
       },
     });
 
+    // Enviar email de verificação
+    const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/verificar-email?token=${emailVerificationToken}`;
+
+    try {
+      await EmailService.sendEmailVerification(user.email, user.name, verificationUrl);
+    } catch (emailError) {
+      console.error('Erro ao enviar email de verificação:', emailError);
+      // Não falhar o cadastro por erro de email
+    }
+
     return NextResponse.json({
-      message: 'Cadastro realizado com sucesso!',
+      message: 'Cadastro realizado com sucesso! Verifique seu email para ativar sua conta.',
       user,
+      requiresVerification: true,
     }, { status: 201 });
 
   } catch (error) {
