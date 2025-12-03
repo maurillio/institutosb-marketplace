@@ -13,6 +13,8 @@ export async function GET(request: Request) {
     const condition = searchParams.get('condition'); // NEW ou USED
     const minPrice = searchParams.get('minPrice');
     const maxPrice = searchParams.get('maxPrice');
+    const minRating = searchParams.get('minRating');
+    const inStock = searchParams.get('inStock') === 'true';
     const search = searchParams.get('search');
     const sortBy = searchParams.get('sortBy') || 'createdAt';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
@@ -40,6 +42,14 @@ export async function GET(request: Request) {
       where.price = {};
       if (minPrice) where.price.gte = parseFloat(minPrice);
       if (maxPrice) where.price.lte = parseFloat(maxPrice);
+    }
+
+    if (minRating) {
+      where.rating = { gte: parseFloat(minRating) };
+    }
+
+    if (inStock) {
+      where.stock = { gt: 0 };
     }
 
     // Filtros de beleza
@@ -110,6 +120,7 @@ export async function GET(request: Request) {
     // Converter Decimal para number e ajustar estrutura
     const productsWithNumbers = products.map((product) => {
       const priceAsNumber = Number(product.price);
+      const productRating = Number(product.rating);
       const ratingAsNumber = product.seller.sellerProfile?.rating
         ? Number(product.seller.sellerProfile.rating)
         : null;
@@ -127,6 +138,8 @@ export async function GET(request: Request) {
         condition: product.condition,
         stock: product.stock,
         status: product.status,
+        rating: productRating,
+        sales: product.sales,
         category: product.category,
         seller: {
           user: {
