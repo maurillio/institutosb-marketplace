@@ -70,7 +70,46 @@ export async function POST(
       },
     });
 
-    return NextResponse.json(progress);
+    // Calcular progresso total do curso
+    const totalLessons = await prisma.courseLesson.count({
+      where: {
+        module: {
+          courseId: lesson.module.courseId,
+        },
+      },
+    });
+
+    const completedLessonsCount = await prisma.lessonProgress.count({
+      where: {
+        enrollmentId: enrollment.id,
+        completed: true,
+      },
+    });
+
+    const progressPercentage = Math.round((completedLessonsCount / totalLessons) * 100);
+
+    // Atualizar progresso da matrícula
+    const updatedEnrollment = await prisma.courseEnrollment.update({
+      where: { id: enrollment.id },
+      data: {
+        progress: progressPercentage,
+        ...(progressPercentage === 100 && !enrollment.completedAt
+          ? {
+              completedAt: new Date(),
+              // TODO: Gerar certificado
+            }
+          : {}),
+      },
+    });
+
+    return NextResponse.json({
+      progress,
+      enrollment: updatedEnrollment,
+      message:
+        progressPercentage === 100
+          ? 'Parabéns! Você concluiu o curso!'
+          : 'Aula marcada como concluída!',
+    });
   } catch (error) {
     console.error('Erro ao atualizar progresso:', error);
     return NextResponse.json(

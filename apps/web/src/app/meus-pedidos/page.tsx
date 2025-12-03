@@ -8,21 +8,26 @@ import { Footer } from '@/components/layout/footer';
 import { Button } from '@thebeautypro/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Package, ChevronRight, ShoppingBag } from 'lucide-react';
+import { Package, ChevronRight, ShoppingBag, Truck, Star, X } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Order {
   id: string;
+  orderNumber: string;
   status: string;
   total: number;
   createdAt: string;
+  trackingCode: string | null;
+  shippingCarrier: string | null;
   items: Array<{
     id: string;
     product: {
+      id: string;
       name: string;
-      imageUrl: string | null;
+      images: string[];
     };
     quantity: number;
-    total: number;
+    price: number;
   }>;
   payment: {
     status: string;
@@ -58,14 +63,37 @@ export default function MyOrdersPage() {
     }
   };
 
+  const handleCancelOrder = async (orderId: string) => {
+    if (!confirm('Tem certeza que deseja cancelar este pedido?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'CANCELLED' }),
+      });
+
+      if (!response.ok) throw new Error('Erro ao cancelar pedido');
+
+      toast.success('Pedido cancelado com sucesso');
+      fetchOrders();
+    } catch (error) {
+      console.error('Erro:', error);
+      toast.error('Erro ao cancelar pedido');
+    }
+  };
+
   const getStatusLabel = (status: string) => {
     const statusMap: Record<string, { label: string; color: string }> = {
-      PENDING: { label: 'Pendente', color: 'bg-yellow-100 text-yellow-800' },
-      CONFIRMED: { label: 'Confirmado', color: 'bg-blue-100 text-blue-800' },
-      PROCESSING: { label: 'Processando', color: 'bg-purple-100 text-purple-800' },
-      SHIPPED: { label: 'Enviado', color: 'bg-indigo-100 text-indigo-800' },
-      DELIVERED: { label: 'Entregue', color: 'bg-green-100 text-green-800' },
+      PENDING: { label: 'Aguardando Pagamento', color: 'bg-yellow-100 text-yellow-800' },
+      PAID: { label: 'Pago', color: 'bg-green-100 text-green-800' },
+      PROCESSING: { label: 'Em Preparação', color: 'bg-blue-100 text-blue-800' },
+      SHIPPED: { label: 'Enviado', color: 'bg-purple-100 text-purple-800' },
+      DELIVERED: { label: 'Entregue', color: 'bg-green-500 text-white' },
       CANCELLED: { label: 'Cancelado', color: 'bg-red-100 text-red-800' },
+      REFUNDED: { label: 'Reembolsado', color: 'bg-gray-100 text-gray-800' },
     };
     return statusMap[status] || { label: status, color: 'bg-gray-100 text-gray-800' };
   };
@@ -110,6 +138,9 @@ export default function MyOrdersPage() {
             <div className="mt-8 space-y-4">
               {orders.map((order) => {
                 const statusInfo = getStatusLabel(order.status);
+                const canCancel = order.status === 'PENDING';
+                const canReview = order.status === 'DELIVERED';
+
                 return (
                   <div
                     key={order.id}
@@ -117,13 +148,13 @@ export default function MyOrdersPage() {
                   >
                     <div className="border-b bg-gray-50 p-4">
                       <div className="flex flex-wrap items-center justify-between gap-4">
-                        <div className="flex items-center gap-4">
+                        <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                           <div>
                             <p className="text-sm text-muted-foreground">
                               Pedido
                             </p>
                             <p className="font-mono font-semibold">
-                              #{order.id.slice(0, 8).toUpperCase()}
+                              #{order.orderNumber}
                             </p>
                           </div>
                           <div>
@@ -152,6 +183,23 @@ export default function MyOrdersPage() {
                     </div>
 
                     <div className="p-4">
+                      {/* Rastreamento */}
+                      {order.trackingCode && (
+                        <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-3">
+                          <div className="flex items-center gap-2 text-sm">
+                            <Truck className="h-4 w-4 text-blue-600" />
+                            <div className="flex-1">
+                              <p className="font-medium text-blue-900">
+                                Código de rastreamento
+                              </p>
+                              <p className="font-mono text-sm text-blue-700">
+                                {order.trackingCode}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Itens do pedido */}
                       <div className="space-y-3">
                         {order.items.slice(0, 3).map((item) => (
@@ -159,7 +207,7 @@ export default function MyOrdersPage() {
                             <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md bg-gray-100">
                               <Image
                                 src={
-                                  item.product.imageUrl ||
+                                  item.product.images[0] ||
                                   'https://via.placeholder.com/80'
                                 }
                                 alt={item.product.name}
@@ -167,16 +215,16 @@ export default function MyOrdersPage() {
                                 className="object-cover"
                               />
                             </div>
-                            <div className="flex-1">
+                            <div className="flex-1 min-w-0">
                               <p className="font-medium line-clamp-1">
                                 {item.product.name}
                               </p>
                               <p className="text-sm text-muted-foreground">
-                                Qtd: {item.quantity}
+                                Qtd: {item.quantity} × R$ {item.price.toFixed(2)}
                               </p>
                             </div>
-                            <p className="font-bold">
-                              R$ {item.total.toFixed(2)}
+                            <p className="font-bold text-sm sm:text-base">
+                              R$ {(item.price * item.quantity).toFixed(2)}
                             </p>
                           </div>
                         ))}
@@ -189,24 +237,32 @@ export default function MyOrdersPage() {
                       </div>
 
                       {/* Ações */}
-                      <div className="mt-4 flex gap-2">
+                      <div className="mt-4 flex flex-col gap-2 sm:flex-row">
                         <Button asChild variant="outline" className="flex-1">
-                          <Link href={`/pedido/${order.id}/sucesso`}>
+                          <Link href={`/meus-pedidos/${order.id}`}>
                             <Package className="mr-2 h-4 w-4" />
                             Ver Detalhes
                             <ChevronRight className="ml-auto h-4 w-4" />
                           </Link>
                         </Button>
 
-                        {order.status === 'PENDING' && (
-                          <Button variant="outline" className="flex-1">
+                        {canCancel && (
+                          <Button
+                            variant="outline"
+                            className="flex-1 text-red-600 hover:bg-red-50 hover:text-red-700"
+                            onClick={() => handleCancelOrder(order.id)}
+                          >
+                            <X className="mr-2 h-4 w-4" />
                             Cancelar Pedido
                           </Button>
                         )}
 
-                        {order.status === 'DELIVERED' && (
-                          <Button variant="outline" className="flex-1">
-                            Avaliar Compra
+                        {canReview && (
+                          <Button asChild variant="outline" className="flex-1">
+                            <Link href={`/meus-pedidos/${order.id}#reviews`}>
+                              <Star className="mr-2 h-4 w-4" />
+                              Avaliar Produtos
+                            </Link>
                           </Button>
                         )}
                       </div>

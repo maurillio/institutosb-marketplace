@@ -37,11 +37,13 @@ export async function GET(
           },
         },
         payment: true,
+        address: true,
         buyer: {
           select: {
             id: true,
             name: true,
             email: true,
+            phone: true,
           },
         },
       },
@@ -63,7 +65,28 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(order);
+    // Converter Decimal para Number
+    const orderData = {
+      ...order,
+      subtotal: Number(order.subtotal),
+      shippingCost: Number(order.shippingCost),
+      discount: Number(order.discount),
+      total: Number(order.total),
+      platformFee: Number(order.platformFee),
+      sellerAmount: Number(order.sellerAmount),
+      items: order.items.map((item) => ({
+        ...item,
+        price: Number(item.price),
+      })),
+      payment: order.payment
+        ? {
+            ...order.payment,
+            amount: Number(order.payment.amount),
+          }
+        : null,
+    };
+
+    return NextResponse.json(orderData);
   } catch (error) {
     console.error('Erro ao buscar pedido:', error);
     return NextResponse.json(

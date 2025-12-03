@@ -87,7 +87,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const removeFromWishlist = async (productId: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/wishlist?productId=${productId}`, {
+      const response = await fetch(`/api/wishlist/${productId}`, {
         method: 'DELETE',
       });
 

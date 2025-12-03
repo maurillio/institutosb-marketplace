@@ -20,6 +20,7 @@ export async function GET(request: Request) {
           include: {
             product: {
               select: {
+                id: true,
                 name: true,
                 images: true,
               },
@@ -33,7 +34,28 @@ export async function GET(request: Request) {
       },
     });
 
-    return NextResponse.json(orders);
+    // Converter Decimal para Number
+    const ordersData = orders.map((order) => ({
+      ...order,
+      subtotal: Number(order.subtotal),
+      shippingCost: Number(order.shippingCost),
+      discount: Number(order.discount),
+      total: Number(order.total),
+      platformFee: Number(order.platformFee),
+      sellerAmount: Number(order.sellerAmount),
+      items: order.items.map((item) => ({
+        ...item,
+        price: Number(item.price),
+      })),
+      payment: order.payment
+        ? {
+            ...order.payment,
+            amount: Number(order.payment.amount),
+          }
+        : null,
+    }));
+
+    return NextResponse.json(ordersData);
   } catch (error) {
     console.error('Erro ao buscar pedidos:', error);
     return NextResponse.json(

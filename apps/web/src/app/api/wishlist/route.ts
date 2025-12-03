@@ -3,8 +3,8 @@ import { getServerSession } from 'next-auth';
 import { prisma } from '@thebeautypro/database';
 import { authOptions } from '../auth/[...nextauth]/route';
 
-// GET /api/wishlist - Listar produtos da wishlist do usuário
-export async function GET(request: Request) {
+// GET /api/wishlist - Listar todos os produtos na wishlist do usuário
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -12,31 +12,22 @@ export async function GET(request: Request) {
     }
 
     const wishlistItems = await prisma.wishlist.findMany({
-      where: { userId: session.user.id },
+      where: {
+        userId: session.user.id,
+      },
       include: {
         product: {
           include: {
-            category: {
-              select: {
-                name: true,
-                slug: true,
-              },
-            },
             seller: {
               select: {
                 id: true,
                 name: true,
-                avatar: true,
-                sellerProfile: {
-                  select: {
-                    rating: true,
-                  },
-                },
               },
             },
-            _count: {
+            category: {
               select: {
-                reviews: true,
+                id: true,
+                name: true,
               },
             },
           },
@@ -47,11 +38,24 @@ export async function GET(request: Request) {
       },
     });
 
-    return NextResponse.json(wishlistItems);
+    // Converter Decimal para Number nos produtos
+    const wishlistData = wishlistItems.map((item) => ({
+      ...item,
+      product: {
+        ...item.product,
+        price: Number(item.product.price),
+        compareAtPrice: item.product.compareAtPrice
+          ? Number(item.product.compareAtPrice)
+          : null,
+        rating: item.product.rating ? Number(item.product.rating) : null,
+      },
+    }));
+
+    return NextResponse.json(wishlistData);
   } catch (error) {
     console.error('Erro ao buscar wishlist:', error);
     return NextResponse.json(
-      { error: 'Erro ao buscar wishlist' },
+      { error: 'Erro ao buscar lista de desejos' },
       { status: 500 }
     );
   }
@@ -88,7 +92,7 @@ export async function POST(request: Request) {
     }
 
     // Verificar se já está na wishlist
-    const existing = await prisma.wishlist.findUnique({
+    const existingItem = await prisma.wishlist.findUnique({
       where: {
         userId_productId: {
           userId: session.user.id,
@@ -97,9 +101,9 @@ export async function POST(request: Request) {
       },
     });
 
-    if (existing) {
+    if (existingItem) {
       return NextResponse.json(
-        { error: 'Produto já está na wishlist' },
+        { error: 'Produto já está na lista de desejos' },
         { status: 400 }
       );
     }
@@ -111,59 +115,30 @@ export async function POST(request: Request) {
         productId,
       },
       include: {
-        product: true,
-      },
-    });
-
-    return NextResponse.json(wishlistItem, { status: 201 });
-  } catch (error) {
-    console.error('Erro ao adicionar à wishlist:', error);
-    return NextResponse.json(
-      { error: 'Erro ao adicionar à wishlist' },
-      { status: 500 }
-    );
-  }
-}
-
-// DELETE /api/wishlist - Remover produto da wishlist
-export async function DELETE(request: Request) {
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-    }
-
-    const { searchParams } = new URL(request.url);
-    const productId = searchParams.get('productId');
-
-    if (!productId) {
-      return NextResponse.json(
-        { error: 'productId é obrigatório' },
-        { status: 400 }
-      );
-    }
-
-    // Remover da wishlist
-    await prisma.wishlist.delete({
-      where: {
-        userId_productId: {
-          userId: session.user.id,
-          productId,
+        product: {
+          include: {
+            seller: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
         },
       },
     });
 
-    return NextResponse.json({ message: 'Removido da wishlist' });
-  } catch (error: any) {
-    console.error('Erro ao remover da wishlist:', error);
-
-    // Se o item não existir, retornar sucesso mesmo assim
-    if (error.code === 'P2025') {
-      return NextResponse.json({ message: 'Removido da wishlist' });
-    }
-
     return NextResponse.json(
-      { error: 'Erro ao remover da wishlist' },
+      {
+        message: 'Produto adicionado à lista de desejos',
+        item: wishlistItem,
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error('Erro ao adicionar à wishlist:', error);
+    return NextResponse.json(
+      { error: 'Erro ao adicionar à lista de desejos' },
       { status: 500 }
     );
   }
