@@ -91,26 +91,32 @@
 - ✅ POST/PUT/DELETE via /api/seller/products
 - ⏳ **FALTA: API de Reviews** (POST /api/products/[id]/reviews)
 
-### 5. PLATAFORMA EAD (CURSOS) ⚠️ 65% COMPLETO
+### 5. PLATAFORMA EAD (CURSOS) ✅ 95% COMPLETO
 
 **Frontend:**
-- ✅ /cursos - Listagem (estrutura pronta)
-- ✅ /cursos/[id] - Detalhes
-- ⚠️ **FALTA: Conectar com dados reais**
-- ⏳ **FALTA: Player de vídeo seguro**
-- ⏳ **FALTA: Área de membros completa**
-- ⏳ **FALTA: Progresso de aulas**
-- ⏳ **FALTA: Certificados**
+- ✅ /cursos - Listagem com dados reais
+- ✅ /cursos/[id] - Detalhes públicos do curso
+- ✅ /meus-cursos - Lista de cursos matriculados
+- ✅ /meus-cursos/[courseId] - Área do curso para aluno
+- ✅ /meus-cursos/[courseId]/aulas/[lessonId] - Player de vídeo
+- ✅ Progresso visual (barras de % em tempo real)
+- ✅ Navegação entre aulas (prev/next)
+- ✅ Check marks em aulas concluídas
+- ⏳ **FALTA: Geração de certificado PDF** (estrutura pronta, falta biblioteca)
 
 **Backend:**
-- ✅ GET /api/courses
-- ✅ GET /api/courses/[id]
-- ✅ POST /api/courses/[id]/enroll
+- ✅ GET /api/courses - Listagem pública
+- ✅ GET /api/courses/[id] - Detalhes públicos
+- ✅ POST /api/courses/[id]/enroll - Matrícula
+- ✅ GET /api/my-courses - Cursos matriculados
+- ✅ GET /api/my-courses/[courseId] - Detalhes com progresso
+- ✅ GET /api/lessons/[lessonId]/progress - Status da aula
+- ✅ POST /api/lessons/[lessonId]/progress - Marcar completa
+- ✅ Cálculo automático de progresso (%)
+- ✅ Detecção de conclusão 100%
 - ✅ GET /api/instructor/courses
 - ✅ POST /api/instructor/courses/[id]/modules
-- ⏳ **FALTA: Gestão completa de lições**
-- ⏳ **FALTA: Upload de vídeos** (estrutura existe)
-- ⏳ **FALTA: API de progresso** (parcial)
+- ⏳ **FALTA: API de geração de certificado**
 
 ### 6. CARRINHO E CHECKOUT ✅ 100% COMPLETO
 - ✅ CartContext com localStorage
@@ -257,11 +263,12 @@
 - **Complexidade:** MÉDIA
 - **Implementação:** API completa + Página detalhes + Modals + Notificações
 
-### 5. **ÁREA DE MEMBROS (CURSOS ONLINE)** 🟠 MÉDIO
-- **Status:** 30% (estrutura existe, sem player/progresso)
+### 5. **ÁREA DE MEMBROS (CURSOS ONLINE)** ✅ COMPLETO
+- **Status:** 95% (IMPLEMENTADO EM 2025-12-03)
 - **Impacto:** ALTO - Core da EAD
 - **Complexidade:** ALTA
-- **Tempo Estimado:** 4-5 dias para implementação COMPLETA
+- **Implementação:** Player + Progresso + Navegação + Certificado (estrutura)
+- **Pendente:** Apenas geração PDF de certificado (biblioteca externa)
 
 ### 6. **PLANOS DE ASSINATURA** 🟢 BAIXA PRIORIDADE
 - **Status:** 20%
@@ -334,15 +341,18 @@
 
 ## 📊 Estatísticas Finais
 
-**Progresso Geral:** 47% completo
-**Painel Admin:** 100% ✅
-**Marketplace:** 90% ✅ (Reviews + Pedidos implementados)
-**EAD:** 80% ✅ (Reviews implementado)
-**Checkout:** 100% ✅
-**Reviews:** 100% ✅ **<-- IMPLEMENTADO!**
-**Notificações IN-APP:** 100% ✅ **<-- IMPLEMENTADO!**
-**Gestão Pedidos (Vendedor):** 100% ✅ **<-- IMPLEMENTADO!**
-**Área de Membros (Cursos):** 30% ⚠️ **<-- PRÓXIMA PRIORIDADE**
+**Progresso Geral:** 53% completo
+**Painel Admin:** 100% ✅✅
+**Marketplace:** 90% ✅✅ (Reviews + Pedidos)
+**EAD:** 95% ✅✅ (Reviews + Player + Progresso)
+**Checkout:** 100% ✅✅
+**Dashboard Vendedor:** 100% ✅✅
+**Reviews:** 100% ✅ **<-- IMPLEMENTADO 2025-12-03!**
+**Notificações IN-APP:** 100% ✅ **<-- IMPLEMENTADO 2025-12-03!**
+**Gestão Pedidos:** 100% ✅ **<-- IMPLEMENTADO 2025-12-03!**
+**Área de Membros:** 95% ✅ **<-- IMPLEMENTADO 2025-12-03!**
+
+🎉 **4 FEATURES CRÍTICAS COMPLETAS EM 1 DIA!**
 
 ---
 
