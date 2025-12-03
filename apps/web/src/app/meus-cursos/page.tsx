@@ -111,8 +111,8 @@ export default function MyCoursesPage() {
                       </p>
                     </div>
 
-                    <Button asChild className="mt-4 w-full" variant="outline">
-                      <Link href={`/cursos/${enrollment.courseId}`}>
+                    <Button asChild className="mt-4 w-full">
+                      <Link href={`/meus-cursos/${enrollment.courseId}`}>
                         <PlayCircle className="mr-2 h-4 w-4" />
                         Continuar Assistindo
                       </Link>
