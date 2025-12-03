@@ -9,9 +9,9 @@
 
 ### Status Geral
 - **Total de Funcionalidades Mapeadas:** ~250+
-- **Implementadas e Funcionais:** ~170 (68%)
-- **Estruturadas mas Incompletas:** ~20 (8%)
-- **Pendentes:** ~60 (24%)
+- **Implementadas e Funcionais:** ~180 (72%)
+- **Estruturadas mas Incompletas:** ~15 (6%)
+- **Pendentes:** ~55 (22%)
 
 ### Principais Conquistas ✅
 1. ✅ **Painel Admin Completo** (8 fases - 100%)
@@ -22,9 +22,10 @@
 6. ✅ **Sistema de Notificações** (in-app + email completo)
 7. ✅ **Sistema de Cupons** (100% - validações robustas)
 8. ✅ **Notificações por Email** (100% - templates profissionais)
-9. ✅ **Upload de Imagens** (Vercel Blob)
-10. ✅ **Autenticação NextAuth** (completo)
-11. ✅ **Deploy em Produção** (Vercel + Neon)
+9. ✅ **Planos de Assinatura** (85% - 4 planos com limites e comissões)
+10. ✅ **Upload de Imagens** (Vercel Blob)
+11. ✅ **Autenticação NextAuth** (completo)
+12. ✅ **Deploy em Produção** (Vercel + Neon)
 
 ---
 
@@ -228,14 +229,37 @@
 - ✅ Cálculo de desconto (porcentagem com max, valor fixo)
 - ✅ Proteção contra uso indevido
 
-### 15. PLANOS DE ASSINATURA ⏳ 20% COMPLETO
-- ✅ Modelo Prisma SubscriptionPlan
-- ✅ Relação com Seller/Instructor
-- ⏳ **FALTA: API de upgrade/downgrade**
-- ⏳ **FALTA: Limite de anúncios por plano**
-- ⏳ **FALTA: Comissões diferenciadas por plano**
-- ⏳ **FALTA: Renovação automática**
-- ⏳ **FALTA: Página /planos completa**
+### 15. PLANOS DE ASSINATURA ✅ 85% COMPLETO
+- ✅ Modelo Prisma SubscriptionPlan (enum com FREE, BASIC, PRO, PREMIUM)
+- ✅ Relação com Seller/Instructor (plan e planExpiresAt em ambos)
+- ✅ **API completa de planos:**
+  - GET /api/subscription/plans (4 planos com features e pricing)
+  - GET /api/subscription/current (busca plano atual do usuário)
+  - POST /api/subscription/subscribe (subscreve/faz upgrade)
+- ✅ **Limites por plano implementados:**
+  - Produtos: FREE(5), BASIC(20), PRO(100), PREMIUM(ilimitado)
+  - Cursos: FREE(2), BASIC(10), PRO(50), PREMIUM(ilimitado)
+  - Validação em POST /api/seller/products
+  - Validação em POST /api/instructor/courses
+- ✅ **Comissões diferenciadas por plano:**
+  - Vendedores: FREE(15%), BASIC(12%), PRO(10%), PREMIUM(8%)
+  - Instrutores: FREE(20%), BASIC(15%), PRO(12%), PREMIUM(10%)
+  - Função getCommissionRate implementada
+- ✅ **Página /planos completa:**
+  - Grid visual com 4 planos
+  - Badge de plano atual
+  - Tabela comparativa de features
+  - Integração com autenticação
+  - Loading states e feedback
+- ✅ **Features por plano:**
+  - Analytics (Basic+)
+  - Certificados (Basic+)
+  - Aulas ao vivo (Pro+)
+  - Produtos em destaque (Basic: 2, Pro: 5, Premium: 15)
+  - Suporte (Free: padrão, Pro: prioritário, Premium: VIP 24/7)
+  - Domínio personalizado (Premium)
+- ⏳ **FALTA: Integração Mercado Pago para pagamentos recorrentes**
+- ⏳ **FALTA: Renovação automática via webhook**
 
 ### 16. SEO E PERFORMANCE ✅ 95% COMPLETO
 - ✅ Metadata básica
