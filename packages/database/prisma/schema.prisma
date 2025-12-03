@@ -498,6 +498,7 @@ model CourseEnrollment {
   progress    Int      @default(0) // 0-100%
 
   // Certificado
+  certificateCode String? @unique
   certificateUrl String?
   certificateIssuedAt DateTime?
 
