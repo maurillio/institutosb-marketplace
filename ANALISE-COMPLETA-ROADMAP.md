@@ -177,16 +177,19 @@
 - ⏳ **FALTA: Validação robusta de tipos**
 - ⏳ **FALTA: Resize automático de imagens**
 
-### 12. NOTIFICAÇÕES ⚠️ 70% COMPLETO
+### 12. NOTIFICAÇÕES ✅ 100% COMPLETO
 - ✅ NotificationService criado
 - ✅ Modelo Prisma Notification
 - ✅ Métodos: productApproved, productRejected, courseApproved, etc.
 - ✅ Integrado no painel admin
-- ⏳ **FALTA: API GET /api/notifications**
-- ⏳ **FALTA: API PUT /api/notifications/[id]/read**
-- ⏳ **FALTA: UI de notificações no header**
-- ⏳ **FALTA: Badge com contador**
-- ⏳ **FALTA: WebSocket para tempo real** (opcional)
+- ✅ API GET /api/notifications (com paginação e filtros)
+- ✅ API PATCH /api/notifications/[id] (marcar como lida)
+- ✅ API DELETE /api/notifications/[id] (deletar)
+- ✅ UI de notificações no header (NotificationsDropdown)
+- ✅ Badge com contador de não lidas
+- ✅ Polling automático (30 segundos) para atualização
+- ✅ Ações: marcar como lida, deletar, marcar todas
+- ✅ Formatação de datas em português (pt-BR)
 
 ### 13. PAGAMENTOS ⚠️ 75% COMPLETO
 - ✅ Integração Mercado Pago SDK
@@ -240,11 +243,11 @@
 - **Complexidade:** MÉDIA
 - **Tempo Estimado:** 3-4 dias para implementação COMPLETA
 
-### 3. **NOTIFICAÇÕES IN-APP** 🟡 IMPORTANTE
-- **Status:** 70% (backend pronto, sem UI)
+### 3. **NOTIFICAÇÕES IN-APP** ✅ COMPLETO
+- **Status:** 100% (IMPLEMENTADO EM 2025-12-03)
 - **Impacto:** MÉDIO - Engajamento
 - **Complexidade:** BAIXA
-- **Tempo Estimado:** 1-2 dias para implementação COMPLETA
+- **Implementação:** APIs completas + UI dropdown + Badge + Polling
 
 ### 4. **GESTÃO COMPLETA DE PEDIDOS (VENDEDOR)** 🟡 IMPORTANTE
 - **Status:** 50% (lista existe, falta detalhes/ações)
@@ -329,13 +332,14 @@
 
 ## 📊 Estatísticas Finais
 
-**Progresso Geral:** 38% completo
+**Progresso Geral:** 42% completo
 **Painel Admin:** 100% ✅
 **Marketplace:** 85% ✅ (Reviews implementado)
 **EAD:** 80% ✅ (Reviews implementado)
 **Checkout:** 100% ✅
 **Reviews:** 100% ✅ **<-- IMPLEMENTADO!**
-**Notificações IN-APP:** 70% ⚠️ **<-- PRÓXIMA PRIORIDADE**
+**Notificações IN-APP:** 100% ✅ **<-- IMPLEMENTADO!**
+**Gestão Pedidos (Vendedor):** 50% ⚠️ **<-- PRÓXIMA PRIORIDADE**
 
 ---
 
