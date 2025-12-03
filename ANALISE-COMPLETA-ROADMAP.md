@@ -77,13 +77,13 @@
 - ✅ EmptyState / ErrorState
 - ✅ Tabs, Dialog, Dropdown
 
-### 4. MARKETPLACE DE PRODUTOS ✅ 90% COMPLETO
+### 4. MARKETPLACE DE PRODUTOS ✅ 95% COMPLETO
 
 **Frontend:**
 - ✅ /produtos - Listagem (estrutura pronta)
 - ✅ /produtos/[id] - Detalhes (estrutura pronta)
 - ✅ /categorias - Navegação
-- ⚠️ **FALTA: UI de filtros avançados na página** (API pronta)
+- ✅ **Filtros avançados implementados** (avaliação, estoque, ordenação melhorada)
 - ✅ **Wishlist funcional** (contexto, API completa e integração)
 - ✅ **Sistema de Reviews completo** (UI + API + validações)
 
@@ -831,3 +831,182 @@
 📧 **SISTEMA DE EMAILS TRANSACIONAIS 100% FUNCIONAL!**
 
 ---
+
+### 2025-12-03 (Continuação): Filtros Avançados de Produtos ✅
+**Status:** 90% → 95% (▲5%)
+**Overall:** 76% → 77%
+
+**Implementações:**
+
+🔍 **UI DE FILTROS COMPLETA:**
+- **Filtro de Avaliação Mínima:**
+  - Select dropdown com opções de 1-4 estrelas
+  - Display visual com emojis de estrelas ⭐
+  - Integração com API /api/products (minRating param)
+- **Filtro de Disponibilidade:**
+  - Checkbox "Somente em estoque"
+  - Integração com API (inStock param)
+  - Estilização consistente com design existente
+- **Ordenação Melhorada:**
+  - Opções novas: Maior preço, Melhor avaliados, Mais vendidos
+  - Suporte a ordenação descendente (prefixo -)
+  - Mantém opções existentes: Mais recentes, Menor preço, A-Z
+
+📦 **INTERFACE ATUALIZADA:**
+- Interface Product atualizada com campos:
+  - rating: number | null
+  - sales: number
+  - stock: number
+- Estados de filtro implementados:
+  - minRating: string
+  - inStock: boolean
+- Integração com useEffect para refetch automático
+- Função clearFilters atualizada
+
+🎨 **DESIGN E UX:**
+- Layout em grid responsivo (md:grid-cols-4)
+- Checkbox com hover effect
+- Select consistente com outros filtros
+- Agrupamento lógico (Gerais vs Beleza)
+- Posicionamento estratégico dos novos filtros
+
+🔌 **INTEGRAÇÃO COMPLETA:**
+- fetchProducts() atualizado com novos params
+- Sincronização com estados existentes
+- Compatibilidade com paginação
+- Mantém todos os filtros de beleza (brand, skinType, concern, tag)
+
+**Arquivos Modificados:** 1 arquivo
+**Linhas de Código:** +48
+
+🎯 **IMPACTO:**
+- Melhora experiência de busca de produtos
+- Facilita encontrar produtos bem avaliados
+- Evita mostrar produtos sem estoque
+- Aumenta conversão com melhor discovery
+- Interface profissional e intuitiva
+
+🚀 **MARKETPLACE DE PRODUTOS QUASE 100% COMPLETO!**
+
+---
+
+## 🎯 PRÓXIMAS FUNCIONALIDADES PRIORITÁRIAS
+
+Com base no roadmap atual (77% completo), as próximas prioridades são:
+
+### PRIORIDADE ALTA 🔴 (Impacto no Core Business)
+
+1. **Dashboard do Instrutor - Lista de Alunos e Progresso** (70% → 85%)
+   - Tempo estimado: 2-3 dias
+   - Impacto: ALTO - Essencial para instrutores gerenciarem cursos
+   - Funcionalidades:
+     - GET /api/instructor/courses/[id]/students - lista alunos
+     - Página /dashboard/instrutor/cursos/[id]/alunos
+     - Tabela com progresso individual (%)
+     - Filtros: completou/em progresso/não iniciou
+     - Exportar lista (CSV)
+
+2. **Integração Mercado Pago - Planos Recorrentes** (85% → 100%)
+   - Tempo estimado: 3-4 dias
+   - Impacto: ALTO - Monetização recorrente
+   - Funcionalidades:
+     - Criar preferência de assinatura no MP
+     - Webhook de renovação automática
+     - Cancelamento e pause de planos
+     - Histórico de cobranças
+     - Notificações de vencimento
+
+3. **Upload de Vídeos de Aulas** (60% → 80%)
+   - Tempo estimado: 3-4 dias
+   - Impacto: ALTO - Core da plataforma EAD
+   - Funcionalidades:
+     - Upload para Vercel Blob ou Cloudinary
+     - Progress bar de upload
+     - Transcodificação (opcional)
+     - Thumbnails automáticos
+     - Signed URLs para proteção
+
+### PRIORIDADE MÉDIA 🟡 (Melhorias de UX)
+
+4. **Recuperação de Senha** (95% → 100% em Auth)
+   - Tempo estimado: 1 dia
+   - Impacto: MÉDIO - UX essencial
+   - Funcionalidades:
+     - /api/auth/forgot-password
+     - /api/auth/reset-password
+     - Página /recuperar-senha
+     - Email com link temporário
+     - Validação de token
+
+5. **Histórico de Transações e Reembolsos** (75% → 90% em Pagamentos)
+   - Tempo estimado: 2 dias
+   - Impacto: MÉDIO - Transparência financeira
+   - Funcionalidades:
+     - Página de histórico completo
+     - Filtros por status/data/valor
+     - Solicitação de reembolso
+     - Webhook de reembolso MP
+
+6. **Métodos de Pagamento Salvos** (85% → 95% em Área do Cliente)
+   - Tempo estimado: 1-2 dias
+   - Impacto: MÉDIO - Conveniência
+   - Funcionalidades:
+     - Salvar cartões (tokenização MP)
+     - CRUD de métodos salvos
+     - Checkout one-click
+
+### PRIORIDADE BAIXA 🟢 (Polimento e Avançado)
+
+7. **Rate Limiting e Segurança** (60% → 80%)
+   - Tempo estimado: 2 dias
+   - Impacto: MÉDIO - Proteção
+   - Funcionalidades:
+     - Rate limiting com Upstash Redis
+     - CSRF tokens
+     - Input sanitization
+
+8. **Social Login** (95% → 100% em Auth)
+   - Tempo estimado: 1 dia
+   - Impacto: BAIXO - Conveniência
+   - Funcionalidades:
+     - Google OAuth
+     - Facebook OAuth (opcional)
+
+9. **Imagens OG Personalizadas** (95% → 100% em SEO)
+   - Tempo estimado: 1 dia
+   - Impacto: BAIXO - SEO/Social
+   - Funcionalidades:
+     - @vercel/og para gerar imagens
+     - Templates dinâmicos por produto/curso
+
+---
+
+## 📊 ROADMAP ATUALIZADO - DEZEMBRO 2025
+
+**Progresso Atual: 77%**
+
+### Semana 1 (3-7 Dez):
+- ✅ Filtros Avançados de Produtos
+- 🎯 Dashboard Instrutor - Alunos
+- 🎯 Recuperação de Senha
+
+### Semana 2 (8-14 Dez):
+- 🎯 Upload de Vídeos
+- 🎯 Planos Recorrentes (Mercado Pago)
+
+### Semana 3 (15-21 Dez):
+- 🎯 Histórico de Transações
+- 🎯 Métodos de Pagamento Salvos
+- 🎯 Rate Limiting
+
+### Semana 4 (22-28 Dez):
+- 🎯 Polimentos finais
+- 🎯 Testes end-to-end
+- 🎯 Documentação
+
+**🎯 META: 90%+ até final de Dezembro 2025**
+
+---
+
+**Última Atualização:** 2025-12-03 (Filtros Avançados)
+**Próxima Prioridade:** Dashboard Instrutor - Lista de Alunos
