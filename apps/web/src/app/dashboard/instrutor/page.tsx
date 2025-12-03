@@ -181,6 +181,11 @@ export default function InstructorDashboardPage() {
                         </p>
                         <div className="mt-2 flex gap-2">
                           <Button size="sm" variant="outline" asChild>
+                            <Link href={`/dashboard/instrutor/cursos/${course.id}/alunos`}>
+                              Alunos
+                            </Link>
+                          </Button>
+                          <Button size="sm" variant="outline" asChild>
                             <Link href={`/dashboard/instrutor/cursos/${course.id}/editar`}>
                               Editar
                             </Link>
