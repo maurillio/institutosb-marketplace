@@ -14,6 +14,9 @@ interface Product {
   price: number;
   imageUrl: string | null;
   condition: string;
+  rating: number | null;
+  sales: number;
+  stock: number;
   category: {
     name: string;
     slug: string;
@@ -49,6 +52,8 @@ export default function ProductsPage() {
   const [selectedCondition, setSelectedCondition] = useState<string>('');
   const [minPrice, setMinPrice] = useState<string>('');
   const [maxPrice, setMaxPrice] = useState<string>('');
+  const [minRating, setMinRating] = useState<string>('');
+  const [inStock, setInStock] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('createdAt');
 
@@ -95,6 +100,8 @@ export default function ProductsPage() {
     selectedCondition,
     minPrice,
     maxPrice,
+    minRating,
+    inStock,
     searchTerm,
     sortBy,
     selectedBrand,
@@ -115,6 +122,8 @@ export default function ProductsPage() {
       if (selectedCondition) params.append('condition', selectedCondition);
       if (minPrice) params.append('minPrice', minPrice);
       if (maxPrice) params.append('maxPrice', maxPrice);
+      if (minRating) params.append('minRating', minRating);
+      if (inStock) params.append('inStock', 'true');
       if (searchTerm) params.append('search', searchTerm);
       if (sortBy) params.append('sortBy', sortBy);
 
@@ -151,6 +160,8 @@ export default function ProductsPage() {
     setSelectedCondition('');
     setMinPrice('');
     setMaxPrice('');
+    setMinRating('');
+    setInStock(false);
     setSearchTerm('');
     setSortBy('createdAt');
     setSelectedBrand('');
@@ -199,7 +210,10 @@ export default function ProductsPage() {
               >
                 <option value="createdAt">Mais recentes</option>
                 <option value="price">Menor preço</option>
+                <option value="-price">Maior preço</option>
                 <option value="name">A-Z</option>
+                <option value="-rating">Melhor avaliados</option>
+                <option value="-sales">Mais vendidos</option>
               </select>
 
               <Button
@@ -281,6 +295,40 @@ export default function ProductsPage() {
                     onChange={(e) => setMaxPrice(e.target.value)}
                     className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm"
                   />
+                </div>
+
+                {/* Avaliação Mínima */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium">
+                    Avaliação Mínima
+                  </label>
+                  <select
+                    value={minRating}
+                    onChange={(e) => setMinRating(e.target.value)}
+                    className="h-10 w-full rounded-md border border-input bg-white px-3 text-sm"
+                  >
+                    <option value="">Todas</option>
+                    <option value="4">⭐⭐⭐⭐ 4+ estrelas</option>
+                    <option value="3">⭐⭐⭐ 3+ estrelas</option>
+                    <option value="2">⭐⭐ 2+ estrelas</option>
+                    <option value="1">⭐ 1+ estrelas</option>
+                  </select>
+                </div>
+
+                {/* Disponibilidade */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium">
+                    Disponibilidade
+                  </label>
+                  <label className="flex h-10 items-center gap-2 rounded-md border border-input bg-white px-3 text-sm cursor-pointer hover:bg-gray-50">
+                    <input
+                      type="checkbox"
+                      checked={inStock}
+                      onChange={(e) => setInStock(e.target.checked)}
+                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                    <span>Somente em estoque</span>
+                  </label>
                 </div>
               </div>
 
