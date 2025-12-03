@@ -1,10 +1,108 @@
 import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+// Rate limiting simples usando Map (em produção, usar Redis/Upstash)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+// Configurações de rate limit por tipo de rota
+const RATE_LIMITS = {
+  api: {
+    windowMs: 60 * 1000, // 1 minuto
+    max: 100, // 100 requests por minuto
+  },
+  auth: {
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 10, // 10 tentativas de login
+  },
+  upload: {
+    windowMs: 60 * 1000, // 1 minuto
+    max: 20, // 20 uploads por minuto
+  },
+};
+
+function getRateLimitKey(request: any): string {
+  // Usar IP do cliente
+  const forwarded = request.headers.get('x-forwarded-for');
+  const ip = forwarded ? forwarded.split(',')[0] : request.ip || 'unknown';
+  return ip;
+}
+
+function getRateLimitConfig(pathname: string) {
+  if (pathname.startsWith('/api/auth/')) {
+    return RATE_LIMITS.auth;
+  }
+  if (pathname.startsWith('/api/upload')) {
+    return RATE_LIMITS.upload;
+  }
+  if (pathname.startsWith('/api/')) {
+    return RATE_LIMITS.api;
+  }
+  return null;
+}
+
+function checkRateLimit(key: string, config: { windowMs: number; max: number }): boolean {
+  const now = Date.now();
+  const record = rateLimitMap.get(key);
+
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(key, {
+      count: 1,
+      resetTime: now + config.windowMs,
+    });
+    return true;
+  }
+
+  if (record.count >= config.max) {
+    return false;
+  }
+
+  record.count++;
+  return true;
+}
 
 export default withAuth(
   function middleware(req) {
     const token = req.nextauth.token;
     const path = req.nextUrl.pathname;
+
+    // Rate limiting para APIs
+    if (path.startsWith('/api/')) {
+      const config = getRateLimitConfig(path);
+
+      if (config) {
+        const key = `${path}:${getRateLimitKey(req)}`;
+        const allowed = checkRateLimit(key, config);
+
+        if (!allowed) {
+          console.log('[RateLimit] ❌ Limite excedido:', path);
+          return NextResponse.json(
+            {
+              error: 'Muitas requisições. Tente novamente em alguns instantes.',
+              retryAfter: Math.ceil(config.windowMs / 1000),
+            },
+            {
+              status: 429,
+              headers: {
+                'Retry-After': Math.ceil(config.windowMs / 1000).toString(),
+                'X-RateLimit-Limit': config.max.toString(),
+                'X-RateLimit-Remaining': '0',
+              },
+            }
+          );
+        }
+      }
+
+      // Cleanup periódico
+      if (Math.random() < 0.01) {
+        const now = Date.now();
+        for (const [key, record] of rateLimitMap.entries()) {
+          if (now > record.resetTime) {
+            rateLimitMap.delete(key);
+          }
+        }
+      }
+    }
 
     console.log('[Middleware] Path:', path, 'Token exists:', !!token);
     console.log('[Middleware] User:', token ? `${token.id} - ${token.name}` : 'none');

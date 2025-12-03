@@ -76,6 +76,9 @@ model User {
   instructorProfile InstructorProfile?
   coursesCreated    Course[] @relation("InstructorCourses")
 
+  // Métodos de pagamento salvos
+  savedPaymentMethods SavedPaymentMethod[]
+
   @@index([email])
   @@index([status])
   @@map("users")
@@ -214,6 +217,29 @@ model Address {
 
   @@index([userId])
   @@map("addresses")
+}
+
+// Métodos de pagamento salvos (tokenização)
+model SavedPaymentMethod {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Dados do cartão (tokenizados - não salvamos dados reais)
+  cardToken       String   // Token do Mercado Pago
+  lastFourDigits  String   // Últimos 4 dígitos (ex: "4242")
+  brand           String   // visa, mastercard, etc
+  cardholderName  String   // Nome no cartão
+  expiryMonth     String   // MM
+  expiryYear      String   // YYYY
+
+  isDefault       Boolean  @default(false)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@map("saved_payment_methods")
 }
 
 // ========================================
