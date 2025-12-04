@@ -3,6 +3,9 @@ import { getServerSession } from 'next-auth';
 import { prisma } from '@thebeautypro/database';
 import { authOptions } from '../auth/[...nextauth]/route';
 
+// Forçar rota dinâmica (necessário para getServerSession)
+export const dynamic = 'force-dynamic';
+
 // GET /api/my-courses - Listar cursos matriculados do usuário
 export async function GET(request: Request) {
   try {

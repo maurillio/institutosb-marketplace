@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@thebeautypro/database';
 
+// Forçar rota dinâmica (necessário para request.url)
+export const dynamic = 'force-dynamic';
+
 // GET /api/courses - Listar cursos públicos com filtros
 export async function GET(request: Request) {
   try {
