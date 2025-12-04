@@ -4,6 +4,9 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@thebeautypro/database';
 import { startOfDay, endOfDay, subDays } from 'date-fns';
 
+// Forçar rota dinâmica (necessário para getServerSession)
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     // Autenticação
