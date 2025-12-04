@@ -9,15 +9,15 @@ const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMITS = {
   api: {
     windowMs: 60 * 1000, // 1 minuto
-    max: 100, // 100 requests por minuto
+    max: 1000, // 1000 requests por minuto (aumentado)
   },
   auth: {
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 10, // 10 tentativas de login
+    max: 50, // 50 tentativas (aumentado)
   },
   upload: {
     windowMs: 60 * 1000, // 1 minuto
-    max: 20, // 20 uploads por minuto
+    max: 50, // 50 uploads por minuto (aumentado)
   },
 };
 
