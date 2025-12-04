@@ -55,9 +55,10 @@ export default function AdminUsersPage() {
       }
       fetchUsers();
     }
-  }, [status, session, router, pagination.page, filters]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, session, router, pagination.page, filters.role, filters.status, filters.search]);
 
-  // Buscar usuários
+  // Buscar usuários com timeout e controle de requisições
   const fetchUsers = async () => {
     setLoading(true);
     try {
@@ -70,7 +71,15 @@ export default function AdminUsersPage() {
       if (filters.status) params.append('status', filters.status);
       if (filters.search) params.append('search', filters.search);
 
-      const response = await fetch(`/api/admin/users?${params}`);
+      // Adicionar timeout de 10 segundos
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+      const response = await fetch(`/api/admin/users?${params}`, {
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error('Erro ao buscar usuários');
@@ -79,9 +88,13 @@ export default function AdminUsersPage() {
       const data = await response.json();
       setUsers(data.users);
       setPagination(data.pagination);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao buscar usuários:', error);
-      toast.error('Erro ao buscar usuários');
+      if (error.name === 'AbortError') {
+        toast.error('Tempo limite excedido. Tente novamente.');
+      } else {
+        toast.error('Erro ao buscar usuários');
+      }
     } finally {
       setLoading(false);
     }
