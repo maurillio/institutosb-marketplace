@@ -45,12 +45,12 @@ export async function GET(request: NextRequest) {
     });
 
     // Total de matrículas
-    const totalEnrollments = await prisma.enrollment.count();
+    const totalEnrollments = await prisma.courseEnrollment.count();
 
     // Matrículas no período
-    const enrollmentsInPeriod = await prisma.enrollment.count({
+    const enrollmentsInPeriod = await prisma.courseEnrollment.count({
       where: {
-        createdAt: {
+        enrolledAt: {
           gte: startDate,
           lte: endDate,
         },
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
     const avgRating = ratingCount > 0 ? totalRatings / ratingCount : 0;
 
     // Calcular receita total de cursos
-    const enrollmentsWithPrice = await prisma.enrollment.findMany({
+    const enrollmentsWithPrice = await prisma.courseEnrollment.findMany({
       include: {
         course: {
           select: {
