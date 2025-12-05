@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
         lte: endDate,
       },
       status: {
-        in: ['PROCESSING', 'SHIPPED', 'DELIVERED', 'COMPLETED'],
+        in: ['PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
       },
     };
 

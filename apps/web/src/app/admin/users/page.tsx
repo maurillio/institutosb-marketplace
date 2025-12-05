@@ -87,7 +87,12 @@ export default function AdminUsersPage() {
 
       const data = await response.json();
       setUsers(data.users);
-      setPagination(data.pagination);
+      // Atualizar apenas total e totalPages para evitar loop infinito
+      setPagination(prev => ({
+        ...prev,
+        total: data.pagination.total,
+        totalPages: data.pagination.totalPages,
+      }));
     } catch (error: any) {
       console.error('Erro ao buscar usuários:', error);
       if (error.name === 'AbortError') {

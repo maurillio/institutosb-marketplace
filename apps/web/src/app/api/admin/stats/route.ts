@@ -27,7 +27,9 @@ export async function GET() {
       prisma.course.count(),
       prisma.order.findMany({
         where: {
-          status: 'COMPLETED',
+          status: {
+            in: ['PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
+          },
         },
         select: {
           total: true,
