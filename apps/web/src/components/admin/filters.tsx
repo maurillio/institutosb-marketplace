@@ -30,7 +30,8 @@ export function FilterBar({
   // Atualiza o search pai quando o debounce terminar
   useEffect(() => {
     onSearchChange(debouncedSearch);
-  }, [debouncedSearch, onSearchChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch]);
 
   // Verifica se há filtros ativos (excluindo busca vazia)
   const hasActiveFilters =
