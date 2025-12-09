@@ -12,24 +12,49 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }
 
-    // Verificar se o usuário é vendedor
-    if (!session.user.roles.includes('SELLER') && !session.user.roles.includes('ADMIN')) {
-      return NextResponse.json(
-        { error: 'Acesso negado. Somente vendedores.' },
-        { status: 403 }
-      );
+    // Buscar usuário atual
+    const currentUser = await prisma.user.findUnique({
+      where: { id: session.user.id },
+    });
+
+    if (!currentUser) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    // Buscar perfil do vendedor
-    const sellerProfile = await prisma.sellerProfile.findUnique({
+    // Se não tem role SELLER, adicionar automaticamente (qualquer um pode ser vendedor)
+    if (!currentUser.roles.includes('SELLER') && !currentUser.roles.includes('ADMIN')) {
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: {
+          roles: [...currentUser.roles, 'SELLER'],
+        },
+      });
+    }
+
+    // Buscar ou criar perfil de vendedor
+    let sellerProfile = await prisma.sellerProfile.findUnique({
       where: { userId: session.user.id },
     });
 
     if (!sellerProfile) {
-      return NextResponse.json(
-        { error: 'Perfil de vendedor não encontrado' },
-        { status: 404 }
-      );
+      // Criar perfil de vendedor automaticamente
+      const baseSlug = currentUser.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+      const uniqueSlug = `${baseSlug}-${session.user.id.substring(0, 8)}`;
+
+      sellerProfile = await prisma.sellerProfile.create({
+        data: {
+          userId: session.user.id,
+          storeName: `${currentUser.name}'s Store`,
+          storeSlug: uniqueSlug,
+          description: 'Minha loja online de produtos de beleza',
+        },
+      });
     }
 
     // Buscar produtos do vendedor (usando User.id, não SellerProfile.id)
@@ -103,22 +128,49 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }
 
-    if (!session.user.roles.includes('SELLER') && !session.user.roles.includes('ADMIN')) {
-      return NextResponse.json(
-        { error: 'Acesso negado. Somente vendedores.' },
-        { status: 403 }
-      );
+    // Buscar usuário atual
+    const currentUser = await prisma.user.findUnique({
+      where: { id: session.user.id },
+    });
+
+    if (!currentUser) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    const sellerProfile = await prisma.sellerProfile.findUnique({
+    // Se não tem role SELLER, adicionar automaticamente (qualquer um pode ser vendedor)
+    if (!currentUser.roles.includes('SELLER') && !currentUser.roles.includes('ADMIN')) {
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: {
+          roles: [...currentUser.roles, 'SELLER'],
+        },
+      });
+    }
+
+    // Buscar ou criar perfil de vendedor
+    let sellerProfile = await prisma.sellerProfile.findUnique({
       where: { userId: session.user.id },
     });
 
     if (!sellerProfile) {
-      return NextResponse.json(
-        { error: 'Perfil de vendedor não encontrado' },
-        { status: 404 }
-      );
+      // Criar perfil de vendedor automaticamente
+      const baseSlug = currentUser.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+      const uniqueSlug = `${baseSlug}-${session.user.id.substring(0, 8)}`;
+
+      sellerProfile = await prisma.sellerProfile.create({
+        data: {
+          userId: session.user.id,
+          storeName: `${currentUser.name}'s Store`,
+          storeSlug: uniqueSlug,
+          description: 'Minha loja online de produtos de beleza',
+        },
+      });
     }
 
     // Verificar limite de produtos do plano

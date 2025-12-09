@@ -12,22 +12,35 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }
 
-    if (!session.user.roles.includes('INSTRUCTOR') && !session.user.roles.includes('ADMIN')) {
-      return NextResponse.json(
-        { error: 'Acesso negado. Somente instrutores.' },
-        { status: 403 }
-      );
+    // Buscar usuário atual
+    const currentUser = await prisma.user.findUnique({
+      where: { id: session.user.id },
+    });
+
+    if (!currentUser) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
+    // Se não tem role INSTRUCTOR, adicionar automaticamente (qualquer um pode ser instrutor)
+    if (!currentUser.roles.includes('INSTRUCTOR') && !currentUser.roles.includes('ADMIN')) {
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: {
+          roles: [...currentUser.roles, 'INSTRUCTOR'],
+        },
+      });
+    }
+
+    // Buscar ou criar perfil de instrutor
     let instructorProfile = await prisma.instructorProfile.findUnique({
       where: { userId: session.user.id },
     });
 
-    // Criar perfil automaticamente se não existir
     if (!instructorProfile) {
       instructorProfile = await prisma.instructorProfile.create({
         data: {
           userId: session.user.id,
+          bio: 'Instrutor de beleza',
         },
       });
     }
@@ -80,22 +93,35 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }
 
-    if (!session.user.roles.includes('INSTRUCTOR') && !session.user.roles.includes('ADMIN')) {
-      return NextResponse.json(
-        { error: 'Acesso negado. Somente instrutores.' },
-        { status: 403 }
-      );
+    // Buscar usuário atual
+    const currentUser = await prisma.user.findUnique({
+      where: { id: session.user.id },
+    });
+
+    if (!currentUser) {
+      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
+    // Se não tem role INSTRUCTOR, adicionar automaticamente (qualquer um pode ser instrutor)
+    if (!currentUser.roles.includes('INSTRUCTOR') && !currentUser.roles.includes('ADMIN')) {
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: {
+          roles: [...currentUser.roles, 'INSTRUCTOR'],
+        },
+      });
+    }
+
+    // Buscar ou criar perfil de instrutor
     let instructorProfile = await prisma.instructorProfile.findUnique({
       where: { userId: session.user.id },
     });
 
-    // Criar perfil automaticamente se não existir
     if (!instructorProfile) {
       instructorProfile = await prisma.instructorProfile.create({
         data: {
           userId: session.user.id,
+          bio: 'Instrutor de beleza',
         },
       });
     }
