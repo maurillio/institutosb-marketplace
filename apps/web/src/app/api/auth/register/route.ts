@@ -41,14 +41,14 @@ export async function POST(request: Request) {
     const emailVerificationToken = crypto.randomBytes(32).toString('hex');
     const emailVerificationExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 horas
 
-    // Cria o usuário
+    // Cria o usuário com status ACTIVE (sem necessidade de aprovação)
     const user = await prisma.user.create({
       data: {
         name: validatedData.name,
         email: validatedData.email,
         password: hashedPassword,
         roles: ['CUSTOMER'],
-        status: 'PENDING_VERIFICATION',
+        status: 'ACTIVE', // Usuário pode fazer login imediatamente
         emailVerificationToken,
         emailVerificationExpiry,
       },
@@ -73,9 +73,9 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({
-      message: 'Cadastro realizado com sucesso! Verifique seu email para ativar sua conta.',
+      message: 'Cadastro realizado com sucesso! Você já pode fazer login.',
       user,
-      requiresVerification: true,
+      requiresVerification: false,
     }, { status: 201 });
 
   } catch (error) {
