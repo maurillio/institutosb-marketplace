@@ -74,19 +74,12 @@ export default function PerfilPage() {
       console.log('[Frontend] ✅ Perfil atualizado:', data);
 
       console.log('[Frontend] Chamando update() do NextAuth...');
-      
+
       // Atualizar sessão do NextAuth
-      const updateResult = await update();
-      console.log('[Frontend] Update result:', updateResult);
+      await update();
+      console.log('[Frontend] ✅ Sessão atualizada');
 
       alert('Perfil atualizado com sucesso!');
-      
-      console.log('[Frontend] Recarregando página em 1 segundo...');
-      
-      // Aguardar um pouco antes de recarregar
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
       
     } catch (error) {
       console.error('[Frontend] ❌ ERRO CRÍTICO:', error);

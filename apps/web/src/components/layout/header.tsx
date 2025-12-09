@@ -22,7 +22,11 @@ export function Header() {
       <div className="container flex h-16 items-center">
         {/* Logo */}
         <Link href="/" className="mr-8 flex items-center space-x-2">
-          <span className="text-2xl font-bold text-primary">The Beauty Pro</span>
+          <img
+            src="/images/logo.png"
+            alt="The Beauty Pro"
+            className="h-12 w-auto"
+          />
         </Link>
 
         {/* Navigation */}

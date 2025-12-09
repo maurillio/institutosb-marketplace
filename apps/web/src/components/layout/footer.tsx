@@ -8,7 +8,11 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* Logo e Descrição */}
           <div className="space-y-3">
-            <h3 className="text-lg font-bold text-primary">The Beauty Pro</h3>
+            <img
+              src="/images/logo.png"
+              alt="The Beauty Pro"
+              className="h-16 w-auto"
+            />
             <p className="text-sm text-muted-foreground">
               O ecossistema digital definitivo para a indústria da beleza.
             </p>

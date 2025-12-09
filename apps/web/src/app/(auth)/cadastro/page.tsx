@@ -81,9 +81,13 @@ export default function RegisterPage() {
           {/* Logo e Título */}
           <div className="text-center mb-8">
             <Link href="/" className="inline-block">
-              <h1 className="text-3xl font-bold text-primary">The Beauty Pro</h1>
+              <img
+                src="/images/logo-large.png"
+                alt="The Beauty Pro"
+                className="h-24 w-auto mx-auto"
+              />
             </Link>
-            <p className="text-muted-foreground mt-2">
+            <p className="text-muted-foreground mt-4">
               Crie sua conta gratuitamente
             </p>
           </div>
