@@ -24,29 +24,14 @@ export default function TornarSeVendedorPage() {
     setError(null);
 
     try {
-      // Buscar roles atuais do usuário
-      const currentRoles = session.user.roles || ['CUSTOMER'];
-
-      // Adicionar SELLER se ainda não tiver
-      const newRoles = Array.from(new Set([...currentRoles, 'SELLER']));
-
-      const response = await fetch(`/api/admin/users/${session.user.id}/roles`, {
-        method: 'PATCH',
+      const response = await fetch('/api/user/upgrade-role', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ roles: newRoles }),
+        body: JSON.stringify({ role: 'SELLER' }),
       });
 
       if (!response.ok) {
-        // Se não for admin, fazer auto-promoção
-        const selfResponse = await fetch('/api/user/upgrade-role', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ role: 'SELLER' }),
-        });
-
-        if (!selfResponse.ok) {
-          throw new Error('Erro ao se tornar vendedor');
-        }
+        throw new Error('Erro ao se tornar vendedor');
       }
 
       // Atualizar sessão
@@ -71,29 +56,14 @@ export default function TornarSeVendedorPage() {
     setError(null);
 
     try {
-      // Buscar roles atuais do usuário
-      const currentRoles = session.user.roles || ['CUSTOMER'];
-
-      // Adicionar INSTRUCTOR se ainda não tiver
-      const newRoles = Array.from(new Set([...currentRoles, 'INSTRUCTOR']));
-
-      const response = await fetch(`/api/admin/users/${session.user.id}/roles`, {
-        method: 'PATCH',
+      const response = await fetch('/api/user/upgrade-role', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ roles: newRoles }),
+        body: JSON.stringify({ role: 'INSTRUCTOR' }),
       });
 
       if (!response.ok) {
-        // Se não for admin, fazer auto-promoção
-        const selfResponse = await fetch('/api/user/upgrade-role', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ role: 'INSTRUCTOR' }),
-        });
-
-        if (!selfResponse.ok) {
-          throw new Error('Erro ao se tornar instrutor');
-        }
+        throw new Error('Erro ao se tornar instrutor');
       }
 
       // Atualizar sessão
