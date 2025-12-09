@@ -68,11 +68,22 @@ export async function POST(request: Request) {
       });
 
       if (!existingSellerProfile) {
+        // Gerar slug único para a loja
+        const baseSlug = currentUser.name
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+
+        const uniqueSlug = `${baseSlug}-${session.user.id.substring(0, 8)}`;
+
         await prisma.sellerProfile.create({
           data: {
             userId: session.user.id,
-            storeName: currentUser.name,
-            description: 'Minha loja',
+            storeName: `${currentUser.name}'s Store`,
+            storeSlug: uniqueSlug,
+            description: 'Minha loja online de produtos de beleza',
           },
         });
       }
