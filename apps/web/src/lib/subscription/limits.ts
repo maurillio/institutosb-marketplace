@@ -65,7 +65,7 @@ export async function checkSellerProductLimit(
         sellerId: userId,
         // Não contar produtos inativos/deletados na contagem de limite
         status: {
-          in: ['ACTIVE', 'DRAFT', 'PENDING'],
+          in: ['ACTIVE', 'DRAFT'],
         },
       },
     });
